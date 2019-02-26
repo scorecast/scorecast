@@ -1,46 +1,50 @@
-import {Component} from "react";
+import { Component } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     TextInput,
-    TouchableOpacity
-} from "react-native";
-import React from "react";
+    TouchableOpacity,
+} from 'react-native';
+import React from 'react';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import {styles, pallette} from '../styles';
+import { styles, pallette } from '../styles';
 
 export default class Join extends Component {
     state = {
         codeText: '',
     };
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     render() {
         return (
             <View style={styles.content}>
-                <Text style={[styles.header, {marginBottom: 50}]}>Join Game</Text>
+                <Text style={[styles.header, { marginBottom: 50 }]}>
+                    Join Game
+                </Text>
                 <View style={localStyles.codeTextForm}>
-                    <TextInput onChangeText={(codeText) => this.setState({codeText})}
+                    <TextInput
+                        onChangeText={codeText => this.setState({ codeText })}
                         style={localStyles.codeText}
                         value={this.state.codeText}
                         placeholder="Enter Game ID"
-                        placeholderTextColor={pallette.gray}/>
+                        placeholderTextColor={pallette.gray}
+                    />
                     <TouchableOpacity style={localStyles.codeTextButton}>
                         <Text style={localStyles.codeTextJoin}>Join!</Text>
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.interlude}>- or -</Text>
                 <TouchableOpacity style={localStyles.qrButton}>
-                    <Icon name="camera" size={20} color="#ffffff00"/>
+                    <Icon name="camera" size={20} color="#ffffff00" />
                     <Text style={localStyles.qrButtonText}>Scan</Text>
-                    <Icon name="camera" size={20} color={pallette.white}/>
+                    <Icon name="camera" size={20} color={pallette.white} />
                 </TouchableOpacity>
-            </View>);
+            </View>
+        );
     }
 }
 
@@ -51,11 +55,11 @@ const localStyles = StyleSheet.create({
         //backgroundColor: pallette.lightblue,
         //padding: 10,
         height: 35,
-        width: 80+'%',
+        width: 80 + '%',
     },
     codeText: {
         minWidth: 200,
-        flex:1,
+        flex: 1,
         borderColor: pallette.gray,
         borderWidth: 2,
         borderBottomLeftRadius: 20,
@@ -82,8 +86,9 @@ const localStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: 80+'%',
-        padding: 18,
+        width: '80%',
+        paddingVertical: 18,
+        paddingHorizontal: 23,
         borderRadius: 35,
         backgroundColor: pallette.darkgray,
     },
@@ -92,5 +97,5 @@ const localStyles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 30,
         color: pallette.white,
-    }
+    },
 });
