@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+    Text,
+    View,
+    SafeAreaView,
+    StatusBar,
+    TouchableOpacity,
+} from 'react-native';
 
 import { NativeRouter, Route, Link } from 'react-router-native';
 import NavLink from './components/NavLink';
@@ -66,6 +72,7 @@ export default class App extends Component {
                 initialIndex={1}
                 initialEntries={['/create', '/join', '/history']}
             >
+                <StatusBar />
                 <SafeAreaView style={styles.container}>
                     <View style={[styles.navbar]}>
                         <TouchableOpacity activeOpacity={0.5}>
