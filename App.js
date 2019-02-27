@@ -30,7 +30,7 @@ import FontText from './components/Text';
 
 import Join from './components/Join';
 import Create from './components/Create';
-const History = () => <Text style={styles.header}>History</Text>;
+import Discover from './components/Discover';
 
 export default class App extends Component {
     state = {
@@ -71,7 +71,7 @@ export default class App extends Component {
             <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
                 <NativeRouter
                     initialIndex={1}
-                    initialEntries={['/create', '/join', '/history']}
+                    initialEntries={['/create', '/join', '/discover']}
                 >
                     <SafeAreaView style={styles.container}>
                         <View style={[styles.navbar]}>
@@ -83,7 +83,9 @@ export default class App extends Component {
                                 />
                             </TouchableOpacity>
                             <View style={styles.logo}>
-                                <FontText style={styles.logoText}>Score</FontText>
+                                <FontText style={styles.logoText}>
+                                    Score
+                                </FontText>
                                 <FontText
                                     style={[
                                         styles.logoText,
@@ -109,7 +111,7 @@ export default class App extends Component {
                                 )}
                             />
                             <Route path="/join" component={Join} />
-                            <Route path="/history" component={History} />
+                            <Route path="/discover" component={Discover} />
                         </View>
                         <View style={[styles.nav]}>
                             <NavLink
@@ -118,7 +120,7 @@ export default class App extends Component {
                                 style={styles.navItem}
                                 activeStyle={styles.navItemActive}
                                 activeOpacity={0.5}
-                                iconName={"pencil"}
+                                iconName={'pencil'}
                             />
                             <NavLink
                                 to="/join"
@@ -126,15 +128,15 @@ export default class App extends Component {
                                 style={styles.navItem}
                                 activeStyle={styles.navItemActive}
                                 activeOpacity={0.5}
-                                iconName={"rocket"}
+                                iconName={'rocket'}
                             />
                             <NavLink
-                                to="/history"
+                                to="/discover"
                                 component={TouchableOpacity}
                                 style={styles.navItem}
                                 activeStyle={styles.navItemActive}
                                 activeOpacity={0.5}
-                                iconName={"history"}
+                                iconName={'history'}
                             />
                         </View>
                     </SafeAreaView>
