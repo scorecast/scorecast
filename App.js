@@ -111,39 +111,24 @@ export default class App extends Component {
                             style={styles.navItem}
                             activeStyle={styles.navItemActive}
                             activeOpacity={0.5}
-                        >
-                            <Icon
-                                name="pencil"
-                                size={20}
-                                color={pallette.crimson}
-                            />
-                        </NavLink>
+                            iconName={"pencil"}
+                        />
                         <NavLink
                             to="/join"
                             component={TouchableOpacity}
                             style={styles.navItem}
                             activeStyle={styles.navItemActive}
                             activeOpacity={0.5}
-                        >
-                            <Icon
-                                name="rocket"
-                                size={20}
-                                color={pallette.crimson}
-                            />
-                        </NavLink>
+                            iconName={"rocket"}
+                        />
                         <NavLink
                             to="/history"
                             component={TouchableOpacity}
                             style={styles.navItem}
                             activeStyle={styles.navItemActive}
                             activeOpacity={0.5}
-                        >
-                            <Icon
-                                name="history"
-                                size={20}
-                                color={pallette.crimson}
-                            />
-                        </NavLink>
+                            iconName={"history"}
+                        />
                     </View>
                 </SafeAreaView>
             </NativeRouter>
