@@ -68,77 +68,78 @@ export default class App extends Component {
         }
 
         return (
-            <NativeRouter
-                initialIndex={1}
-                initialEntries={['/create', '/join', '/history']}
-            >
-                <StatusBar />
-                <SafeAreaView style={styles.container}>
-                    <View style={[styles.navbar]}>
-                        <TouchableOpacity activeOpacity={0.5}>
-                            <Icon
-                                name="arrow-left"
-                                size={20}
-                                color={pallette.darkgray}
-                            />
-                        </TouchableOpacity>
-                        <View style={styles.logo}>
-                            <FontText style={styles.logoText}>Score</FontText>
-                            <FontText
-                                style={[
-                                    styles.logoText,
-                                    { color: pallette.crimson },
-                                ]}
-                            >
-                                Cast
-                            </FontText>
+            <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
+                <NativeRouter
+                    initialIndex={1}
+                    initialEntries={['/create', '/join', '/history']}
+                >
+                    <SafeAreaView style={styles.container}>
+                        <View style={[styles.navbar]}>
+                            <TouchableOpacity activeOpacity={0.5}>
+                                <Icon
+                                    name="arrow-left"
+                                    size={20}
+                                    color={pallette.darkgray}
+                                />
+                            </TouchableOpacity>
+                            <View style={styles.logo}>
+                                <FontText style={styles.logoText}>Score</FontText>
+                                <FontText
+                                    style={[
+                                        styles.logoText,
+                                        { color: pallette.crimson },
+                                    ]}
+                                >
+                                    Cast
+                                </FontText>
+                            </View>
+                            <TouchableOpacity activeOpacity={0.5}>
+                                <Icon
+                                    name="user"
+                                    size={20}
+                                    color={pallette.darkgray}
+                                />
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity activeOpacity={0.5}>
-                            <Icon
-                                name="user"
-                                size={20}
-                                color={pallette.darkgray}
+                        <View style={[styles.content]}>
+                            <Route
+                                path="/create"
+                                render={() => (
+                                    <Create rows={this.state.templates} />
+                                )}
                             />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={[styles.content]}>
-                        <Route
-                            path="/create"
-                            render={() => (
-                                <Create rows={this.state.templates} />
-                            )}
-                        />
-                        <Route path="/join" component={Join} />
-                        <Route path="/history" component={History} />
-                    </View>
-                    <View style={[styles.nav]}>
-                        <NavLink
-                            to="/create"
-                            component={TouchableOpacity}
-                            style={styles.navItem}
-                            activeStyle={styles.navItemActive}
-                            activeOpacity={0.5}
-                            iconName={"pencil"}
-                        />
-                        <NavLink
-                            to="/join"
-                            component={TouchableOpacity}
-                            style={styles.navItem}
-                            activeStyle={styles.navItemActive}
-                            activeOpacity={0.5}
-                            iconName={"rocket"}
-                        />
-                        <NavLink
-                            to="/history"
-                            component={TouchableOpacity}
-                            style={styles.navItem}
-                            activeStyle={styles.navItemActive}
-                            activeOpacity={0.5}
-                            iconName={"history"}
-                        />
-                    </View>
-                </SafeAreaView>
-            </NativeRouter>
+                            <Route path="/join" component={Join} />
+                            <Route path="/history" component={History} />
+                        </View>
+                        <View style={[styles.nav]}>
+                            <NavLink
+                                to="/create"
+                                component={TouchableOpacity}
+                                style={styles.navItem}
+                                activeStyle={styles.navItemActive}
+                                activeOpacity={0.5}
+                                iconName={"pencil"}
+                            />
+                            <NavLink
+                                to="/join"
+                                component={TouchableOpacity}
+                                style={styles.navItem}
+                                activeStyle={styles.navItemActive}
+                                activeOpacity={0.5}
+                                iconName={"rocket"}
+                            />
+                            <NavLink
+                                to="/history"
+                                component={TouchableOpacity}
+                                style={styles.navItem}
+                                activeStyle={styles.navItemActive}
+                                activeOpacity={0.5}
+                                iconName={"history"}
+                            />
+                        </View>
+                    </SafeAreaView>
+                </NativeRouter>
+            </View>
         );
     }
 }
