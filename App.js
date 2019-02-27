@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import { Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
 
 import { NativeRouter, Route, Link } from 'react-router-native';
+import NavLink from './components/NavLink';
+
 import firebase from 'firebase';
 import 'firebase/firestore';
 var config = {
-    apiKey: "AIzaSyBd8u4BvdZylqyztlgTToIi6D1a79k3emA",
-    authDomain: "scorecast-5f168.firebaseapp.com",
-    databaseURL: "https://scorecast-5f168.firebaseio.com",
-    projectId: "scorecast-5f168",
-    storageBucket: "scorecast-5f168.appspot.com",
-    messagingSenderId: "138861825009"
+    apiKey: 'AIzaSyBd8u4BvdZylqyztlgTToIi6D1a79k3emA',
+    authDomain: 'scorecast-5f168.firebaseapp.com',
+    databaseURL: 'https://scorecast-5f168.firebaseio.com',
+    projectId: 'scorecast-5f168',
+    storageBucket: 'scorecast-5f168.appspot.com',
+    messagingSenderId: '138861825009',
 };
 firebase.initializeApp(config);
 
@@ -23,10 +25,6 @@ import FontText from './components/Text';
 import Join from './components/Join';
 import Create from './components/Create';
 const History = () => <Text style={styles.header}>History</Text>;
-
-const Topic = ({ match }) => (
-    <Text style={styles.topic}>{match.params.topicId}</Text>
-);
 
 export default class App extends Component {
     state = {
@@ -42,13 +40,20 @@ export default class App extends Component {
 
         this.setState({ isReady: true });
 
-        await firebase.firestore().collection('templates').get().then((templates) => {
-            templates.forEach((template) => {
-                this.setState({templates: [...(this.state.templates), template]});
+        await firebase
+            .firestore()
+            .collection('templates')
+            .get()
+            .then(templates => {
+                templates.forEach(template => {
+                    this.setState({
+                        templates: [...this.state.templates, template],
+                    });
+                });
+            })
+            .catch(function(error) {
+                console.log('Error getting document:', error);
             });
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
     }
 
     render() {
@@ -90,14 +95,19 @@ export default class App extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.content]}>
-                        <Route exact path="/create" render={() => (<Create rows={this.state.templates}></Create>)}/>
+                        <Route
+                            path="/create"
+                            render={() => (
+                                <Create rows={this.state.templates} />
+                            )}
+                        />
                         <Route path="/join" component={Join} />
                         <Route path="/history" component={History} />
                     </View>
                     <View style={[styles.nav]}>
-                        <Link
+                        <NavLink
                             to="/create"
-                            underlayColor="#f0f4f7"
+                            component={TouchableOpacity}
                             style={styles.navItem}
                             activeStyle={styles.navItemActive}
                             activeOpacity={0.5}
@@ -107,37 +117,33 @@ export default class App extends Component {
                                 size={20}
                                 color={pallette.crimson}
                             />
-                        </Link>
-                        <Link
+                        </NavLink>
+                        <NavLink
                             to="/join"
-                            underlayColor="#f0f4f7"
+                            component={TouchableOpacity}
                             style={styles.navItem}
                             activeStyle={styles.navItemActive}
                             activeOpacity={0.5}
                         >
-                            <Text>
-                                <Icon
-                                    name="rocket"
-                                    size={20}
-                                    color={pallette.crimson}
-                                />
-                            </Text>
-                        </Link>
-                        <Link
+                            <Icon
+                                name="rocket"
+                                size={20}
+                                color={pallette.crimson}
+                            />
+                        </NavLink>
+                        <NavLink
                             to="/history"
-                            underlayColor="#f0f4f7"
+                            component={TouchableOpacity}
                             style={styles.navItem}
                             activeStyle={styles.navItemActive}
                             activeOpacity={0.5}
                         >
-                            <Text>
-                                <Icon
-                                    name="history"
-                                    size={20}
-                                    color={pallette.crimson}
-                                />
-                            </Text>
-                        </Link>
+                            <Icon
+                                name="history"
+                                size={20}
+                                color={pallette.crimson}
+                            />
+                        </NavLink>
                     </View>
                 </SafeAreaView>
             </NativeRouter>

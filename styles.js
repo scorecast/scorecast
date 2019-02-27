@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         backgroundColor: pallette.lightgray,
-        padding: 10,
     },
     navbar: {
         flexDirection: 'row',
@@ -50,13 +49,10 @@ const styles = StyleSheet.create({
     navItem: {
         flex: 1,
         alignItems: 'center',
-        padding: 10,
+        padding: 20,
     },
     navItemActive: {
-        flex: 1,
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: pallette.lightergray,
+        backgroundColor: pallette.white,
     },
     subNavItem: {
         padding: 5,
