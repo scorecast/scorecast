@@ -29,8 +29,8 @@ class Discover extends React.Component {
                                       (rowId == 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
                                       {width: 200}]}>
                                       <Text style={styles.listViewRowText}>{
-                                          (JSON.stringify(game.variables) !== 'undefined') ?
-                                              JSON.parse(JSON.stringify(game.variables)).find((v) => {
+                                          game.variables ?
+                                              game.variables.find((v) => {
                                                   return v.name === 'gameName';
                                               }).value :
                                               ''
