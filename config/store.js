@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { reactReduxFirebase } from 'react-redux-firebase';
+import { reduxFirestore } from 'redux-firestore';
 import rootReducer from '../reducers';
 
 const firebaseConfig = {
@@ -15,13 +16,17 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
+// Initialize Firestore with timeshot settings
+firebase.firestore().settings({});
+
 // Add redux Firebase to compose
 const createStoreWithMiddleware = compose(
     reactReduxFirebase(firebase, {
         userProfile: 'users', // firebase root where user profiles are stored
         useFirestoreForProfile: true, // Store in Firestore instead of Real Time DB
         enableLogging: false, // enable/disable Firebase's database logging
-    })
+    }),
+    reduxFirestore(firebase)
 )(createStore);
 
 // Create store with reducers and initial state
