@@ -25,6 +25,7 @@ import Login from './Login';
 import SignUpPage from './SignUp';
 
 const Home = props => {
+    //console.log(props.firebase.auth);
     return (
         <NativeRouter
             initialIndex={1}

@@ -24,7 +24,7 @@ class SelectTemplate extends Component {
             rowHasChanged: (r1, r2) => r1 !== r2,
         }).cloneWithRows(this.props.templates || []);
 
-        var options =["Home","Savings","Car","GirlFriend"];
+        //let lastRow = this.props.templates.length;
 
         return (
             <View style={[styles.content, {justifyContent: 'center', alignItems: 'center'}]}>
@@ -40,7 +40,10 @@ class SelectTemplate extends Component {
                                       this.props.onSelect(template.name);
                                       this.props.history.push('/gameSetup/' + template.name);
                                   }}
-                                                    style={[styles.listViewRow, (rowId % 2) ? {} : {backgroundColor: pallette.lightergray},
+                                                    style={[styles.listViewRow,
+                                                        (rowId % 2) ? {} : {backgroundColor: pallette.lightergray},
+                                                        //(rowId == lastRow) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
+                                                        (rowId == 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
                                                         {width: 200}]}>
                                       <Text style={styles.listViewRowText}>{template.name}</Text>
                                   </TouchableOpacity>)
