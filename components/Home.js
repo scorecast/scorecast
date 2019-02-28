@@ -21,8 +21,6 @@ import Create from './Create';
 import Discover from './Discover';
 
 const Home = props => {
-    console.log(props.firebase);
-
     return (
         <NativeRouter
             initialIndex={1}
@@ -53,7 +51,7 @@ const Home = props => {
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.content]}>
-                    <Route path="/create" render={() => <Create rows={[]} />} />
+                    <Route path="/create" render={() => <Create/>} />
                     <Route path="/join" component={Join} />
                     <Route path="/discover" component={Discover} />
                 </View>
