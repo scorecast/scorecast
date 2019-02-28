@@ -24,7 +24,21 @@ class SelectTemplate extends Component {
             rowHasChanged: (r1, r2) => r1 !== r2,
         }).cloneWithRows(this.props.templates || []);
 
+        let templateRows = [];
         //let lastRow = this.props.templates.length;
+        if (this.props.templates) {
+            this.props.templates.map((t, index) => {
+                templateRows.push((
+                    <View>
+                        <Text style={[styles.listViewRowText,
+                            (index % 2) ? {} : {backgroundColor: pallette.lightergray},
+                            (index === this.props.templates.length) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
+                            (index === 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
+                        ]}>{t.name}</Text>
+                    </View>
+                ))
+            })
+        }
 
         return (
             <View style={[styles.content, {justifyContent: 'center', alignItems: 'center'}]}>
@@ -43,11 +57,12 @@ class SelectTemplate extends Component {
                                                     style={[styles.listViewRow,
                                                         (rowId % 2) ? {} : {backgroundColor: pallette.lightergray},
                                                         //(rowId == lastRow) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
-                                                        (rowId == 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
+                                                        (rowId === 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
                                                         {width: 200}]}>
                                       <Text style={styles.listViewRowText}>{template.name}</Text>
                                   </TouchableOpacity>)
                           }}/>
+                {templateRows}
             </View>
         );
     };
