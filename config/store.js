@@ -31,4 +31,3 @@ const createStoreWithMiddleware = compose(
 
 // Create store with reducers and initial state
 export default createStoreWithMiddleware(rootReducer);
-export { firebase };
