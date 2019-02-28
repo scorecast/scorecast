@@ -16,7 +16,7 @@ class Login extends React.Component {
         firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => { console.log(this.props.firebase); this.props.history.goBack(); })
+        .then(() => this.props.history.goBack())
         .catch(error => this.setState({ errorMessage: error.message}))
     }
 

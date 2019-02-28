@@ -53,7 +53,7 @@ const Home = props => {
                         </FontText>
                     </View>
                     <TouchableOpacity activeOpacity={0.5}>
-                        <Link to={ !props.firebase.auth.email === 'undefined' ? "/login" : "/user" }>
+                        <Link to={ props.firebase.auth.isEmpty || props.firebase.auth.isAnonymous ? "/login" : "/user" }>
                             <Icon name="user" size={20} color={pallette.darkgray} />
                         </Link>
                     </TouchableOpacity>
