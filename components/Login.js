@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, View, Button, TouchableOpacity } from 'react-native'
 import { Link, Redirect } from 'react-router-native';
-import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
