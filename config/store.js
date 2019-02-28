@@ -19,6 +19,11 @@ firebase.initializeApp(firebaseConfig);
 // Initialize Firestore with timeshot settings
 firebase.firestore().settings({});
 
+//Testing: initializing the authentication to log in anonymously
+if (!firebase.auth().currentUser) {
+    firebase.auth().signInAnonymously();
+}
+
 // Add redux Firebase to compose
 const createStoreWithMiddleware = compose(
     reactReduxFirebase(firebase, {
@@ -28,6 +33,5 @@ const createStoreWithMiddleware = compose(
     }),
     reduxFirestore(firebase)
 )(createStore);
-
 // Create store with reducers and initial state
 export default createStoreWithMiddleware(rootReducer);

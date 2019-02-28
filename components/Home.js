@@ -10,6 +10,7 @@ import {
 import { connect } from 'react-redux';
 
 import { NativeRouter, Route, Link } from 'react-router-native';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { styles, pallette } from '../styles';
@@ -19,6 +20,9 @@ import NavLink from './NavLink';
 import Join from './Join';
 import Create from './Create';
 import Discover from './Discover';
+import UserProfile from './UserProfile';
+import Login from './Login';
+import SignUpPage from './SignUp';
 
 const Home = props => {
     return (
@@ -47,13 +51,18 @@ const Home = props => {
                         </FontText>
                     </View>
                     <TouchableOpacity activeOpacity={0.5}>
-                        <Icon name="user" size={20} color={pallette.darkgray} />
+                        <Link to={ props.firebase.auth.isEmpty || props.firebase.auth.isAnonymous ? "/login" : "/user" }>
+                            <Icon name="user" size={20} color={pallette.darkgray} />
+                        </Link>
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.content]}>
                     <Route path="/create" render={() => <Create/>} />
                     <Route path="/join" component={Join} />
                     <Route path="/discover" component={Discover} />
+                    <Route path="/user" component={UserProfile} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/signup" component={SignUpPage} />
                 </View>
                 <View style={[styles.nav]}>
                     <NavLink

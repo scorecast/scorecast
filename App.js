@@ -10,8 +10,8 @@ export default class App extends Component {
     state = {
         isReady: false,
         routerHistory: {},
-        templates: [],
-    };
+        templates: []
+    }
 
     async componentDidMount() {
         await Font.loadAsync({

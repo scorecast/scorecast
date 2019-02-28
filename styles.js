@@ -81,6 +81,13 @@ const styles = StyleSheet.create({
     listViewRowText: {
         fontSize: 20,
     },
+    textInput: {
+        height: 40,
+        width: '90%',
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginTop: 8
+    },
 });
 
 export { styles, pallette };
