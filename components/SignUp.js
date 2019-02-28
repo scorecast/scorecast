@@ -1,21 +1,31 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, TouchableOpacity } from 'react-native'
+import { Link, Redirect } from 'react-router-native';
+import { connect } from 'react-redux';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import { styles, pallette } from '../styles';
 import firebase from 'firebase';
 
-export default class SignUpPage extends Component {
+class SignUpPage extends Component {
     state = { email: '', password: '', c_Password: '', errorMessage: null }
 
     handleSignUp = () => {
+        const { email, password } = this.state;
+        console.log("attempting to log in");
+        console.log(this.state);
         firebase
           .auth()
-          .createUserWithEmailAndPassword(this.state.email, this.state.password)
-          .then(() => this.props.navigation.navigate('Main'))
+          .createUserWithEmailAndPassword(email, password)
+          .then(() => this.props.history.goBack())
           .catch(error => this.setState({ errorMessage: error.message }))
-      }
+    }
 
     render() {
-        return (
+        console.log("we made it");
+
+        const signup = (
             <View style={styles.container}>
                 <Text>Sign Up</Text>
                 {this.state.errorMessage &&
@@ -26,7 +36,7 @@ export default class SignUpPage extends Component {
                     placeholder="Email"
                     autoCapitalize="none"
                     style={styles.textInput}
-                    onChangeText={email => this.setState({ email })}
+                    onChangeText={email => this.setState({ email : email })}
                     value={this.state.email}
                 />
                 <TextInput
@@ -34,7 +44,7 @@ export default class SignUpPage extends Component {
                     placeholder="Password"
                     autoCapitalize="none"
                     style={styles.textInput}
-                    onChangeText={password => this.setState({ password })}
+                    onChangeText={password => this.setState({ password : password })}
                     value={this.state.password}
                 />
                 <TextInput
@@ -42,31 +52,27 @@ export default class SignUpPage extends Component {
                     placeholder="Confirm Password"
                     autoCapitalize="none"
                     style={styles.textInput}
-                    onChangeText={c_Password => this.setState({ password })}
+                    onChangeText={c_Password => this.setState({ c_Password : c_Password })}
                     value={this.state.c_Password}
                 />
                 <Button title="Sign Up" onPress={this.handleSignUp} />
-                <Button
-                    title="Already have an account? Login"
-                    //investigate disabling the button based on inputs
-                    onPress={() => this.props.navigation.navigate('Login')}
-                />
+                <TouchableOpacity activeOpacity={0.5}>
+                    <Link to="/login">
+                        <Icon name="user" size={20} color={pallette.darkgray} />
+                    </Link>
+                </TouchableOpacity>
             </View>
-        )
+        );
+
+        if (!this.props.firebase.auth.email === 'undefined') {
+            return ( <Redirect to="/user" from="/signup"/> );
+        } else {
+            return login;
+        }
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    textInput: {
-        height: 40,
-        width: '90%',
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginTop: 8
-    }
+const mapStateToProps = state => ({
+    firebase: state.firebase,
 });
+
+export default connect(mapStateToProps)(SignUpPage);

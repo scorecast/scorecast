@@ -71,6 +71,13 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '500',
     },
+    textInput: {
+        height: 40,
+        width: '90%',
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginTop: 8
+    },
 });
 
 export { styles, pallette };

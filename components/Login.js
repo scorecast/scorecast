@@ -1,16 +1,29 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
+import { StyleSheet, Text, TextInput, View, Button, TouchableOpacity } from 'react-native'
+import { Link, Redirect } from 'react-router-native';
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux';
 
-export default class Login extends React.Component {
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import { styles, pallette } from '../styles';
+import firebase from 'firebase';
+
+class Login extends React.Component {
     state = { email: '', password: '', errorMessage: null }
 
     handleLogin = () => {
-        // TODO: Firebase stuff...
-        console.log('handleLogin')
+        const { email, password } = this.state;
+        firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => { console.log(this.props.firebase); this.props.history.goBack(); })
+        .catch(error => this.setState({ errorMessage: error.message}))
     }
 
     render() {
-        return (
+        console.log("in login");
+        const login = (
             <View style={styles.container}>
                 <Text>Login</Text>
                 {this.state.errorMessage &&
@@ -33,26 +46,24 @@ export default class Login extends React.Component {
                     value={this.state.password}
                 />
                 <Button title="Login" onPress={this.handleLogin} />
-                <Button
-                    title="Don't have an account? Sign Up"
-                    onPress={() => this.props.navigation.navigate('SignUp')}
-                />
+                <TouchableOpacity activeOpacity={0.5}>
+                    <Link to="/signup">
+                        <Icon name="user" size={20} color={pallette.darkgray} />
+                    </Link>
+                </TouchableOpacity>
             </View>
-        )
+        );
+
+        if (!this.props.firebase.auth.email === 'undefined') {
+            return ( <Redirect to="/user" from="/login"/> );
+        } else {
+            return login;
+        }
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    textInput: {
-        height: 40,
-        width: '90%',
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginTop: 8
-    }
-})
+const mapStateToProps = state => ({
+    firebase: state.firebase,
+});
+
+export default connect(mapStateToProps)(Login);
