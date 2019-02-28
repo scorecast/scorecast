@@ -71,6 +71,16 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '500',
     },
+    listView: {
+        //flex: 1,
+        width: 80 + '%',
+    },
+    listViewRow: {
+        padding: 10,
+    },
+    listViewRowText: {
+        fontSize: 20,
+    },
     textInput: {
         height: 40,
         width: '90%',

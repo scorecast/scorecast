@@ -25,8 +25,7 @@ import Login from './Login';
 import SignUpPage from './SignUp';
 
 const Home = props => {
-    console.log(props.firebase);
-
+    //console.log(props.firebase.auth);
     return (
         <NativeRouter
             initialIndex={1}
@@ -59,7 +58,7 @@ const Home = props => {
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.content]}>
-                    <Route path="/create" render={() => <Create rows={[]} />} />
+                    <Route path="/create" render={() => <Create/>} />
                     <Route path="/join" component={Join} />
                     <Route path="/discover" component={Discover} />
                     <Route path="/user" component={UserProfile} />
