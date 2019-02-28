@@ -37,7 +37,8 @@ export default class App extends Component {
         isReady: false,
         routerHistory: {},
         templates: [],
-    };
+        currentUser: firebase.auth().currentUser
+    }
 
     async componentDidMount() {
         await Font.loadAsync({
@@ -60,6 +61,10 @@ export default class App extends Component {
             .catch(function(error) {
                 console.log('Error getting document:', error);
             });
+
+        firebase.auth().onAuthStateChanged(user => {
+            this.setState({ currentUser : user });
+        });
     }
 
     render() {
@@ -96,11 +101,13 @@ export default class App extends Component {
                                 </FontText>
                             </View>
                             <TouchableOpacity activeOpacity={0.5}>
-                                <Icon
-                                    name="user"
-                                    size={20}
-                                    color={pallette.darkgray}
-                                />
+                                <Link to="/signup">
+                                    <Icon
+                                        name="user"
+                                        size={20}
+                                        color={pallette.darkgray}
+                                    />
+                                </Link>
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.content]}>
