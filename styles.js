@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     navItemActive: {
-        backgroundColor: pallette.white,
+        backgroundColor: pallette.lightergray,
     },
     subNavItem: {
         padding: 5,

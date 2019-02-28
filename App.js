@@ -70,7 +70,7 @@ export default class App extends Component {
         return (
             <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
                 <NativeRouter
-                    initialIndex={1}
+                    initialIndex={0}
                     initialEntries={['/create', '/join', '/history']}
                 >
                     <SafeAreaView style={styles.container}>
