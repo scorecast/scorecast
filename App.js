@@ -10,8 +10,7 @@ export default class App extends Component {
     state = {
         isReady: false,
         routerHistory: {},
-        templates: [],
-        currentUser: firebase.auth().currentUser
+        templates: []
     }
 
     async componentDidMount() {
@@ -20,7 +19,7 @@ export default class App extends Component {
         });
 
         this.setState({ isReady: true });
-        
+
         // await firebase
         //     .firestore()
         //     .collection('templates')
