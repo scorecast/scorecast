@@ -18,6 +18,8 @@ import FontText from './Text';
 import Join from './Join';
 import Create from './Create';
 import Discover from './Discover';
+import UserProfile from './UserProfile';
+import Login from './Login';
 
 const Home = props => {
     console.log(props.firebase);
@@ -48,13 +50,17 @@ const Home = props => {
                         </FontText>
                     </View>
                     <TouchableOpacity activeOpacity={0.5}>
-                        <Icon name="user" size={20} color={pallette.darkgray} />
+                        <Link to={ this.state.firebase.auth.currentUser !== null ? "/user" : "/login"}>
+                            <Icon name="user" size={20} color={pallette.darkgray} />
+                        </Link>
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.content]}>
                     <Route path="/create" render={() => <Create rows={[]} />} />
                     <Route path="/join" component={Join} />
                     <Route path="/discover" component={Discover} />
+                    <Route path="/user" component={UserProfile} />
+                    <Route path="/login" component={Login} />
                 </View>
                 <View style={[styles.nav]}>
                     <NavLink
