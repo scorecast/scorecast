@@ -10,7 +10,7 @@ import React from "react";
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeRouter, Route, Link } from 'react-router-native';
-import firebase from 'firebase';
+import { firebase } from '../config/store';
 
 import {styles, pallette} from '../styles';
 
@@ -19,16 +19,31 @@ export default class Join extends Component {
         super(props);
         this.state = {
             selected: 0,
+            templates: [],
         };
     }
 
     componentDidMount() {
+        firebase
+            .firestore()
+            .collection('templates')
+            .get()
+            .then(templates => {
+                templates.forEach(template => {
+                    this.setState({
+                        templates: [...this.state.templates, template],
+                    });
+                });
+            })
+            .catch(function(error) {
+                console.log('Error getting document:', error);
+            });
     }
 
     render() {
         let dataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2,
-        }).cloneWithRows(this.props.rows);
+        }).cloneWithRows(this.state.templates);
 
         var options =["Home","Savings","Car","GirlFriend"];
 
@@ -39,7 +54,7 @@ export default class Join extends Component {
                           style={{ flex: 1 }}
                           enableEmptySections={true}
                           renderRow={(template) => (
-                              <Link to="/history">
+                              <Link to="/discover">
 
                                       <Text>{template.get('name')}</Text>
 
