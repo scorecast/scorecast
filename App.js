@@ -3,6 +3,8 @@ import { View, StatusBar } from 'react-native';
 import { Font, AppLoading } from 'expo';
 import { Provider } from 'react-redux';
 import Store from './config/store';
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['Setting a timer']);
 
 import Home from './components/Home';
 
