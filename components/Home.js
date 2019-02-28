@@ -28,7 +28,7 @@ const Home = props => {
     //console.log(props.firebase.auth);
     return (
         <NativeRouter
-            initialIndex={1}
+            initialIndex={0}
             initialEntries={['/create', '/join', '/discover']}
         >
             <SafeAreaView style={styles.container}>

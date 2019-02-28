@@ -7,37 +7,31 @@ import connect from "react-redux/es/connect/connect";
 
 class Discover extends React.Component {
     render() {
-        let dataSource = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2,
-        }).cloneWithRows(this.props.games || []);
+        let gameRows = [];
+        if (this.props.games) {
+            this.props.games.map((g, index) => {
+                gameRows.push((
+                    <TouchableOpacity key={index}>
+                        <Text style={[{padding: 10, fontSize: 20},
+                            (index % 2) ? {backgroundColor: pallette.lightergray} : {backgroundColor: pallette.lightgray},
+                            (index === this.props.templates.length - 1) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
+                            (index === 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
+                        ]}>{g.variables.find((v) => {
+                            return (v.name === 'gameName');
+                        }).value + '\n'}
+                            <Text style={{fontSize: 10}}>{g.template}</Text>
+                        </Text>
+                    </TouchableOpacity>
+                ))
+            })
+        }
 
-        // console.log(`Type of games: ${typeof (this.props.games)}`);
-        // console.log(`Type of []: ${typeof ([])}`);
-        // console.log(`Games: ${this.props.games || []}`);
         return (
             <View style={styles.content}>
-                <Text style={styles.header}>Discover</Text>
-                <ListView dataSource={dataSource}
-                          style={[{flexDirection: 'row', padding: 10, overflow: 'hidden'}]}
-                          contentContainerStyle={{flex: 0}}
-                          enableEmptySections={true}
-                          renderRow={(game, sectionId, rowId) => {
-                              //console.log(rowId);
-                              return (
-                                  <TouchableOpacity style={[styles.listViewRow,
-                                      (rowId % 2) ? {} : {backgroundColor: pallette.lightergray},
-                                      (rowId == 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
-                                      {width: 200}]}>
-                                      <Text style={styles.listViewRowText}>{
-                                          game.variables ?
-                                              game.variables.find((v) => {
-                                                  return v.name === 'gameName';
-                                              }).value :
-                                              ''
-                                      }</Text>
-                                      <Text style={{fontSize: 10}}>{game.template}</Text>
-                                  </TouchableOpacity>)
-                          }}/>
+                <Text style={[styles.header, { marginBottom: 50 }]}>Discover</Text>
+                <View style={styles.listView}>
+                    {gameRows}
+                </View>
             </View>
         );
     }
