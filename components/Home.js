@@ -7,14 +7,15 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-import { NativeRouter, Route, Link } from 'react-router-native';
-import NavLink from './NavLink';
+import { connect } from 'react-redux';
 
+import { NativeRouter, Route, Link } from 'react-router-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { styles, pallette } from '../styles';
-import FontText from './Text';
 
+import FontText from './Text';
+import NavLink from './NavLink';
 import Join from './Join';
 import Create from './Create';
 import Discover from './Discover';
@@ -87,4 +88,8 @@ const Home = props => {
     );
 };
 
-export default Home;
+const mapStateToProps = state => ({
+    firebase: state.firebase,
+});
+
+export default connect(mapStateToProps)(Home);
