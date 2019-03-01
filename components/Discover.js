@@ -9,9 +9,10 @@ class Discover extends React.Component {
     render() {
         let gameRows = [];
         if (this.props.games) {
-            this.props.games.filter((g) => {
+            let availableGames = this.props.games.filter((g) => {
                 return (g.variables['gameName']);
-            }).map((g, index) => {
+            })
+            availableGames.map((g, index) => {
                 let templateName = this.props.templates.find((t) => {
                     return t.id === g.template;
                 }).name;
@@ -23,7 +24,7 @@ class Discover extends React.Component {
                     }}>
                         <Text style={[{padding: 10, fontSize: 20},
                             (index % 2) ? {backgroundColor: pallette.lightergray} : {backgroundColor: pallette.lightgray},
-                            (index === this.props.games.length - 1) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
+                            (index === availableGames.length - 1) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
                             (index === 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
                         ]}>{g.variables[Object.keys(g.variables).find((k) => {
                             return (k === 'gameName');

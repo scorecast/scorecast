@@ -11,6 +11,8 @@ import React, { Component } from "react";
 import {compose} from "redux";
 import {firestoreConnect, getVal} from "react-redux-firebase";
 import connect from "react-redux/es/connect/connect";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Link from "react-router-native/Link";
 
 class GameSetup extends Component {
     constructor(props) {
@@ -71,7 +73,19 @@ class GameSetup extends Component {
 
         return (
             <View style={styles.content}>
-                <Text style={[styles.header]}>{gameName}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Text style={[styles.header]}>{gameName}</Text>
+                    <TouchableOpacity style={{ marginLeft: 10, marginTop: 5 }}
+                        onPress={() => {
+                        console.log(this.props.match.params.gameId);
+                        let setupPath = `/home/gameSetup/${this.props.match.params.gameId}`;
+                        console.log(setupPath);
+                        this.props.history.push(setupPath);
+                    }}>
+                        <Icon name="wrench" size={20} color={pallette.darkgray} />
+                    </TouchableOpacity>
+                </View>
+
                 <Text style={{ fontSize: 10, marginBottom: 30 }}>{template + ', ' + this.props.match.params.gameId}</Text>
                 <View style={{ minWidth: 300, marginBottom: 50}}>
                     {varList}
