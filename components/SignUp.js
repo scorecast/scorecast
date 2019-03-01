@@ -67,7 +67,7 @@ class SignUpPage extends Component {
         if (!this.props.firebase.auth.email === 'undefined') {
             return ( <Redirect to="/user" from="/signup"/> );
         } else {
-            return login;
+            return signup;
         }
     }
 }
