@@ -32,17 +32,10 @@ class Create extends Component {
 
     render() {
         return (
-            <NativeRouter
-                initialIndex={0}
-                initialEntries={['/selectTemplate', '/gameSetup']}
-                style={styles.content}>
                 <View style={styles.content}>
-                    <Route path="/selectTemplate" render={(props) => (
-                        <SelectTemplate style={[styles.content, {backgroundColor: pallette.lightgreen}]}
-                            onSelect={this.selectTemplate.bind(this)}
-                            history={props.history}/>
-                    )}/>
-                    <Route path="/gameSetup/:gameId" render={(props) => (
+                    <SelectTemplate style={[styles.content, {backgroundColor: pallette.lightgreen}]}
+                        history={this.props.history}/>
+                    {/*<Route path="/gameSetup/:gameId" render={(props) => (
                         <GameSetup style={styles.content}
                                    match={props.match}
                                    history={props.history}/>
@@ -51,9 +44,8 @@ class Create extends Component {
                         <Game style={styles.content}
                                    history={props.history}/>
                     )}/>
-                    <BackButton/>
+                    <BackButton/>*/}
                 </View>
-            </NativeRouter>
         );
     }
 }

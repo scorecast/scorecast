@@ -9,7 +9,7 @@ import {
 
 import { connect } from 'react-redux';
 
-import { NativeRouter, Route, Link } from 'react-router-native';
+import { NativeRouter, Route, Link, BackButton } from 'react-router-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -23,6 +23,8 @@ import Discover from './Discover';
 import UserProfile from './UserProfile';
 import Login from './Login';
 import SignUpPage from './SignUp';
+import Game from './Game';
+import GameSetup from './Create/GameSetup';
 
 const Home = props => {
     //console.log(props.firebase.auth);
@@ -58,12 +60,18 @@ const Home = props => {
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.content]}>
-                    <Route path="/create" render={() => <Create/>} />
+                    <Route path="/create" component={Create} />
                     <Route path="/join" component={Join} />
                     <Route path="/discover" component={Discover} />
                     <Route path="/user" component={UserProfile} />
                     <Route path="/login" component={Login} />
                     <Route path="/signup" component={SignUpPage} />
+                    <Route path="/game/:gameId" render={(props) => (
+                        <Game match={props.match}></Game>
+                    )}/>
+                    <Route path="/gameSetup/:gameId" render={(props) => (
+                        <GameSetup match={props.match}></GameSetup>
+                    )}/>
                 </View>
                 <View style={[styles.nav]}>
                     <NavLink
@@ -91,6 +99,7 @@ const Home = props => {
                         iconName={'history'}
                     />
                 </View>
+                <BackButton/>
             </SafeAreaView>
         </NativeRouter>
     );
