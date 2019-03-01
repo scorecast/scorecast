@@ -1,49 +1,37 @@
 import React, { Component } from 'react';
-import { View, StatusBar } from 'react-native';
 import { Font, AppLoading } from 'expo';
 import { Provider } from 'react-redux';
 import Store from './config/store';
+
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['Setting a timer']);
 
-import Home from './components/Home';
+import Root from './components/Root';
 
 export default class App extends Component {
-    state = {
-        isReady: false,
-        routerHistory: {},
-        templates: []
+    constructor(props) {
+        super(props);
+        this.state = {
+            isReady: false,
+        };
     }
 
-    async componentDidMount() {
+    async loadApp() {
         await Font.loadAsync({
             'open-sans-semibold': require('./assets/fonts/OpenSans-SemiBold.ttf'),
         });
 
         this.setState({ isReady: true });
+    }
 
-        // await firebase
-        //     .firestore()
-        //     .collection('templates')
-        //     .get()
-        //     .then(templates => {
-        //         templates.forEach(template => {
-        //             this.setState({
-        //                 templates: [...this.state.templates, template],
-        //             });
-        //         });
-        //     })
-        //     .catch(function(error) {
-        //         console.log('Error getting document:', error);
-        //     });
+    componentDidMount() {
+        this.loadApp();
     }
 
     render() {
         return this.state.isReady ? (
             <Provider store={Store}>
-                <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
-                    <Home />
-                </View>
+                <Root />
             </Provider>
         ) : (
             <AppLoading />
