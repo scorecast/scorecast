@@ -15,7 +15,8 @@ import { connect } from 'react-redux';
 
 import {styles, pallette} from '../styles';
 import SelectTemplate from './Create/SelectTemplate';
-import GameSetup from "./Create/GameSetup";
+import GameSetup from './Create/GameSetup';
+import Game from './Game';
 
 class Create extends Component {
     constructor(props) {
@@ -41,10 +42,14 @@ class Create extends Component {
                             onSelect={this.selectTemplate.bind(this)}
                             history={props.history}/>
                     )}/>
-                    <Route path="/gameSetup" render={(props) => (
+                    <Route path="/gameSetup/:gameId" render={(props) => (
                         <GameSetup style={styles.content}
-                            template={this.state.selectedTemplate}
-                            history={props.history}/>
+                                   match={props.match}
+                                   history={props.history}/>
+                    )}/>
+                    <Route path="/game" render={(props) => (
+                        <Game style={styles.content}
+                                   history={props.history}/>
                     )}/>
                     <BackButton/>
                 </View>

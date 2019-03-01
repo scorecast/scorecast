@@ -1,4 +1,5 @@
-let logic = {
+let logic =
+{
     name: 'Die',
     variables: [{
         name: 'gameName',
@@ -53,6 +54,8 @@ let logic = {
         name: 'bName',
         lock: false
     }]
-};
+}
+
+;
 
 export { logic };

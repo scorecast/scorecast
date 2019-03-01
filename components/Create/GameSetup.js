@@ -9,102 +9,75 @@ import {
 import React, { Component } from "react";
 
 import {compose} from "redux";
-import {firestoreConnect} from "react-redux-firebase";
+import {firestoreConnect, getVal} from "react-redux-firebase";
 import connect from "react-redux/es/connect/connect";
-
-import { logic } from '../../die';
 
 class GameSetup extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            gameId: 0,
-            setup: {},
-        };
+        //console.log(this.props.match.params.gameId);
     }
 
     componentDidMount() {
-        logic.setup.map((setupVar, index) => {
-            let type = logic.variables.filter((v) => {
-                return v.name == setupVar.name;
-            })[0];
-            let defaultValue = (type === 'Int') ? 0 : '';
-
-            this.updateSetup(setupVar.name, defaultValue);
-        });
-    }
-
-    updateSetup(name, val) {
-        let newSetup = this.state.setup;
-        newSetup[name] = val;
-        this.setState({setup: newSetup});
-        console.log(newSetup);
-    }
-
-    createGame() {
-        let variables = logic.variables.map((v) => {
-            if (Object.keys(this.state.setup).includes(v.name)) {
-                return {
-                    name: v.name,
-                    value: this.state.setup[v.name]
-                }
-            } else {
-                let defaultValue = (v.type === 'Int') ? 0 : '';
-                return {
-                    name: v.name,
-                    value: defaultValue
-                }
-            }
-        });
-        let game = {
-            name: logic.name,
-            admin: this.props.firebase.auth.uid,
-            variables,
-            template: this.props.template
-        };
-
-        return this.props.firestore.add({
-            collection: 'games'
-        },game);
+        //TODO: Figure out event listeners so that multiple people can update
+        //this.props.firestore.setListener({ collection: 'games', doc: this.props.match.params.gameId });
     }
 
     render() {
-        let setupList = logic.setup.map((setupVar, index) => {
-            let type = logic.variables.filter((v) => {
-                return (v.name == setupVar.name) ? v.type : '';
-            })[0];
-            let defaultValue = (type === 'Int') ? 0 : '';   //default is String
+            let template = this.props.games.find((g) => {
+                return g.id === this.props.match.params.gameId;
+            }).template;
+
+            let logic = this.props.templates.find((t) => {
+                return t.id === template;
+            }).logic;
+
+            let setupList = [];
+            if (logic) {
+                logic = JSON.parse(logic);
+
+                setupList = logic.setup.map((setupVar, index) => {
+                    let type = logic.variables.filter((v) => {
+                        return (v.name === setupVar.name) ? v.type : '';
+                    })[0];
+                    let defaultValue = (type === 'Int') ? 0 : '';   //default is String
+
+                    return (
+                        <View key={index} style={{flexDirection: 'row', padding: 10}}>
+                            <Text style={{fontSize: 20}}>{setupVar.name + ': '}</Text>
+                            <TextInput
+                                style={{borderRadius: 10, backgroundColor: pallette.lightgray, flex: 1, padding: 10}}
+                                defaultValue={defaultValue}
+                                onChangeText={(text) => {
+                                    this.props.firestore.collection('games')
+                                        .doc('' + this.props.match.params.gameId).update({
+                                        [`variables.${setupVar.name}`]: text
+                                    }).catch(console.error);
+                                }}/>
+                        </View>
+                    );
+                });
+            }
 
             return (
-                <View key={index} style={{ flexDirection: 'row', padding: 10 }}>
-                    <Text style={{ fontSize: 20 }}>{setupVar.name + ': '}</Text>
-                    <TextInput style={{ borderRadius: 10, backgroundColor: pallette.lightgray, flex: 1, padding: 10}}
-                        defaultValue={defaultValue}
-                        onChangeText={(text) => {
-                            this.updateSetup(setupVar.name, text);
-                        }}/>
+                <View style={styles.content}>
+                    <Text style={[styles.header, { marginBottom: 50 }]}>Game Setup: {this.props.template}</Text>
+                    <View style={{ minWidth: 300, marginBottom: 50}}>
+                        {setupList}
+                    </View>
+                    <TouchableOpacity onPress={() => {
+                        let gamePath = '/game/' + this.props.match.params.gameId;
+                        console.log("Game started: " + gamePath);
+                        this.props.history.push(gamePath);
+                    }}>
+                        <Text style={{backgroundColor: pallette.darkgray,
+                            color: pallette.white,
+                            borderRadius: 20,
+                            padding: 20,
+                            fontSize: 20}}>Start Game!</Text>
+                    </TouchableOpacity>
                 </View>
             );
-        });
-
-        return (
-            <View style={styles.content}>
-                <Text style={[styles.header, { marginBottom: 50 }]}>Game Setup: {this.props.template}</Text>
-                <View style={{ minWidth: 300, marginBottom: 50}}>
-                    {setupList}
-                </View>
-                <TouchableOpacity onPress={() => {
-                    this.createGame();
-                    this.props.history.push('/game/' + this.state.gameId);
-                }}>
-                    <Text style={{backgroundColor: pallette.darkgray,
-                        color: pallette.white,
-                        borderRadius: 20,
-                        padding: 20,
-                        fontSize: 20}}>Submit</Text>
-                </TouchableOpacity>
-            </View>
-        );
     };
 }
 
