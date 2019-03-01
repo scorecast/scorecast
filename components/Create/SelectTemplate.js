@@ -27,7 +27,10 @@ class SelectTemplate extends Component {
                 console.log(t.name);
 
                 templateRows.push((
-                    <TouchableOpacity key={index}>
+                    <TouchableOpacity key={index} onPress={() => {
+                        this.props.onSelect(t.name);
+                        this.props.history.push('/gameSetup/' + t.name);
+                    }}>
                         <Text style={[{padding: 10, fontSize: 20},
                             (index % 2) ? {backgroundColor: pallette.lightergray} : {backgroundColor: pallette.lightgray},
                             (index === this.props.templates.length - 1) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
