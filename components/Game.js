@@ -23,10 +23,62 @@ class GameSetup extends Component {
     }
 
     render() {
+        let game = this.props.games.find((g) => {
+            return g.id === this.props.match.params.gameId;
+        });
+
+        let template = this.props.games.find((g) => {
+            return g.id === this.props.match.params.gameId;
+        }).template;
+
+        let logic = this.props.templates.find((t) => {
+            return t.id === template;
+        }).logic;
+
+        let gameName = 'Game';
+        let varList = Object.keys(game.variables).map((varName, index) => {
+            if (varName === 'gameName') {
+                gameName = game.variables[varName];
+            }
+            return (
+                <View key={index} style={{flexDirection: 'row', padding: 10}}>
+                    <Text style={{fontSize: 20}}>{varName + ': '}</Text>
+                    <Text style={{borderRadius: 10, backgroundColor: pallette.lightergray,
+                        flex: 1, padding: 10}}>{game.variables[varName]}</Text>
+                </View>
+            );
+        });
+
+        let actionList = [];
+        if (logic) {
+            logic = JSON.parse(logic);
+            console.log(logic.actions);
+
+            actionList = logic.actions.map((action, index) => {
+                return (
+                    <View key={index} style={{flexDirection: 'row',  justifyContent: 'center', padding: 10}}>
+                        <TouchableOpacity>
+                            <Text style={{backgroundColor: pallette.darkgray,
+                                color: pallette.white,
+                                borderRadius: 10,
+                                padding: 10,
+                                fontSize: 10}}>{action.name}</Text>
+                        </TouchableOpacity>
+                    </View>
+                );
+            });
+        }
+
         return (
             <View style={styles.content}>
-                <Text style={[styles.header, { marginBottom: 50 }]}>Game</Text>
-                <Text>{'ID: ' + this.props.match.params.gameId}</Text>
+                <Text style={[styles.header]}>{gameName}</Text>
+                <Text style={{ fontSize: 10, marginBottom: 30 }}>{template + ', ' + this.props.match.params.gameId}</Text>
+                <View style={{ minWidth: 300, marginBottom: 50}}>
+                    {varList}
+                </View>
+                <View style={{ flexDirection: 'row', minWidth: 300, marginBottom: 50}}>
+                    {actionList}
+                </View>
             </View>
         );
     };

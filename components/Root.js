@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
-import { NativeRouter, Route, Redirect, Switch } from 'react-router-native';
+import { NativeRouter, Route, Redirect, Switch, BackButton } from 'react-router-native';
 
 import { styles } from '../styles';
 
@@ -25,6 +25,7 @@ const Root = props => {
                     <Route path="/login" component={Login} />
                     <Route path="/signup" component={SignUpPage} />
                 </Switch>
+                <BackButton/>
             </SafeAreaView>
         </NativeRouter>
     );
