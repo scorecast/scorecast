@@ -35,16 +35,6 @@ class Create extends Component {
                 <View style={styles.content}>
                     <SelectTemplate style={[styles.content, {backgroundColor: pallette.lightgreen}]}
                         history={this.props.history}/>
-                    {/*<Route path="/gameSetup/:gameId" render={(props) => (
-                        <GameSetup style={styles.content}
-                                   match={props.match}
-                                   history={props.history}/>
-                    )}/>
-                    <Route path="/game" render={(props) => (
-                        <Game style={styles.content}
-                                   history={props.history}/>
-                    )}/>
-                    <BackButton/>*/}
                 </View>
         );
     }

@@ -19,10 +19,7 @@ class Discover extends React.Component {
                     <TouchableOpacity key={index} onPress={() => {
                         // TODO: Either wrap Discover in a nested 'navigation router' (see Create.js), or
                         //this.props.history.push('/game/' + this.props.match.params.gameId);
-                        let gamePath = '/game/' + g.id;
-                        console.log("Game started: " + gamePath);
-                        this.props.history.push(gamePath);
-
+                        this.props.history.push(`/home/game/` + g.id);
                     }}>
                         <Text style={[{padding: 10, fontSize: 20},
                             (index % 2) ? {backgroundColor: pallette.lightergray} : {backgroundColor: pallette.lightgray},

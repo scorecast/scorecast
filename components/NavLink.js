@@ -1,8 +1,5 @@
 import React from 'react';
 import { Route, Link } from 'react-router-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
-import {pallette} from "../styles";
 
 function joinClassnames(...classnames) {
     return classnames.filter(i => i).join(' ');
@@ -22,7 +19,7 @@ function NavLink({
     strict,
     style: styleProp,
     to,
-    iconName,
+    render,
     ...rest
 }) {
     const path = typeof to === 'object' ? to.pathname : to;
@@ -49,8 +46,6 @@ function NavLink({
                     ? { ...styleProp, ...activeStyle }
                     : styleProp;
 
-                //let iconName = this.props.iconName;
-                let iconColor = isActive? pallette.crimson : pallette.black;
                 return (
                     <Link
                         aria-current={(isActive && ariaCurrent) || null}
@@ -59,7 +54,7 @@ function NavLink({
                         to={to}
                         {...rest}
                     >
-                        <Icon name={iconName} color={iconColor} size={20}/>
+                        {render(isActive)}
                     </Link>
                 );
             }}

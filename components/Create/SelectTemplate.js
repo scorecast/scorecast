@@ -46,7 +46,7 @@ class SelectTemplate extends Component {
                                 collection: 'games'
                             }, game).then((ref) => {
                                 console.log(`Created game ${ref.id}`);
-                                return this.props.history.push('/gameSetup/' + ref.id);
+                                this.props.history.push(`/home/gameSetup/` + ref.id);
                             });
                         }).catch(console.error);
                     }}>

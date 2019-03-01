@@ -66,7 +66,7 @@ class GameSetup extends Component {
                         {setupList}
                     </View>
                     <TouchableOpacity onPress={() => {
-                        let gamePath = '/game/' + this.props.match.params.gameId;
+                        let gamePath = '/home/game/' + this.props.match.params.gameId;
                         console.log("Game started: " + gamePath);
                         this.props.history.push(gamePath);
                     }}>
