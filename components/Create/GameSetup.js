@@ -76,9 +76,9 @@ class GameSetup extends Component {
             let defaultValue = (type === 'Int') ? 0 : '';   //default is String
 
             return (
-                <View key={index}>
-                    <Text>{setupVar.name}</Text>
-                    <TextInput style={{ borderWidth: 1, borderColor: pallette.gray}}
+                <View key={index} style={{ flexDirection: 'row', padding: 10 }}>
+                    <Text style={{ fontSize: 20 }}>{setupVar.name + ': '}</Text>
+                    <TextInput style={{ borderRadius: 10, backgroundColor: pallette.lightgray, flex: 1, padding: 10}}
                         defaultValue={defaultValue}
                         onChangeText={(text) => {
                             this.updateSetup(setupVar.name, text);
@@ -89,13 +89,19 @@ class GameSetup extends Component {
 
         return (
             <View style={styles.content}>
-                <Text>Game Setup: {this.props.template}</Text>
-                {setupList}
+                <Text style={[styles.header, { marginBottom: 50 }]}>Game Setup: {this.props.template}</Text>
+                <View style={{ minWidth: 300, marginBottom: 50}}>
+                    {setupList}
+                </View>
                 <TouchableOpacity onPress={() => {
                     this.createGame();
                     this.props.history.push('/game/' + this.state.gameId);
                 }}>
-                    <Text style={{backgroundColor: pallette.darkgray, color: pallette.white}}>Submit</Text>
+                    <Text style={{backgroundColor: pallette.darkgray,
+                        color: pallette.white,
+                        borderRadius: 20,
+                        padding: 20,
+                        fontSize: 20}}>Submit</Text>
                 </TouchableOpacity>
             </View>
         );
