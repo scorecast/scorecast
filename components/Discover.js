@@ -9,23 +9,34 @@ class Discover extends React.Component {
     render() {
         let gameRows = [];
         if (this.props.games) {
-            this.props.games.map((g, index) => {
+            let availableGames = this.props.games.filter((g) => {
+                return (g.variables['gameName']);
+            })
+            availableGames.map((g, index) => {
+                let templateName = this.props.templates.find((t) => {
+                    return t.id === g.template;
+                }).name;
                 gameRows.push((
-                    <TouchableOpacity key={index}>
+                    <TouchableOpacity key={index} onPress={() => {
+                        // TODO: Either wrap Discover in a nested 'navigation router' (see Create.js), or
+                        //this.props.history.push('/game/' + this.props.match.params.gameId);
+                        this.props.history.push(`/home/game/` + g.id);
+                    }}>
                         <Text style={[{padding: 10, fontSize: 20},
                             (index % 2) ? {backgroundColor: pallette.lightergray} : {backgroundColor: pallette.lightgray},
-                            (index === this.props.templates.length - 1) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
+                            (index === availableGames.length - 1) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
                             (index === 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
-                        ]}>{g.variables.find((v) => {
-                            return (v.name === 'gameName');
-                        }).value + '\n'}
-                            <Text style={{fontSize: 10}}>{g.template}</Text>
+                        ]}>{g.variables[Object.keys(g.variables).find((k) => {
+                            return (k === 'gameName');
+                        })] + '\n'}
+                            <Text style={{fontSize: 10}}>{templateName}</Text>
                         </Text>
                     </TouchableOpacity>
-                ))
+                ));
             })
         }
 
+        //console.log(gameRows);
         return (
             <View style={styles.content}>
                 <Text style={[styles.header, { marginBottom: 50 }]}>Discover</Text>

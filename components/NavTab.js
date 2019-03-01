@@ -11,6 +11,13 @@ const NavTab = ({ to, iconName, ...props }) => (
         style={styles.navItem}
         activeStyle={styles.navItemActive}
         activeOpacity={0.5}
+        ignore-this={1/*isActive={(match, location) => {
+            if (to === '/home') {
+                console.log(match);
+                console.log(location);
+                console.log(to);
+            }
+        }}*/}
         render={active => (
             <Icon
                 name={iconName}
