@@ -100,11 +100,11 @@ class Game2 extends Component {
                     </View>
                 );
             } else if (logic) {
-                let actionName = logic.actions.find((a) => {
+                let action = logic.actions.find((a) => {
                     return (a.name === e.ref);
-                }).name;
+                });
 
-                if (actionName) {
+                if (action) {
                     return (
                         <View style={{
                             position: 'absolute',
@@ -119,7 +119,20 @@ class Game2 extends Component {
                                 flexDirection: 'row',
                                 textAlign: 'center',
                             }}>
-                                <TouchableOpacity style={{marginLeft: 10, marginTop: 5}}>
+                                <TouchableOpacity style={{marginLeft: 10, marginTop: 5}}
+                                    onPress={() => {
+                                        //Store result of gameAction in variable
+                                        let val = new Operation(action.value).evaluate(game.variables);
+                                        game.variables[action.variable] = val;
+
+                                        console.log(`Action Value: ${val}`);
+
+                                        //Now Update the store
+                                        this.props.firestore.collection('games')
+                                            .doc('' + this.props.match.params.gameId).update({
+                                            [`variables.${action.variable}`]: val
+                                        }).catch(console.error);
+                                    }}>
                                     <Text style={[{
                                         flex: 1,
                                         textAlign: 'center',
@@ -130,7 +143,7 @@ class Game2 extends Component {
                                         borderRadius: 10,
                                         padding: 10,
                                         fontSize: e.size
-                                    }]}>{actionName}</Text>
+                                    }]}>{action.name}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

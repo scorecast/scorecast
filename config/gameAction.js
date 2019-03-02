@@ -18,6 +18,11 @@ class Operation extends Evaluateable{
         let opPart = str.substring(0, openIndex);
         let argPart = str.substring(openIndex + 1, str.length - 1);      // -1 for close paren
 
+        /*
+        * Parentheses Matcher
+        * Needed to split operands only on top-level commas
+        * side-effect: argStrings contains operands as strings
+        * */
         let parenStack = 0;
         let argStrings = [];
         let currentStart = 0;
