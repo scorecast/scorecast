@@ -15,6 +15,7 @@ import Join from './Join';
 import Create from './Create';
 import Discover from './Discover';
 import Game from './Game';
+import Game2 from './Game2';
 import GameSetup from './Create/GameSetup';
 
 const Home = ({ match, ...props }) => (
@@ -48,7 +49,7 @@ const Home = ({ match, ...props }) => (
             <Route path={`${match.url}/create`} component={Create} />
             <Route exact path={`${match.url}`} component={Join} />
             <Route path={`${match.url}/discover`} component={Discover} />
-            <Route path={`${match.url}/game/:gameId`} component={Game} />
+            <Route path={`${match.url}/game/:gameId`} component={Game2} />
             <Route path={`${match.url}/gameSetup/:gameId`} component={GameSetup} />
         </View>
         <View style={[styles.nav]}>
