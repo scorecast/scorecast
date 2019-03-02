@@ -46,17 +46,33 @@ class Game2 extends Component {
         let logic = this.props.templates.find((t) => {
             return t.id === template;
         }).logic;
-
         if (!logic) return (<></>);
         logic = JSON.parse(logic);
 
         let view = this.props.templates.find((t) => {
             return t.id === template;
         }).view;
-
         if (!view) return (<></>);
         view = JSON.parse(view);
 
+        //Update composite variables
+        logic.variables.map((v) => {
+            if (v.value) {
+                let val = new Operation(v.value).evaluate(game.variables);
+                console.log(`Composite Value: ${val}`);
+                game.variables[v.name] = val;
+
+                //Now Update the store
+                this.props.firestore.collection('games')
+                    .doc('' + this.props.match.params.gameId).update({
+                    [`variables.${v.name}`]: val
+                }).catch(console.error);
+            }
+        });
+
+        //Check win condition
+        let isWon = game.variables[logic.winCondition] !== 0;
+        let winText = new Operation(logic.winText).evaluate(game.variables);
 
         let gameName = 'Game';
         let elements = view.elements.map((e, index) => {
@@ -90,7 +106,7 @@ class Game2 extends Component {
                                                   onPress={() => {
                                                       console.log(this.props.match.params.gameId);
                                                       let setupPath = `/home/gameSetup/${this.props.match.params.gameId}`;
-                                                      console.log(setupPath);
+                                                      //console.log(setupPath);
                                                       this.props.history.push(setupPath);
                                                   }}>
                                     <Icon name="wrench" size={20} color={pallette.darkgray}/>
@@ -154,9 +170,15 @@ class Game2 extends Component {
 
         return (
             <View style={[{ flex: 1, flexDirection: 'row', backgroundColor: '#ffccdd' }]}>
-                <View style={[{ flex: 1, flexDirection: 'column', backgroundColor: pallette.lightgreen }]}>
-                    {elements}
-                </View>
+                {isWon ? (
+                    <View style={[styles.content, {backgroundColor: view.backgroundColor }]}>
+                        <Text style={styles.header}>{winText}</Text>
+                    </View>
+                ) : (
+                    <View style={[{ flex: 1, flexDirection: 'column', backgroundColor: view.backgroundColor }]}>
+                        {elements}
+                    </View>
+                )}
             </View>
         );
     };
