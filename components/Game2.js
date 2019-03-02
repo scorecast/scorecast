@@ -16,6 +16,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Link from "react-router-native/Link";
 import { SectionGrid } from 'react-native-super-grid';
 
+import { Operation } from "../config/gameAction";
+
 class Game2 extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +38,10 @@ class Game2 extends Component {
         let template = this.props.games.find((g) => {
             return g.id === this.props.match.params.gameId;
         }).template;
+
+        /*let templateName = this.props.templates.find((t) => {
+            return t.id === template;
+        }).name;*/
 
         let logic = this.props.templates.find((t) => {
             return t.id === template;
@@ -78,7 +84,8 @@ class Game2 extends Component {
                                 textAlign: 'center',
                                 fontSize: e.size,
                             }}>{game.variables[varName]}</Text>
-                            {(isAdmin && varName === 'gameName') ? (
+                            {//Display the setup icon if user is admin
+                                (isAdmin && varName === 'gameName') ? (
                                 <TouchableOpacity style={{marginLeft: 10, marginTop: 5}}
                                                   onPress={() => {
                                                       console.log(this.props.match.params.gameId);
