@@ -14,7 +14,7 @@ import connect from "react-redux/es/connect/connect";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Link from "react-router-native/Link";
 
-class GameSetup extends Component {
+class Game extends Component {
     constructor(props) {
         super(props);
     }
@@ -28,6 +28,8 @@ class GameSetup extends Component {
         let game = this.props.games.find((g) => {
             return g.id === this.props.match.params.gameId;
         });
+
+        let isAdmin = (this.props.firebase.auth.uid === game.admin);
 
         let template = this.props.games.find((g) => {
             return g.id === this.props.match.params.gameId;
@@ -75,15 +77,17 @@ class GameSetup extends Component {
             <View style={styles.content}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Text style={[styles.header]}>{gameName}</Text>
-                    <TouchableOpacity style={{ marginLeft: 10, marginTop: 5 }}
-                        onPress={() => {
-                        console.log(this.props.match.params.gameId);
-                        let setupPath = `/home/gameSetup/${this.props.match.params.gameId}`;
-                        console.log(setupPath);
-                        this.props.history.push(setupPath);
-                    }}>
-                        <Icon name="wrench" size={20} color={pallette.darkgray} />
-                    </TouchableOpacity>
+                    {isAdmin &&
+                        <TouchableOpacity style={{ marginLeft: 10, marginTop: 5 }}
+                            onPress={() => {
+                                console.log(this.props.match.params.gameId);
+                                let setupPath = `/home/gameSetup/${this.props.match.params.gameId}`;
+                                console.log(setupPath);
+                                this.props.history.push(setupPath);
+                            }}>
+                            <Icon name="wrench" size={20} color={pallette.darkgray} />
+                        </TouchableOpacity>
+                    }
                 </View>
 
                 <Text style={{ fontSize: 10, marginBottom: 30 }}>{template + ', ' + this.props.match.params.gameId}</Text>
@@ -105,4 +109,4 @@ export default compose(
         templates: state.firestore.ordered.templates,
         games: state.firestore.ordered.games,
     }))
-)(GameSetup);
+)(Game);
