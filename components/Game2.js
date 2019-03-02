@@ -16,6 +16,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Link from "react-router-native/Link";
 import { SectionGrid } from 'react-native-super-grid';
 
+import { Operation } from "../config/gameAction";
+
 class Game2 extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +38,10 @@ class Game2 extends Component {
         let template = this.props.games.find((g) => {
             return g.id === this.props.match.params.gameId;
         }).template;
+
+        /*let templateName = this.props.templates.find((t) => {
+            return t.id === template;
+        }).name;*/
 
         let logic = this.props.templates.find((t) => {
             return t.id === template;
@@ -78,7 +84,8 @@ class Game2 extends Component {
                                 textAlign: 'center',
                                 fontSize: e.size,
                             }}>{game.variables[varName]}</Text>
-                            {(isAdmin && varName === 'gameName') ? (
+                            {//Display the setup icon if user is admin
+                                (isAdmin && varName === 'gameName') ? (
                                 <TouchableOpacity style={{marginLeft: 10, marginTop: 5}}
                                                   onPress={() => {
                                                       console.log(this.props.match.params.gameId);
@@ -93,11 +100,11 @@ class Game2 extends Component {
                     </View>
                 );
             } else if (logic) {
-                let actionName = logic.actions.find((a) => {
+                let action = logic.actions.find((a) => {
                     return (a.name === e.ref);
-                }).name;
+                });
 
-                if (actionName) {
+                if (action) {
                     return (
                         <View style={{
                             position: 'absolute',
@@ -112,7 +119,20 @@ class Game2 extends Component {
                                 flexDirection: 'row',
                                 textAlign: 'center',
                             }}>
-                                <TouchableOpacity style={{marginLeft: 10, marginTop: 5}}>
+                                <TouchableOpacity style={{marginLeft: 10, marginTop: 5}}
+                                    onPress={() => {
+                                        //Store result of gameAction in variable
+                                        let val = new Operation(action.value).evaluate(game.variables);
+                                        game.variables[action.variable] = val;
+
+                                        console.log(`Action Value: ${val}`);
+
+                                        //Now Update the store
+                                        this.props.firestore.collection('games')
+                                            .doc('' + this.props.match.params.gameId).update({
+                                            [`variables.${action.variable}`]: val
+                                        }).catch(console.error);
+                                    }}>
                                     <Text style={[{
                                         flex: 1,
                                         textAlign: 'center',
@@ -123,7 +143,7 @@ class Game2 extends Component {
                                         borderRadius: 10,
                                         padding: 10,
                                         fontSize: e.size
-                                    }]}>{actionName}</Text>
+                                    }]}>{action.name}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
