@@ -19,17 +19,15 @@ firebase.initializeApp(firebaseConfig);
 // Initialize Firestore with timeshot settings
 firebase.firestore().settings({});
 
-//Testing: initializing the authentication to log in anonymously
-if (!firebase.auth().currentUser) {
-    firebase.auth().signInAnonymously();
-}
-
 // Add redux Firebase to compose
 const createStoreWithMiddleware = compose(
     reactReduxFirebase(firebase, {
         userProfile: 'users', // firebase root where user profiles are stored
         useFirestoreForProfile: true, // Store in Firestore instead of Real Time DB
         enableLogging: false, // enable/disable Firebase's database logging
+        onAuthStateChanged: auth => {
+            if (!auth) firebase.auth().signInAnonymously();
+        },
     }),
     reduxFirestore(firebase)
 )(createStore);

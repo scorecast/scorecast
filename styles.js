@@ -39,11 +39,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         backgroundColor: pallette.lightgray,
     },
-    navbar: {
+    topbar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: pallette.lightgray,
+    },
+    topButton: {
         padding: 20,
     },
     navItem: {
@@ -74,8 +76,7 @@ const styles = StyleSheet.create({
     listView: {
         minWidth: 300,
     },
-    listViewRow: {
-    },
+    listViewRow: {},
     listViewRowText: {
         fontSize: 20,
     },

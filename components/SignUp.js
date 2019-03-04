@@ -1,78 +1,104 @@
-import React, {Component} from 'react';
-import { StyleSheet, Text, TextInput, View, Button, TouchableOpacity } from 'react-native'
+import React, { Component } from 'react';
+import {
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+    Button,
+    TouchableOpacity,
+} from 'react-native';
 import { Link, Redirect } from 'react-router-native';
-import { connect } from 'react-redux';
+import { withFirebase } from 'react-redux-firebase';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { styles, pallette } from '../styles';
-import firebase from 'firebase';
+
+const style = StyleSheet.create({
+    screen: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: pallette.lightgray,
+    },
+});
 
 class SignUpPage extends Component {
-    state = { email: '', password: '', c_Password: '', errorMessage: null }
+    state = {
+        email: '',
+        password: '',
+        c_Password: '',
+        errorMessage: null,
+        success: false,
+    };
 
     handleSignUp = () => {
         const { email, password } = this.state;
-        console.log("attempting to log in");
-        console.log(this.state);
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(email, password)
-          .then(() => this.props.history.goBack())
-          .catch(error => this.setState({ errorMessage: error.message }))
-    }
+        this.props.firebase
+            .createUser({ email, password })
+            .then(() => this.setState({ success: true }))
+            .catch(error => this.setState({ errorMessage: error.message }));
+    };
 
     render() {
-        console.log("we made it");
-
         const signup = (
-            <View style={styles.container}>
-                <Text>Sign Up</Text>
-                {this.state.errorMessage &&
-                    <Text style={{ color: 'red' }}>
-                        {this.state.errorMessage}
-                    </Text>}
-                <TextInput
-                    placeholder="Email"
-                    autoCapitalize="none"
-                    style={styles.textInput}
-                    onChangeText={email => this.setState({ email : email })}
-                    value={this.state.email}
-                />
-                <TextInput
-                    secureTextEntry
-                    placeholder="Password"
-                    autoCapitalize="none"
-                    style={styles.textInput}
-                    onChangeText={password => this.setState({ password : password })}
-                    value={this.state.password}
-                />
-                <TextInput
-                    secureTextEntry
-                    placeholder="Confirm Password"
-                    autoCapitalize="none"
-                    style={styles.textInput}
-                    onChangeText={c_Password => this.setState({ c_Password : c_Password })}
-                    value={this.state.c_Password}
-                />
-                <Button title="Sign Up" onPress={this.handleSignUp} />
-                <TouchableOpacity activeOpacity={0.5}>
-                    <Link to="/login">
-                        <Icon name="user" size={20} color={pallette.darkgray} />
+            <>
+                <View style={styles.topbar}>
+                    <Link
+                        to="/home"
+                        activeOpacity={0.5}
+                        component={TouchableOpacity}
+                        style={styles.topButton}
+                    >
+                        <Text>Not Now</Text>
                     </Link>
-                </TouchableOpacity>
-            </View>
+                </View>
+                <View style={style.screen}>
+                    <Text>Sign Up</Text>
+                    {this.state.errorMessage && (
+                        <Text style={{ color: 'red' }}>
+                            {this.state.errorMessage}
+                        </Text>
+                    )}
+                    <TextInput
+                        placeholder="Email"
+                        autoCapitalize="none"
+                        style={styles.textInput}
+                        onChangeText={email => this.setState({ email })}
+                        value={this.state.email}
+                    />
+                    <TextInput
+                        secureTextEntry
+                        placeholder="Password"
+                        autoCapitalize="none"
+                        style={styles.textInput}
+                        onChangeText={password => this.setState({ password })}
+                        value={this.state.password}
+                    />
+                    <TextInput
+                        secureTextEntry
+                        placeholder="Confirm Password"
+                        autoCapitalize="none"
+                        style={styles.textInput}
+                        onChangeText={c_Password =>
+                            this.setState({ c_Password })
+                        }
+                        value={this.state.c_Password}
+                    />
+                    <Button title="Sign Up" onPress={this.handleSignUp} />
+                    <Link
+                        to="/login"
+                        activeOpacity={0.5}
+                        component={TouchableOpacity}
+                    >
+                        <Text>Already have an account? Login</Text>
+                    </Link>
+                </View>
+            </>
         );
 
-        if (!this.props.firebase.auth.email === 'undefined') {
-            return ( <Redirect to="/user" from="/signup"/> );
-        } else {
-            return signup;
-        }
+        return this.state.success ? <Redirect to="/login" /> : signup;
     }
 }
-const mapStateToProps = state => ({
-    firebase: state.firebase,
-});
 
-export default connect(mapStateToProps)(SignUpPage);
+export default withFirebase(SignUpPage);

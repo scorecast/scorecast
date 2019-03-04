@@ -20,8 +20,8 @@ import GameSetup from './Create/GameSetup';
 
 const Home = ({ match, ...props }) => (
     <>
-        <View style={[styles.navbar]}>
-            <TouchableOpacity activeOpacity={0.5}>
+        <View style={[styles.topbar]}>
+            <TouchableOpacity activeOpacity={0.5} style={styles.topButton}>
                 <Icon name="arrow-left" size={20} color={pallette.darkgray} />
             </TouchableOpacity>
             <View style={styles.logo}>
@@ -32,25 +32,24 @@ const Home = ({ match, ...props }) => (
                     Cast
                 </FontText>
             </View>
-            <TouchableOpacity activeOpacity={0.5}>
-                <Link
-                    to={
-                        props.firebase.auth.isEmpty ||
-                        props.firebase.auth.isAnonymous
-                            ? '/login'
-                            : '/user'
-                    }
-                >
-                    <Icon name="user" size={20} color={pallette.darkgray} />
-                </Link>
-            </TouchableOpacity>
+            <Link
+                activeOpacity={0.5}
+                style={styles.topButton}
+                component={TouchableOpacity}
+                to="/user"
+            >
+                <Icon name="user" size={20} color={pallette.darkgray} />
+            </Link>
         </View>
         <View style={[styles.content]}>
             <Route path={`${match.url}/create`} component={Create} />
             <Route exact path={`${match.url}`} component={Join} />
             <Route path={`${match.url}/discover`} component={Discover} />
             <Route path={`${match.url}/game/:gameId`} component={Game2} />
-            <Route path={`${match.url}/gameSetup/:gameId`} component={GameSetup} />
+            <Route
+                path={`${match.url}/gameSetup/:gameId`}
+                component={GameSetup}
+            />
         </View>
         <View style={[styles.nav]}>
             <NavTab to={`${match.url}/create`} iconName={'pencil'} />
@@ -61,7 +60,7 @@ const Home = ({ match, ...props }) => (
 );
 
 const mapStateToProps = state => ({
-    firebase: state.firebase,
+    auth: state.firebase.auth,
 });
 
 export default connect(mapStateToProps)(Home);
