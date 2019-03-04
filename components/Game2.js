@@ -59,14 +59,13 @@ class Game2 extends Component {
         logic.variables.map((v) => {
             if (v.value) {
                 let val = new Operation(v.value).evaluate(game.variables);
-                console.log(`Composite Value: ${val}`);
                 game.variables[v.name] = val;
 
                 //Now Update the store
                 this.props.firestore.collection('games')
                     .doc('' + this.props.match.params.gameId).update({
                     [`variables.${v.name}`]: val
-                }).catch(console.error);
+                }).catch(console.error);``
             }
         });
 
@@ -137,16 +136,17 @@ class Game2 extends Component {
                             }}>
                                 <TouchableOpacity style={{marginLeft: 10, marginTop: 5}}
                                     onPress={() => {
-                                        //Store result of gameAction in variable
-                                        let val = new Operation(action.value).evaluate(game.variables);
-                                        game.variables[action.variable] = val;
+                                        //Store result of gameAction in variables
+                                        let updatePromises = Promise.all(action.variables.map((varName, index) => {
+                                            let val = new Operation(action.values[index]).evaluate(game.variables);
+                                            game.variables[varName] = val;
 
-                                        console.log(`Action Value: ${val}`);
-
-                                        //Now Update the store
-                                        this.props.firestore.collection('games')
-                                            .doc('' + this.props.match.params.gameId).update({
-                                            [`variables.${action.variable}`]: val
+                                            //Now Update the store
+                                            return this.props.firestore.collection('games')
+                                                .doc('' + this.props.match.params.gameId).update({
+                                                    [`variables.${varName}`]: val,
+                                                });
+                                        })).then((values) => {
                                         }).catch(console.error);
                                     }}>
                                     <Text style={[{
