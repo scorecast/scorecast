@@ -1,6 +1,8 @@
-overrides:
-  - files: "*.js"
-  options:
-    tabWidth: 4
-    singleQuote: true
-    trailingComma: 'es5'
+{
+  "overrides": [
+    {
+      "files": "*.js",
+      "options": { "tabWidth": 4, "singleQuote": true, "trailingComma": "es5" }
+    }
+  ]
+}
