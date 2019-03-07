@@ -18,7 +18,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.scorecast.app"
+
+    },
+    "android": {
+      "package": "com.scorecast.app"
     }
   }
 }
