@@ -1,81 +1,81 @@
-import {pallette, styles} from "../../styles";
-import {ListView, Text, TouchableOpacity, View} from "react-native";
-import React, { Component } from "react";
-
-import { firestoreConnect } from 'react-redux-firebase';
+import React from 'react';
+import { FlatList, Text, TouchableOpacity } from 'react-native';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
 
-class SelectTemplate extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selected: 0,
-            templates: [],
-        };
-    }
+import TopBar from '../TopBar/Bar';
 
-    componentDidMount() {
-    }
+import { pallette, styles } from '../../styles';
 
-    render() {
-        let templateRows = [];
-        //let lastRow = this.props.templates.length;
-        if (this.props.templates) {
-            this.props.templates.map((t, index) => {
-                //console.log(t.id);
+const SelectTemplate = ({
+    templates,
+    getTemplate,
+    firestore,
+    history,
+    auth,
+}) => {
+    const renderTemplateItem = ({ item, index }) => (
+        <TouchableOpacity
+            onPress={() => {
+                const template = getTemplate[item.id];
+                let logic = JSON.parse(template.logic);
+                const variables = logic.variables.reduce((acc, cur) => {
+                    acc[cur.name] = cur.type === 'Int' ? 0 : ''; //default is String
+                    return acc;
+                }, {});
 
-                templateRows.push((
-                    <TouchableOpacity key={index} onPress={() => {
-                        return this.props.firestore.collection('templates').doc('' + t.id).get().then((templateDoc) => {
-                            let template = templateDoc.data();
-                            let logic = JSON.parse(template.logic);
-                            let variables = {};
-                            logic.variables.map((v) => {
-                                let defaultValue = (v.type === 'Int') ? 0 : '';     //default is String
-                                variables[v.name] = defaultValue;
-                            });
+                let game = {
+                    admin: auth.uid,
+                    variables,
+                    template: item.id,
+                };
 
-                            let game = {
-                                admin: this.props.firebase.auth.uid,
-                                variables,
-                                template: t.id
-                            };
+                firestore.add({ collection: 'games' }, game).then(ref => {
+                    console.log(`Created game ${ref.id}`);
+                    history.push(`/create/` + ref.id);
+                });
+            }}
+        >
+            <Text
+                style={[
+                    styles.listViewRow,
+                    index % 2
+                        ? { backgroundColor: pallette.lightergray }
+                        : { backgroundColor: pallette.white },
+                ]}
+            >
+                {item.name}
+            </Text>
+        </TouchableOpacity>
+    );
 
-                            this.props.firestore.add({
-                                collection: 'games'
-                            }, game).then((ref) => {
-                                console.log(`Created game ${ref.id}`);
-                                this.props.history.push(`/home/gameSetup/` + ref.id);
-                            });
-                        }).catch(console.error);
-                    }}>
-                        <Text style={[{padding: 10, fontSize: 20},
-                            (index % 2) ? {backgroundColor: pallette.lightergray} : {backgroundColor: pallette.lightgray},
-                            (index === this.props.templates.length - 1) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
-                            (index === 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
-                        ]}>{t.name}</Text>
-                    </TouchableOpacity>
-                ))
-            })
-        }
+    return (
+        <>
+            <TopBar
+                left={{ linkTo: '/home', iconName: 'times' }}
+                logoLeft="Select"
+                logoRight="Template"
+            />
+            {templates ? (
+                <FlatList
+                    style={styles.listView}
+                    data={templates}
+                    renderItem={renderTemplateItem}
+                    keyExtractor={template => template.id}
+                />
+            ) : null}
+        </>
+    );
+};
 
-        return (
-            <View style={styles.content}>
-                <Text style={[styles.header, { marginBottom: 50 }]}>Create</Text>
-                <View style={styles.listView}>
-                    {templateRows}
-                </View>
-            </View>
-        );
-    };
-}
+const mapStateToProps = state => ({
+    auth: state.firebase.auth,
+    getTemplate: state.firestore.data.templates,
+    templates: state.firestore.ordered.templates,
+});
 
 export default compose(
     firestoreConnect(['templates', 'games']),
-    connect((state, props) => ({
-        firebase: state.firebase,
-        templates: state.firestore.ordered.templates,
-        games: state.firestore.ordered.games
-    }))
+    connect(mapStateToProps)
 )(SelectTemplate);

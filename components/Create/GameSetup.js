@@ -1,91 +1,117 @@
-import {pallette, styles} from "../../styles";
-import {
-    ListView,
-    Text,
-    TouchableOpacity,
-    View,
-    TextInput,
-} from "react-native";
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import { Text, TouchableOpacity, View, TextInput } from 'react-native';
 
-import {compose} from "redux";
-import {firestoreConnect, getVal} from "react-redux-firebase";
-import connect from "react-redux/es/connect/connect";
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
+
+import TopBar from '../TopBar/Bar';
+
+import { pallette, styles } from '../../styles';
 
 class GameSetup extends Component {
-    constructor(props) {
-        super(props);
-        //console.log(this.props.match.params.gameId);
-    }
+    startGame = () => {
+        const variables = JSON.parse(
+            this.props.templates[
+                this.props.games[this.props.match.params.gameId].template // TODO: refactor to this.props.match.params.templateId
+            ].logic
+        ).variables.reduce((acc, cur) => {
+            acc[cur.name] = cur.type === 'Int' ? 0 : ''; //default is String
+            return acc;
+        }, {});
 
-    componentDidMount() {
-        //TODO: Figure out event listeners so that multiple people can update
-        //this.props.firestore.setListener({ collection: 'games', doc: this.props.match.params.gameId });
-    }
+        this.props.firestore
+            .update(
+                { collection: 'games', doc: this.props.match.params.gameId },
+                { variables: { ...variables, ...this.state } }
+            )
+            .then(ref => {
+                const gamePath = '/home/game/' + this.props.match.params.gameId; // + ref.id;
+                console.log(`Game started: ${gamePath}`);
+                this.props.history.push(gamePath);
+            });
+    };
 
     render() {
-            let template = this.props.games.find((g) => {
-                return g.id === this.props.match.params.gameId;
-            }).template;
+        const game = this.props.games[this.props.match.params.gameId];
+        const template = this.props.templates[game.template];
+        let logic = template.logic;
 
-            let logic = this.props.templates.find((t) => {
-                return t.id === template;
-            }).logic;
+        let setupList = [];
+        if (logic) {
+            logic = JSON.parse(logic);
 
-            let setupList = [];
-            if (logic) {
-                logic = JSON.parse(logic);
+            // TODO: add form validation for types
+            // TODO: add readable name to vars (maybe just setup vars)
+            setupList = logic.setup.map((setupVar, index) => {
+                // this function doesn't make sense: need to rewrite
+                let type = logic.variables.filter(v => {
+                    return v.name === setupVar.name ? v.type : '';
+                })[0];
+                let defaultValue = type === 'Int' ? 0 : ''; //default is String
 
-                setupList = logic.setup.map((setupVar, index) => {
-                    let type = logic.variables.filter((v) => {
-                        return (v.name === setupVar.name) ? v.type : '';
-                    })[0];
-                    let defaultValue = (type === 'Int') ? 0 : '';   //default is String
+                return (
+                    <View
+                        key={index}
+                        style={{ flexDirection: 'row', padding: 10 }}
+                    >
+                        <Text style={{ fontSize: 20 }}>
+                            {setupVar.name + ': '}
+                        </Text>
+                        <TextInput
+                            style={{
+                                borderRadius: 10,
+                                backgroundColor: pallette.lightgray,
+                                flex: 1,
+                                padding: 10,
+                            }}
+                            defaultValue={defaultValue}
+                            onChangeText={text =>
+                                this.setState({ [setupVar.name]: text })
+                            }
+                        />
+                    </View>
+                );
+            });
+        }
 
-                    return (
-                        <View key={index} style={{flexDirection: 'row', padding: 10}}>
-                            <Text style={{fontSize: 20}}>{setupVar.name + ': '}</Text>
-                            <TextInput
-                                style={{borderRadius: 10, backgroundColor: pallette.lightgray, flex: 1, padding: 10}}
-                                defaultValue={defaultValue}
-                                onChangeText={(text) => {
-                                    this.props.firestore.collection('games')
-                                        .doc('' + this.props.match.params.gameId).update({
-                                        [`variables.${setupVar.name}`]: text
-                                    }).catch(console.error);
-                                }}/>
-                        </View>
-                    );
-                });
-            }
-
-            return (
+        return (
+            <>
+                <TopBar
+                    left={{ linkTo: '/create', iconName: 'arrow-left' }}
+                    logoLeft="Setup"
+                    logoRight="Game"
+                />
                 <View style={styles.content}>
-                    <Text style={[styles.header, { marginBottom: 50 }]}>Game Setup: {this.props.template}</Text>
-                    <View style={{ minWidth: 300, marginBottom: 50}}>
+                    <Text style={[styles.header, { marginBottom: 50 }]}>
+                        {template.name}
+                    </Text>
+                    <View style={{ minWidth: 300, marginBottom: 50 }}>
                         {setupList}
                     </View>
-                    <TouchableOpacity onPress={() => {
-                        let gamePath = '/home/game/' + this.props.match.params.gameId;
-                        console.log("Game started: " + gamePath);
-                        this.props.history.push(gamePath);
-                    }}>
-                        <Text style={{backgroundColor: pallette.darkgray,
-                            color: pallette.white,
-                            borderRadius: 20,
-                            padding: 20,
-                            fontSize: 20}}>Start Game!</Text>
+                    <TouchableOpacity onPress={this.startGame}>
+                        <Text
+                            style={{
+                                backgroundColor: pallette.darkgray,
+                                color: pallette.white,
+                                borderRadius: 20,
+                                padding: 20,
+                                fontSize: 20,
+                            }}
+                        >
+                            Start Game!
+                        </Text>
                     </TouchableOpacity>
                 </View>
-            );
-    };
+            </>
+        );
+    }
 }
 
 export default compose(
     firestoreConnect(['templates', 'games']),
     connect((state, props) => ({
-        firebase: state.firebase,
-        templates: state.firestore.ordered.templates,
-        games: state.firestore.ordered.games,
+        templates: state.firestore.data.templates || {},
+        games: state.firestore.data.games || {},
     }))
 )(GameSetup);

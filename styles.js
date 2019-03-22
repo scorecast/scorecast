@@ -47,6 +47,10 @@ const styles = StyleSheet.create({
     },
     topButton: {
         padding: 20,
+        height: 60,
+        width: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     navItem: {
         flex: 1,
@@ -69,14 +73,16 @@ const styles = StyleSheet.create({
     },
     logoText: {
         color: pallette.darkgray,
-        fontFamily: 'open-sans-semibold',
         fontSize: 24,
-        fontWeight: '500',
+        fontWeight: '700',
     },
     listView: {
-        minWidth: 300,
+        backgroundColor: pallette.white,
     },
-    listViewRow: {},
+    listViewRow: {
+        padding: 20,
+        fontSize: 20,
+    },
     listViewRowText: {
         fontSize: 20,
     },
