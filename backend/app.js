@@ -1,26 +1,72 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+import express from "express";
+import createError from 'http-errors';
+import expressGraphQL from "express-graphql";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import cookieParser from 'cookie-parser';
+import cors from "cors";
+import logger from "morgan";
+import session from "express-session";
+import sessionFileStore from "session-file-store";
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+import schema from "./graphql/";
 
-var app = express();
+mongoose
+  .connect(
+    'mongodb://localhost:27017/scorecast',
+    {
+      useCreateIndex: true,
+      useNewUrlParser: true
+    }
+  )
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+let app = express();
+
+app.use(session({
+  secret: ' ekruvbaervilubaernvyeilarhveiarvbaerg',
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 60000
+  },
+  store: new sessionFileStore(session)()
+}));
+
+app.post(
+  "/",
+  cors(),
+  bodyParser.json(),
+  expressGraphQL((req) => ({
+    schema,
+    graphiql: false,
+    rootValue: {
+      session: req.session
+    }
+  })),
+  (req, res) => {
+    if (req.headers.authorization) {
+      req.session.user = Users.findOne()
+    }
+  }
+);
+app.get(
+  "/",
+  cors(),
+  bodyParser.json(),
+  expressGraphQL({
+    schema,
+    graphiql: true
+  })
+);
+
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -33,9 +79,7 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
-  res.render('error');
 });
 
 module.exports = app;
