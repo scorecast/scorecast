@@ -48,7 +48,7 @@ class SignUpPage extends Component {
                         to="/home"
                         activeOpacity={0.5}
                         component={TouchableOpacity}
-                        style={styles.topButton}
+                        style={{ padding: 20 }}
                     >
                         <Text>Not Now</Text>
                     </Link>

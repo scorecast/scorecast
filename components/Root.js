@@ -1,10 +1,17 @@
 import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
-import { NativeRouter, Route, Redirect, Switch, BackButton } from 'react-router-native';
+import {
+    NativeRouter,
+    Route,
+    Redirect,
+    Switch,
+    BackButton,
+} from 'react-router-native';
 
 import { styles } from '../styles';
 
 import Home from './Home';
+import Create from './Create';
 import UserProfile from './UserProfile';
 import Login from './Login';
 import SignUpPage from './SignUp';
@@ -21,11 +28,12 @@ const Root = props => {
                 <Switch>
                     <Redirect exact from="/" to="/home" />
                     <Route path="/home" component={Home} />
+                    <Route path="/create" component={Create} />
                     <Route path="/user" component={UserProfile} />
                     <Route path="/login" component={Login} />
                     <Route path="/signup" component={SignUpPage} />
                 </Switch>
-                <BackButton/>
+                <BackButton />
             </SafeAreaView>
         </NativeRouter>
     );

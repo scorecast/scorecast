@@ -1,50 +1,19 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    ListView,
-    TouchableOpacity,
-} from 'react-native';
+import React from 'react';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { NativeRouter, Route, Link, BackButton } from 'react-router-native';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { Route } from 'react-router-native';
 
-import {styles, pallette} from '../styles';
 import SelectTemplate from './Create/SelectTemplate';
 import GameSetup from './Create/GameSetup';
-import Game from './Game';
 
-class Create extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedTemplate: '',
-        };
-    }
+const Create = ({ match }) => (
+    <>
+        <Route exact path={`${match.url}`} component={SelectTemplate} />
 
-    selectTemplate(templateName) {
-        this.setState({selectedTemplate: templateName});
-    }
+        {/* <Route path={`${match.url}/:gameId`} component={GameSetup} /> */}
 
-    render() {
-        return (
-                <View style={styles.content}>
-                    <SelectTemplate style={[styles.content, {backgroundColor: pallette.lightgreen}]}
-                        history={this.props.history}/>
-                </View>
-        );
-    }
-}
+        {/* for future refactor */}
+        <Route path={`${match.url}/:templateId`} component={GameSetup} />
+    </>
+);
 
-const localStyles = StyleSheet.create({});
-
-export default compose(
-    firestoreConnect(['templates']),
-    connect((state, props) => ({
-        templates: state.firestore.ordered.templates,
-    }))
-)(Create);
+export default Create;

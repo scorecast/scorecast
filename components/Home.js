@@ -1,66 +1,31 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
-
-import { connect } from 'react-redux';
-
-import { Route, Link } from 'react-router-native';
-
-import Icon from 'react-native-vector-icons/FontAwesome';
-
-import { styles, pallette } from '../styles';
-
-import FontText from './Text';
-import NavTab from './NavTab';
-import Join from './Join';
-import Create from './Create';
+import { View } from 'react-native';
+import { Route } from 'react-router-native';
+import TopBar from './TopBar/Bar';
 import Discover from './Discover';
-import Game from './Game';
 import Game2 from './Game2';
 import GameSetup from './Create/GameSetup';
+import { styles } from '../styles';
 
 const Home = ({ match, ...props }) => (
     <>
-        <View style={[styles.topbar]}>
-            <TouchableOpacity activeOpacity={0.5} style={styles.topButton}>
-                <Icon name="arrow-left" size={20} color={pallette.darkgray} />
-            </TouchableOpacity>
-            <View style={styles.logo}>
-                <FontText style={styles.logoText}>Score</FontText>
-                <FontText
-                    style={[styles.logoText, { color: pallette.crimson }]}
-                >
-                    Cast
-                </FontText>
-            </View>
-            <Link
-                activeOpacity={0.5}
-                style={styles.topButton}
-                component={TouchableOpacity}
-                to="/user"
-            >
-                <Icon name="user" size={20} color={pallette.darkgray} />
-            </Link>
-        </View>
+        <TopBar
+            left={{ linkTo: '/user', iconName: 'user' }}
+            right={{ linkTo: '/create', iconName: 'plus' }}
+            logoLeft="Score"
+            logoRight="Cast"
+        />
         <View style={[styles.content]}>
-            <Route path={`${match.url}/create`} component={Create} />
-            <Route exact path={`${match.url}`} component={Join} />
-            <Route path={`${match.url}/discover`} component={Discover} />
+            <Route exact path={`${match.url}`} component={Discover} />
             <Route path={`${match.url}/game/:gameId`} component={Game2} />
+
+            {/* this is being left until I fix Game/Game2 to use new route */}
             <Route
                 path={`${match.url}/gameSetup/:gameId`}
                 component={GameSetup}
             />
         </View>
-        <View style={[styles.nav]}>
-            <NavTab to={`${match.url}/create`} iconName={'pencil'} />
-            <NavTab exact to={`${match.url}`} iconName={'rocket'} />
-            <NavTab to={`${match.url}/discover`} iconName={'history'} />
-        </View>
     </>
 );
 
-const mapStateToProps = state => ({
-    auth: state.firebase.auth,
-});
-
-export default connect(mapStateToProps)(Home);
+export default Home;
