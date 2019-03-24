@@ -5,6 +5,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withFirestore } from 'react-redux-firebase';
 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import TopBar from '../TopBar/Bar';
 
 import { pallette, styles } from '../../styles';
@@ -62,14 +64,18 @@ class GameSetup extends Component {
                     logoLeft="Setup"
                     logoRight="Game"
                 />
-                <View style={styles.content}>
-                    <Text style={[styles.header, { marginBottom: 50 }]}>
+                <KeyboardAwareScrollView
+                    style={{ backgroundColor: 'white' }}
+                    contentContainerStyle={styles.content}
+                >
+                    <Text style={[styles.header, { padding: 20 }]}>
                         {template.name}
                     </Text>
-                    <View style={{ minWidth: 300, marginBottom: 50 }}>
-                        {setupList}
-                    </View>
-                    <TouchableOpacity onPress={this.startGame}>
+                    <View style={{ minWidth: 300 }}>{setupList}</View>
+                    <TouchableOpacity
+                        style={{ margin: 20 }}
+                        onPress={this.startGame}
+                    >
                         <Text
                             style={{
                                 backgroundColor: pallette.darkgray,
@@ -82,7 +88,7 @@ class GameSetup extends Component {
                             Start Game!
                         </Text>
                     </TouchableOpacity>
-                </View>
+                </KeyboardAwareScrollView>
             </>
         );
     }
