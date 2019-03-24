@@ -9,10 +9,10 @@ const Create = ({ match }) => (
     <>
         <Route exact path={`${match.url}`} component={SelectTemplate} />
 
-        <Route path={`${match.url}/:gameId`} component={GameSetup} />
+        {/* <Route path={`${match.url}/:gameId`} component={GameSetup} /> */}
 
         {/* for future refactor */}
-        {/* <Route path={`${match.url}/:templateId`} component={GameSetup} /> */}
+        <Route path={`${match.url}/:templateId`} component={GameSetup} />
     </>
 );
 
