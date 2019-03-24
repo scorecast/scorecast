@@ -1,86 +1,114 @@
 import React from 'react';
-import {View, FlatList, Text, TouchableOpacity} from 'react-native';
+import {
+    View,
+    FlatList,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    StyleSheet,
+} from 'react-native';
 import { styles, pallette } from '../styles';
-import {compose} from "redux";
-import {firestoreConnect, withFirestore} from "react-redux-firebase";
-import connect from "react-redux/es/connect/connect";
+import { compose } from 'redux';
+import { firestoreConnect } from 'react-redux-firebase';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-native';
 
 class Discover extends React.Component {
-    render () {
-        let availableGames = this.props.games ? this.props.games.filter((g) => { return (g.variables['gameName']); })
-            : [];
+    state = {
+        codeText: '',
+    };
 
-        const renderGameItem = ({ item, index }) => (
-            <TouchableOpacity key={index} onPress={() => {
-                // TODO: Either wrap Discover in a nested 'navigation router' (see Create.js), or
-                //this.props.history.push('/game/' + this.props.match.params.gameId);
-                this.props.history.push(`/home/game/` + item.id);
-            }}>
-                <Text style={[{padding: 10, fontSize: 20},
-                    (index % 2) ? {backgroundColor: pallette.lightergray} : {backgroundColor: pallette.lightgray},
-                    (index === availableGames.length - 1) ? {borderBottomLeftRadius: 10, borderBottomRightRadius: 10} : {},
-                    (index === 0) ? {borderTopLeftRadius: 10, borderTopRightRadius: 10} : {},
-                ]}>{item.variables[Object.keys(item.variables).find((k) => {
-                    return (k === 'gameName');
-                })] + '\n'}
-                    <Text style={{fontSize: 10}}>{ this.props.templates.find((t) => { return t.id === item.template }).name }</Text>
-                </Text>
-            </TouchableOpacity>
-        );
+    renderGameItem = ({ item, index }) => (
+        <Link
+            to={`/home/game/${item.id}`}
+            activeOpacity={0.5}
+            component={TouchableOpacity}
+            style={[
+                styles.listViewRow,
+                index % 2
+                    ? { backgroundColor: pallette.lightergray }
+                    : { backgroundColor: pallette.white },
+            ]}
+        >
+            <Text style={[{ fontSize: 20 }]}>{item.variables.gameName}</Text>
+            <Text style={{ fontSize: 10 }}>
+                {this.props.templates[item.template].name}
+            </Text>
+        </Link>
+    );
 
-        // I apologize for jank empty regions
+    render() {
+        const { games, templates } = this.props;
+
+        const availableGames = games.filter(g => g.variables['gameName']);
+
         return (
-            <View>
-                <View style={styles.space20}/>
-                <FlatList
-                    style={styles.listView}
-                    data={availableGames}
-                    renderItem={renderGameItem}
-                    keyExtractor={game => game.id}
-                />
-                <View style={styles.space20}/>
-            </View>
+            <>
+                {games && templates ? (
+                    <FlatList
+                        style={styles.listView}
+                        data={availableGames}
+                        renderItem={this.renderGameItem}
+                        keyExtractor={game => game.id}
+                    />
+                ) : null}
+                <KeyboardAvoidingView behavior="position">
+                    <View style={localStyles.codeTextForm}>
+                        <TextInput
+                            onChangeText={codeText =>
+                                this.setState({ codeText })
+                            }
+                            style={localStyles.codeText}
+                            value={this.state.codeText}
+                            placeholder="Enter Game ID"
+                            placeholderTextColor={pallette.gray}
+                        />
+                        <TouchableOpacity style={localStyles.codeTextButton}>
+                            <Text style={localStyles.codeTextJoin}>Join!</Text>
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
+            </>
         );
     }
 }
 
-// class Discover extends React.Component {
-//     render() {
-//         let gameRows = [];
-//         if (this.props.games) {
-//             let availableGames = this.props.games.filter((g) => {
-//                 return (g.variables['gameName']);
-//             })
-//             availableGames.map((g, index) => {
-//                 let templateName = this.props.templates.find((t) => {
-//                     return t.id === g.template;
-//                 }).name;
-//                 gameRows.push((
-                    
-//                 ));
-//             })
-//         }
-
-//         //console.log(gameRows);
-//         return (
-//             <View style={styles.content}>
-//                 <Text style={[styles.header, { marginBottom: 50 }]}>Discover</Text>
-//                 <View style={styles.listView}>
-//                     {gameRows}
-//                 </View>
-//             </View>
-//         );
-//     }
-// };
+const localStyles = StyleSheet.create({
+    codeTextForm: {
+        flexDirection: 'row',
+        backgroundColor: pallette.white,
+        height: 50,
+    },
+    codeText: {
+        minWidth: 200,
+        flex: 1,
+        borderColor: pallette.gray,
+        borderWidth: 1,
+        borderRightWidth: 0,
+        borderLeftWidth: 0,
+        paddingLeft: 20,
+    },
+    codeTextButton: {
+        minWidth: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: pallette.lightblue,
+    },
+    codeTextJoin: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: pallette.white,
+    },
+});
 
 const mapStateToProps = state => ({
     firebase: state.firebase,
-    templates: state.firestore.ordered.templates,
-    games: state.firestore.ordered.games,
+    templates: state.firestore.data.templates || {},
+    games: state.firestore.ordered.games || [],
 });
 
 export default compose(
-    withFirestore,
     firestoreConnect(['templates', 'games']),
     connect(mapStateToProps)
 )(Discover);
