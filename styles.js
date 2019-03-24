@@ -63,6 +63,9 @@ const styles = StyleSheet.create({
     subNavItem: {
         padding: 5,
     },
+    space20: {
+        height: 20
+    },
     topic: {
         textAlign: 'center',
         fontSize: 15,
