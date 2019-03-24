@@ -33,7 +33,7 @@ const SelectTemplate = ({ templates }) => {
     return (
         <>
             <TopBar
-                left={{ linkTo: '/home', iconName: 'times' }}
+                leftButton={{ linkTo: '/home', iconName: 'times' }}
                 logoLeft="Select"
                 logoRight="Template"
             />

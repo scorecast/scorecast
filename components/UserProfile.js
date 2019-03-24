@@ -21,7 +21,7 @@ const UserProfile = props => {
         <Redirect to="/login" from="/user" />
     ) : (
         <>
-            <TopBar left={{ linkTo: '/home', iconName: 'home' }} />
+            <TopBar leftButton={{ linkTo: '/home', iconName: 'home' }} />
             <View style={style.screen}>
                 <Text>Hello {props.auth.email}</Text>
                 <Button
