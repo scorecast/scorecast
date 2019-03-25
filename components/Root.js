@@ -12,6 +12,7 @@ import { styles } from '../styles';
 
 import Home from './Home';
 import Create from './Create';
+import Game from './Game';
 import UserProfile from './UserProfile';
 import Login from './Login';
 import SignUpPage from './SignUp';
@@ -29,6 +30,7 @@ const Root = props => {
                     <Redirect exact from="/" to="/home" />
                     <Route path="/home" component={Home} />
                     <Route path="/create" component={Create} />
+                    <Route path="/game" component={Game} />
                     <Route path="/user" component={UserProfile} />
                     <Route path="/login" component={Login} />
                     <Route path="/signup" component={SignUpPage} />

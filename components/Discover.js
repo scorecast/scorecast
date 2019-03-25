@@ -21,7 +21,7 @@ class Discover extends React.Component {
 
     renderGameItem = ({ item, index }) => (
         <Link
-            to={`/home/game/${item.id}`}
+            to={`/game/${item.id}`}
             activeOpacity={0.5}
             component={TouchableOpacity}
             style={[

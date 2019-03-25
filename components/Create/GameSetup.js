@@ -1,62 +1,36 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, View, TextInput } from 'react-native';
 
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withFirestore } from 'react-redux-firebase';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import TopBar from '../TopBar/Bar';
-import Button from '../Button';
-
-import { pallette, styles } from '../../styles';
+import GameForm from '../GameForm';
 
 class GameSetup extends Component {
-    state = this.props.logic.variables.reduce((acc, cur) => {
-        acc[cur.name] = cur.type === 'Int' ? 0 : ''; //default is String
-        return acc;
-    }, {});
-
-    startGame = () => {
+    startGame = state => {
         const { auth, match, firestore, history } = this.props;
 
         const game = {
             admin: auth.uid,
-            variables: this.state,
+            variables: state,
             template: match.params.templateId,
         };
 
         firestore.add({ collection: 'games' }, game).then(ref => {
-            const gamePath = '/home/game/' + ref.id;
+            const gamePath = '/game/' + ref.id;
             console.log(`Game started: ${gamePath}`);
             history.push(gamePath);
         });
     };
 
     render() {
-        console.log(this.state);
-        const { template, logic } = this.props;
+        const { match, logic } = this.props;
 
-        // TODO: add form validation for types
-        // TODO: add readable name to vars (maybe just setup vars)
-        const setupList = logic.setup.map((setupVar, index) => (
-            <View key={index} style={{ flexDirection: 'row', padding: 10 }}>
-                <Text style={{ fontSize: 20 }}>{setupVar.name + ': '}</Text>
-                <TextInput
-                    style={{
-                        borderRadius: 10,
-                        backgroundColor: pallette.lightgray,
-                        flex: 1,
-                        padding: 10,
-                    }}
-                    value={this.state[setupVar.name]}
-                    onChangeText={text =>
-                        this.setState({ [setupVar.name]: text })
-                    }
-                />
-            </View>
-        ));
+        const defaultState = logic.variables.reduce((acc, cur) => {
+            acc[cur.name] = cur.type === 'Int' ? 0 : ''; //default is String
+            return acc;
+        }, {});
 
         return (
             <>
@@ -65,20 +39,12 @@ class GameSetup extends Component {
                     logoLeft="Setup"
                     logoRight="Game"
                 />
-                <KeyboardAwareScrollView
-                    style={{ backgroundColor: 'white' }}
-                    contentContainerStyle={styles.content}
-                >
-                    <Text style={[styles.header, { padding: 20 }]}>
-                        {template.name}
-                    </Text>
-                    <View style={{ minWidth: 300 }}>{setupList}</View>
-                    <Button
-                        style={{ margin: 20 }}
-                        onPress={this.startGame}
-                        text="Start Game"
-                    />
-                </KeyboardAwareScrollView>
+                <GameForm
+                    templateId={match.params.templateId}
+                    defaultState={defaultState}
+                    onSubmit={this.startGame}
+                    submitText="Start Game"
+                />
             </>
         );
     }
@@ -86,10 +52,10 @@ class GameSetup extends Component {
 
 const mapStateToProps = ({ firestore: { data }, firebase }, { match }) => {
     const template = data.templates && data.templates[match.params.templateId];
+    const logic = template && JSON.parse(template.logic);
     return {
-        template,
         auth: firebase.auth,
-        logic: JSON.parse(template.logic),
+        logic,
     };
 };
 
