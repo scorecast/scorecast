@@ -65,7 +65,7 @@ class Discover extends React.Component {
                             placeholderTextColor={pallette.gray}
                         />
                         <TouchableOpacity style={localStyles.codeTextButton}>
-                            <Text style={localStyles.codeTextJoin}>Join!</Text>
+                            <Text style={localStyles.codeTextJoin}>Join</Text>
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
@@ -93,7 +93,7 @@ const localStyles = StyleSheet.create({
         minWidth: 100,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: pallette.lightblue,
+        backgroundColor: pallette.crimson,
     },
     codeTextJoin: {
         fontSize: 16,
