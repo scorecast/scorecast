@@ -13,7 +13,6 @@ import { pallette, styles } from '../styles';
 
 class GameView extends Component {
     render() {
-        console.log(this.props.match);
         const { game, template, auth, match } = this.props;
         if (!game) return null;
 

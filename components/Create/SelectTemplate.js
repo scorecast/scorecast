@@ -10,7 +10,6 @@ import TopBar from '../TopBar/Bar';
 import { pallette, styles } from '../../styles';
 
 const SelectTemplate = ({ templates }) => {
-    console.log('what');
     const renderTemplateItem = ({ item, index }) => (
         <Link
             to={`/create/${item.id}`}
