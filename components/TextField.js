@@ -34,12 +34,12 @@ export default class TextField extends Component {
 
     onFocus = () => {
         this.setState({ focus: true });
-        this.props.onFocus && this.props.onFocus();
+        if (this.props.onFocus) this.props.onFocus();
     };
 
     onBlur = () => {
         this.setState({ focus: false });
-        this.props.onBlur && this.props.onBlur();
+        if (this.props.onBlur) this.props.onBlur();
     };
 
     getStyle = () => {
