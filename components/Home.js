@@ -8,8 +8,8 @@ import GameSetup from './Create/GameSetup';
 const Home = ({ match, ...props }) => (
     <>
         <TopBar
-            leftButton={{ linkTo: '/user', iconName: 'user' }}
-            rightButton={{ linkTo: '/create', iconName: 'plus' }}
+            left={{ linkTo: '/user', iconName: 'user' }}
+            right={{ linkTo: '/create', iconName: 'plus' }}
             logoLeft="Score"
             logoRight="Cast"
         />

@@ -60,7 +60,7 @@ class GameSetup extends Component {
         return (
             <>
                 <TopBar
-                    leftButton={{ linkTo: '/create', iconName: 'arrow-left' }}
+                    left={{ linkTo: '/create', iconName: 'arrow-left' }}
                     logoLeft="Setup"
                     logoRight="Game"
                 />
