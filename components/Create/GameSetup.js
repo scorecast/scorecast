@@ -8,6 +8,7 @@ import { withFirestore } from 'react-redux-firebase';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import TopBar from '../TopBar/Bar';
+import Button from '../Button';
 
 import { pallette, styles } from '../../styles';
 
@@ -72,22 +73,11 @@ class GameSetup extends Component {
                         {template.name}
                     </Text>
                     <View style={{ minWidth: 300 }}>{setupList}</View>
-                    <TouchableOpacity
+                    <Button
                         style={{ margin: 20 }}
                         onPress={this.startGame}
-                    >
-                        <Text
-                            style={{
-                                backgroundColor: pallette.darkgray,
-                                color: pallette.white,
-                                borderRadius: 20,
-                                padding: 20,
-                                fontSize: 20,
-                            }}
-                        >
-                            Start Game!
-                        </Text>
-                    </TouchableOpacity>
+                        text="Start Game"
+                    />
                 </KeyboardAwareScrollView>
             </>
         );

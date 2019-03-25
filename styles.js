@@ -63,9 +63,6 @@ const styles = StyleSheet.create({
     subNavItem: {
         padding: 5,
     },
-    space20: {
-        height: 20
-    },
     topic: {
         textAlign: 'center',
         fontSize: 15,
@@ -89,12 +86,12 @@ const styles = StyleSheet.create({
     listViewRowText: {
         fontSize: 20,
     },
-    textInput: {
-        height: 40,
-        width: '90%',
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginTop: 8,
+    button: {
+        backgroundColor: pallette.crimson,
+        color: 'white',
+        padding: 16,
+        alignItems: 'center',
+        alignSelf: 'stretch',
     },
 });
 

@@ -4,16 +4,17 @@ import {
     Text,
     TextInput,
     View,
-    Button,
     TouchableOpacity,
 } from 'react-native';
 import { Link, Redirect } from 'react-router-native';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withFirebase } from 'react-redux-firebase';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { styles, pallette } from '../styles';
+import TopBar from './TopBar/Bar';
+import Button from './Button';
+import TextField from './TextField';
 
 const style = StyleSheet.create({
     screen: {
@@ -21,6 +22,7 @@ const style = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: pallette.lightgray,
+        padding: 20,
     },
 });
 
@@ -35,47 +37,52 @@ class Login extends Component {
     };
 
     render() {
+        const textStyle = { marginBottom: 20 };
+
         const login = (
             <>
-                <View style={styles.topbar}>
-                    <Link
-                        to="/home"
-                        activeOpacity={0.5}
-                        component={TouchableOpacity}
-                        style={{ padding: 20 }}
-                    >
-                        <Text>Not Now</Text>
-                    </Link>
-                </View>
+                <TopBar
+                    left={{ linkTo: '/home', iconName: 'home' }}
+                    logoLeft="Sign"
+                    logoRight="In"
+                />
                 <View style={style.screen}>
-                    <Text>Login</Text>
                     {this.state.errorMessage && (
                         <Text style={{ color: 'red' }}>
                             {this.state.errorMessage}
                         </Text>
                     )}
-                    <TextInput
-                        style={styles.textInput}
+                    <TextField
+                        style={textStyle}
                         autoCapitalize="none"
                         placeholder="Email"
                         onChangeText={email => this.setState({ email })}
                         value={this.state.email}
                     />
-                    <TextInput
+                    <TextField
                         secureTextEntry
-                        style={styles.textInput}
+                        style={textStyle}
                         autoCapitalize="none"
                         placeholder="Password"
                         onChangeText={password => this.setState({ password })}
                         value={this.state.password}
                     />
-                    <Button title="Login" onPress={this.handleLogin} />
+                    <Button
+                        style={{ marginBottom: 20 }}
+                        text="Sign In"
+                        onPress={this.handleLogin}
+                    />
                     <Link
                         to="/signup"
                         activeOpacity={0.5}
                         component={TouchableOpacity}
                     >
-                        <Text>No account yet? Create One</Text>
+                        <Text>
+                            No account yet?{' '}
+                            <Text style={{ fontWeight: '700' }}>
+                                Create One
+                            </Text>
+                        </Text>
                     </Link>
                 </View>
             </>

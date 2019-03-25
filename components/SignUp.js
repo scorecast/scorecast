@@ -4,13 +4,15 @@ import {
     Text,
     TextInput,
     View,
-    Button,
     TouchableOpacity,
 } from 'react-native';
 import { Link, Redirect } from 'react-router-native';
 import { withFirebase } from 'react-redux-firebase';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import Button from './Button';
+import TopBar from './TopBar/Bar';
+import TextField from './TextField';
 
 import { styles, pallette } from '../styles';
 
@@ -20,6 +22,7 @@ const style = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: pallette.lightgray,
+        padding: 20,
     },
 });
 
@@ -27,7 +30,6 @@ class SignUpPage extends Component {
     state = {
         email: '',
         password: '',
-        c_Password: '',
         errorMessage: null,
         success: false,
     };
@@ -41,63 +43,56 @@ class SignUpPage extends Component {
     };
 
     render() {
+        const textStyle = { marginBottom: 20 };
+
         const signup = (
             <>
-                <View style={styles.topbar}>
-                    <Link
-                        to="/home"
-                        activeOpacity={0.5}
-                        component={TouchableOpacity}
-                        style={{ padding: 20 }}
-                    >
-                        <Text>Not Now</Text>
-                    </Link>
-                </View>
+                <TopBar
+                    left={{ linkTo: '/home', iconName: 'home' }}
+                    logoLeft="Sign"
+                    logoRight="Up"
+                />
                 <View style={style.screen}>
-                    <Text>Sign Up</Text>
                     {this.state.errorMessage && (
                         <Text style={{ color: 'red' }}>
                             {this.state.errorMessage}
                         </Text>
                     )}
-                    <TextInput
+                    <TextField
                         placeholder="Email"
                         autoCapitalize="none"
-                        style={styles.textInput}
+                        style={textStyle}
                         onChangeText={email => this.setState({ email })}
                         value={this.state.email}
                     />
-                    <TextInput
+                    <TextField
                         secureTextEntry
                         placeholder="Password"
                         autoCapitalize="none"
-                        style={styles.textInput}
+                        style={textStyle}
                         onChangeText={password => this.setState({ password })}
                         value={this.state.password}
                     />
-                    <TextInput
-                        secureTextEntry
-                        placeholder="Confirm Password"
-                        autoCapitalize="none"
-                        style={styles.textInput}
-                        onChangeText={c_Password =>
-                            this.setState({ c_Password })
-                        }
-                        value={this.state.c_Password}
+                    <Button
+                        text="Sign Up"
+                        style={textStyle}
+                        onPress={this.handleSignUp}
                     />
-                    <Button title="Sign Up" onPress={this.handleSignUp} />
                     <Link
                         to="/login"
                         activeOpacity={0.5}
                         component={TouchableOpacity}
                     >
-                        <Text>Already have an account? Login</Text>
+                        <Text>
+                            Already have an account?{' '}
+                            <Text style={{ fontWeight: '700' }}>Login</Text>
+                        </Text>
                     </Link>
                 </View>
             </>
         );
 
-        return this.state.success ? <Redirect to="/login" /> : signup;
+        return this.state.success ? <Redirect to="/user" /> : signup;
     }
 }
 
