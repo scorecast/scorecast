@@ -5,7 +5,12 @@ import { styles, pallette } from '../../styles';
 
 const getButton = b =>
     b ? (
-        <Button linkTo={b.linkTo} iconName={b.iconName} goBack={b.goBack} />
+        <Button
+            linkTo={b.linkTo}
+            iconName={b.iconName}
+            goBack={b.goBack}
+            onPress={b.onPress}
+        />
     ) : (
         <View style={styles.topButton} />
     );

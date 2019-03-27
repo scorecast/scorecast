@@ -8,9 +8,8 @@ import {
     StyleSheet,
 } from 'react-native';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { Link } from 'react-router-native';
+import { withRouter } from 'react-router-native';
+import { withFirestore } from 'react-redux-firebase';
 import { pallette } from '../styles';
 
 const localStyles = StyleSheet.create({
@@ -46,6 +45,18 @@ class JoinBar extends Component {
         text: '',
     };
 
+    processTag = () =>
+        this.props.firestore
+            .collection('games')
+            .where('tag', '==', this.state.text)
+            .limit(1)
+            .get()
+            .then(query =>
+                query.forEach(game =>
+                    this.props.history.push(`/game/${game.id}`)
+                )
+            );
+
     render() {
         return (
             <KeyboardAvoidingView behavior="position">
@@ -57,25 +68,20 @@ class JoinBar extends Component {
                         placeholder="Enter Game ID"
                         placeholderTextColor={pallette.gray}
                     />
-                    <Link
+                    <TouchableOpacity
                         activeOpacity={0.5}
-                        to={this.props.tags[this.state.text]}
                         style={localStyles.codeTextButton}
-                        component={TouchableOpacity}
+                        onPress={this.processTag}
                     >
                         <Text style={localStyles.codeTextJoin}>Join</Text>
-                    </Link>
+                    </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
         );
     }
 }
 
-const mapStateToProps = state => ({
-    tags: state.firestore.data.tags || {},
-});
-
 export default compose(
-    firestoreConnect(['tags']),
-    connect(mapStateToProps)
+    withFirestore,
+    withRouter
 )(JoinBar);
