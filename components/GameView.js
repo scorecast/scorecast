@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, Share } from 'react-native';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
@@ -8,10 +8,36 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import TopBar from './TopBar/Bar';
 
 import { Operation } from '../config/gameAction';
+import { createTag } from '../config/functions';
 
 import { pallette, styles } from '../styles';
 
 class GameView extends Component {
+    shareGameTag = () => {
+        this.getTag(this.props).then(tag => Share.share({ message: tag }));
+    };
+
+    async getTag({ firestore, game, match }) {
+        if (game.tag) return game.tag;
+
+        let tag;
+        let query;
+        do {
+            tag = createTag();
+            query = await firestore
+                .collection('games')
+                .where('tag', '==', tag)
+                .get();
+        } while (query.size > 0);
+
+        firestore.update(
+            { collection: 'games', doc: match.params.gameId },
+            { tag }
+        );
+
+        return tag;
+    }
+
     render() {
         const { game, template, auth, match } = this.props;
         if (!game) return null;
@@ -189,7 +215,7 @@ class GameView extends Component {
             <>
                 <TopBar
                     left={{ linkTo: '/home', iconName: 'times' }}
-                    right={{ iconName: 'share' }}
+                    right={{ iconName: 'share', onPress: this.shareGameTag }}
                     logoLeft="Live"
                     logoRight="Score"
                 />

@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import {
     View,
     SectionList,
@@ -8,6 +9,9 @@ import {
     KeyboardAvoidingView,
     StyleSheet,
 } from 'react-native';
+=======
+import { FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+>>>>>>> 1d13c99a52a565cb23d175ab04d35ee6a2fc752c
 import { styles, pallette } from '../styles';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
@@ -15,11 +19,15 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-native';
 
 class Discover extends React.Component {
+<<<<<<< HEAD
     state = {
         codeText: '',
     };
 
     renderGameItem = ({ item, index, section }) => (
+=======
+    renderGameItem = ({ item, index }) => (
+>>>>>>> 1d13c99a52a565cb23d175ab04d35ee6a2fc752c
         <Link
             to={`/game/${item.id}`}
             activeOpacity={0.5}
@@ -49,6 +57,7 @@ class Discover extends React.Component {
         let followedGames = [];
         let generalGames = [];
 
+<<<<<<< HEAD
         if (currentUser) {
             followedGames = availableGames.filter(g => currentUser.following.includes(g.admin) || g.admin === currentUser.id);
             generalGames = availableGames.filter(g => !currentUser.following.includes(g.admin));
@@ -127,6 +136,19 @@ const localStyles = StyleSheet.create({
     },
 });
 
+=======
+        return games && templates ? (
+            <FlatList
+                style={styles.listView}
+                data={availableGames}
+                renderItem={this.renderGameItem}
+                keyExtractor={game => game.id}
+            />
+        ) : null;
+    }
+}
+
+>>>>>>> 1d13c99a52a565cb23d175ab04d35ee6a2fc752c
 const mapStateToProps = state => ({
     firebase: state.firebase,
     templates: state.firestore.data.templates || {},

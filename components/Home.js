@@ -1,6 +1,8 @@
 import React from 'react';
+
 import TopBar from './TopBar/Bar';
 import Discover from './Discover';
+import JoinBar from './JoinBar';
 
 const Home = props => (
     <>
@@ -11,6 +13,7 @@ const Home = props => (
             logoRight="Cast"
         />
         <Discover />
+        <JoinBar />
     </>
 );
 
