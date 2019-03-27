@@ -215,7 +215,7 @@ class GameView extends Component {
             <>
                 <TopBar
                     left={{ linkTo: '/home', iconName: 'times' }}
-                    right={{ iconName: 'share', onPress: this.shareGameTag }}
+                    right={{ iconName: 'share-alt', onPress: this.shareGameTag }}
                     logoLeft="Live"
                     logoRight="Score"
                 />
