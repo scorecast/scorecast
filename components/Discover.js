@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     View,
-    FlatList,
+    SectionList,
     Text,
     TextInput,
     TouchableOpacity,
@@ -19,7 +19,7 @@ class Discover extends React.Component {
         codeText: '',
     };
 
-    renderGameItem = ({ item, index }) => (
+    renderGameItem = ({ item, index, section }) => (
         <Link
             to={`/game/${item.id}`}
             activeOpacity={0.5}
@@ -38,21 +38,37 @@ class Discover extends React.Component {
         </Link>
     );
 
+    renderSectionHeader = ({ section: { title }}) => (
+        <Text style={localStyles.sectionHeader}>{title}</Text>
+    );
+
     render() {
-        const { games, templates } = this.props;
+        const { games, templates, currentUser, auth } = this.props;
 
         const availableGames = games.filter(g => g.variables['gameName']);
+        let followedGames = [];
+        let generalGames = [];
 
+        if (currentUser) {
+            followedGames = availableGames.filter(g => currentUser.following.includes(g.admin) || g.admin === currentUser.id);
+            generalGames = availableGames.filter(g => !currentUser.following.includes(g.admin));
+        } else {
+            generalGames = availableGames;
+        }
         return (
             <>
                 {games && templates ? (
-                    <FlatList
+                    <SectionList
                         style={styles.listView}
-                        data={availableGames}
                         renderItem={this.renderGameItem}
-                        keyExtractor={game => game.id}
+                        renderSectionHeader={this.renderSectionHeader}
+                        sections={[
+                            {title: "Followed Games", data: followedGames},
+                            {title: "General Games", data: generalGames},
+                        ]}
+                        keyExtractor={(game, index) => game.id + index}
                     />
-                ) : null}
+                ) : ( <> </> )}
                 <KeyboardAvoidingView behavior="position">
                     <View style={localStyles.codeTextForm}>
                         <TextInput
@@ -100,15 +116,26 @@ const localStyles = StyleSheet.create({
         fontWeight: 'bold',
         color: pallette.white,
     },
+    sectionHeader: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        backgroundColor: pallette.crimson,
+        color: pallette.white,
+        paddingLeft: 20,
+        paddingTop: 5,
+        paddingBottom: 5,
+    },
 });
 
 const mapStateToProps = state => ({
     firebase: state.firebase,
     templates: state.firestore.data.templates || {},
     games: state.firestore.ordered.games || [],
+    currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
+    auth: state.firebase.auth,
 });
 
 export default compose(
-    firestoreConnect(['templates', 'games']),
+    firestoreConnect(['templates', 'games', 'users',]),
     connect(mapStateToProps)
 )(Discover);

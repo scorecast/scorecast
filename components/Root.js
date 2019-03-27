@@ -16,6 +16,7 @@ import Game from './Game';
 import UserProfile from './UserProfile';
 import Login from './Login';
 import SignUpPage from './SignUp';
+import NewFollow from './NewFollow';
 
 const Root = props => {
     return (
@@ -34,6 +35,7 @@ const Root = props => {
                     <Route path="/user" component={UserProfile} />
                     <Route path="/login" component={Login} />
                     <Route path="/signup" component={SignUpPage} />
+                    <Route path="/follow/new" component={NewFollow} />
                 </Switch>
                 <BackButton />
             </SafeAreaView>

@@ -3,9 +3,10 @@ import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity } from 'reac
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withFirebase, withFirestore } from 'react-redux-firebase';
-import { Redirect, Link } from 'react-router-native';
+import { Redirect, Route, Link } from 'react-router-native';
 import TopBar from './TopBar/Bar';
 import { styles, pallette } from '../styles';
+import NewFollow from './NewFollow';
 
 const style = StyleSheet.create({
     screen: {
@@ -17,6 +18,18 @@ const style = StyleSheet.create({
     listView: {
         flexGrow: 0,
         backgroundColor: pallette.white,
+    },
+    button: {
+        backgroundColor: pallette.darkgray,
+        color: pallette.black,
+        padding: 16,
+        fontSize: 26,
+        fontWeight: 'bold',
+        alignItems: 'center',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: pallette.black,
+        margin: 10,
     }
 });
 
@@ -53,6 +66,7 @@ const UserProfile = props => {
                 logoLeft="User"
                 logoRight="Profile"
             />
+            
             <View style={style.screen}>
                 <Text>Hello {props.auth.email}</Text>
                 { userGames.length !== 0 ? (
@@ -75,7 +89,15 @@ const UserProfile = props => {
                             .then(() => props.history.goBack());
                     }}
                     title="Log out"
+                    style={[{ margin: 10 }]}
                 />
+                <Link
+                    to="/follow/new"
+                    component={TouchableOpacity}
+                    style={style.button}
+                >
+                    <Text>Follow More People!</Text>
+                </Link>
             </View>
         </>
     );
