@@ -35,7 +35,7 @@ const style = StyleSheet.create({
 
 const UserProfile = props => {
 
-    const { games, templates } = props;
+    const { games, templates, currentUser, auth } = props;
 
     renderGameItem = ({ item, index }) => (
         <Link
@@ -51,13 +51,13 @@ const UserProfile = props => {
         >
             <Text style={[{ fontSize: 20 }]}>{item.variables.gameName}</Text>
             <Text style={{ fontSize: 10 }}>
-                {props.templates[item.template].name}
+                {templates[item.template].name}
             </Text>
         </Link>
     );
 
-    const userGames = props.games.filter(g => g.admin === props.auth.uid);
-    return props.auth.isEmpty || props.auth.isAnonymous ? (
+    const userGames = games.filter(g => g.admin === props.auth.uid);
+    return auth.isEmpty || auth.isAnonymous ? (
         <Redirect to="/login" from="/user" />
     ) : (
         <>
@@ -68,7 +68,7 @@ const UserProfile = props => {
             />
             
             <View style={style.screen}>
-                <Text>Hello {props.auth.email}</Text>
+                <Text>Hello {auth.email}</Text>
                 { userGames.length !== 0 ? (
                     <View>
                         <Text>Games you've hosted:</Text>
@@ -107,6 +107,7 @@ const mapStateToProps = state => ({
     auth: state.firebase.auth,
     games: state.firestore.ordered.games || [],
     templates: state.firestore.data.templates || {},
+    currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
 });
 
 export default compose(
