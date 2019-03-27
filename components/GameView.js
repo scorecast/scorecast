@@ -1,60 +1,51 @@
-import { pallette, styles } from '../styles';
-import {
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
-    TextInput,
-    StyleSheet,
-} from 'react-native';
 import React, { Component } from 'react';
-
+import { Text, TouchableOpacity, View, Share } from 'react-native';
 import { compose } from 'redux';
-import { firestoreConnect, getVal } from 'react-redux-firebase';
-import connect from 'react-redux/es/connect/connect';
+import { firestoreConnect } from 'react-redux-firebase';
+import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Link from 'react-router-native/Link';
-import { SectionGrid } from 'react-native-super-grid';
+
+import TopBar from './TopBar/Bar';
 
 import { Operation } from '../config/gameAction';
+import { createTag } from '../config/functions';
 
-class Game2 extends Component {
-    constructor(props) {
-        super(props);
-    }
+import { pallette, styles } from '../styles';
 
-    componentDidMount() {
-        //TODO: Figure out event listeners so that multiple people can update
-        //this.props.firestore.setListener({ collection: 'games', doc: this.props.match.params.gameId });
+class GameView extends Component {
+    shareGameTag = () => {
+        this.getTag(this.props).then(tag => Share.share({ message: "Welcome to ScoreCast. Here is your game id: " + tag }));
+    };
+
+    async getTag({ firestore, game, match }) {
+        if (game.tag) return game.tag;
+
+        let tag;
+        let query;
+        do {
+            tag = createTag();
+            query = await firestore
+                .collection('games')
+                .where('tag', '==', tag)
+                .get();
+        } while (query.size > 0);
+
+        firestore.update(
+            { collection: 'games', doc: match.params.gameId },
+            { tag }
+        );
+
+        return tag;
     }
 
     render() {
-        let game = this.props.games.find(g => {
-            return g.id === this.props.match.params.gameId;
-        });
+        const { game, template, auth, match } = this.props;
         if (!game) return null;
 
-        let isAdmin = this.props.firebase.auth.uid === game.admin;
+        const isAdmin = auth.uid === game.admin;
 
-        let template = this.props.games.find(g => {
-            return g.id === this.props.match.params.gameId;
-        }).template;
-
-        /*let templateName = this.props.templates.find((t) => {
-            return t.id === template;
-        }).name;*/
-
-        let logic = this.props.templates.find(t => {
-            return t.id === template;
-        }).logic;
-        if (!logic) return <></>;
-        logic = JSON.parse(logic);
-
-        let view = this.props.templates.find(t => {
-            return t.id === template;
-        }).view;
-        if (!view) return <></>;
-        view = JSON.parse(view);
+        const logic = JSON.parse(template.logic);
+        const view = JSON.parse(template.view);
 
         //Update composite variables
         logic.variables.map(v => {
@@ -65,7 +56,7 @@ class Game2 extends Component {
                 //Now Update the store
                 this.props.firestore
                     .collection('games')
-                    .doc('' + this.props.match.params.gameId)
+                    .doc('' + match.params.gameId)
                     .update({
                         [`variables.${v.name}`]: val,
                     })
@@ -118,12 +109,8 @@ class Game2 extends Component {
                                 <TouchableOpacity
                                     style={{ marginLeft: 10, marginTop: 5 }}
                                     onPress={() => {
-                                        console.log(
-                                            this.props.match.params.gameId
-                                        );
-                                        let setupPath = `/home/gameSetup/${
-                                            this.props.match.params.gameId
-                                        }`;
+                                        console.log(match.params.gameId);
+                                        let setupPath = `${match.url}/edit`;
                                         //console.log(setupPath);
                                         this.props.history.push(setupPath);
                                     }}
@@ -184,8 +171,7 @@ class Game2 extends Component {
                                                         .collection('games')
                                                         .doc(
                                                             '' +
-                                                                this.props.match
-                                                                    .params
+                                                                match.params
                                                                     .gameId
                                                         )
                                                         .update({
@@ -226,47 +212,61 @@ class Game2 extends Component {
         });
 
         return (
-            <View
-                style={[
-                    {
-                        flex: 1,
-                        flexDirection: 'row',
-                        backgroundColor: '#ffccdd',
-                    },
-                ]}
-            >
-                {isWon ? (
-                    <View
-                        style={[
-                            styles.content,
-                            { backgroundColor: view.backgroundColor },
-                        ]}
-                    >
-                        <Text style={styles.header}>{winText}</Text>
-                    </View>
-                ) : (
-                    <View
-                        style={[
-                            {
-                                flex: 1,
-                                flexDirection: 'column',
-                                backgroundColor: view.backgroundColor,
-                            },
-                        ]}
-                    >
-                        {elements}
-                    </View>
-                )}
-            </View>
+            <>
+                <TopBar
+                    left={{ linkTo: '/home', iconName: 'times' }}
+                    right={{ iconName: 'share', onPress: this.shareGameTag }}
+                    logoLeft="Live"
+                    logoRight="Score"
+                />
+                <View
+                    style={[
+                        {
+                            flex: 1,
+                            flexDirection: 'row',
+                            backgroundColor: '#ffccdd',
+                        },
+                    ]}
+                >
+                    {isWon ? (
+                        <View
+                            style={[
+                                styles.content,
+                                { backgroundColor: view.backgroundColor },
+                            ]}
+                        >
+                            <Text style={styles.header}>{winText}</Text>
+                        </View>
+                    ) : (
+                        <View
+                            style={[
+                                {
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    backgroundColor: view.backgroundColor,
+                                },
+                            ]}
+                        >
+                            {elements}
+                        </View>
+                    )}
+                </View>
+            </>
         );
     }
 }
 
+const mapStateToProps = ({ firestore: { data }, firebase }, { match }) => {
+    const game = data.games && data.games[match.params.gameId];
+    const template = game && data.templates && data.templates[game.template];
+    return {
+        auth: firebase.auth,
+        game,
+        template,
+    };
+};
+
 export default compose(
     firestoreConnect(['templates', 'games']),
-    connect((state, props) => ({
-        firebase: state.firebase,
-        templates: state.firestore.ordered.templates,
-        games: state.firestore.ordered.games,
-    }))
-)(Game2);
+    connect(mapStateToProps)
+)(GameView);
