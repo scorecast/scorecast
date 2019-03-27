@@ -45,7 +45,7 @@ class Discover extends React.Component {
     render() {
         const { games, templates, currentUser, auth } = this.props;
 
-        const availableGames = games.filter(g => g.variables['gameName']);
+        const availableGames = games.filter(g => g.variables['gameName'] && !g.variables['win']);
         let followedGames = [];
         let generalGames = [];
 
