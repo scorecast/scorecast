@@ -127,7 +127,7 @@ class GameView extends Component {
                         </View>
                     </View>
                 );
-            } else if (logic) {
+            } else if (logic && isAdmin) {
                 let action = logic.actions.find(a => {
                     return a.name === e.ref;
                 });
