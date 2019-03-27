@@ -43,7 +43,7 @@ class SignUpPage extends Component {
         const { email, password } = this.state;
         const { auth, firestore, firebase } = this.props;
         firebase
-            .createUser({ email, password }, { following: [] })
+            .createUser({ email, password }, { email: email, following: [] })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
     };
