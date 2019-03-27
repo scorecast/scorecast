@@ -65,7 +65,7 @@ class Discover extends React.Component {
                         sections={
                             auth.isEmpty || auth.isAnonymous ? [{title: "General Games", data: generalGames},] :
                                 [{title: "Followed Games", data: followedGames},
-                                {title: "General Games", data: generalGames},]
+                                {title: "All Games", data: generalGames},]
                         }
                         keyExtractor={(game, index) => game.id + index}
                     />
