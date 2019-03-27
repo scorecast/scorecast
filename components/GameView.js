@@ -201,7 +201,7 @@ class GameView extends Component {
                                             },
                                         ]}
                                     >
-                                        {action.name}
+                                        {action.label || action.name}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
