@@ -7,8 +7,9 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Link, Redirect } from 'react-router-native';
-import { withFirebase } from 'react-redux-firebase';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { withFirebase, firestoreConnect, withFirestore } from 'react-redux-firebase';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import Button from './Button';
 import TopBar from './TopBar/Bar';
@@ -36,10 +37,12 @@ class SignUpPage extends Component {
 
     handleSignUp = () => {
         const { email, password } = this.state;
-        this.props.firebase
+        const { auth, firestore, firebase } = this.props;
+        firebase
             .createUser({ email, password })
-            .then(() => this.setState({ success: true }))
-            .catch(error => this.setState({ errorMessage: error.message }));
+            .then(userData => {
+                this.setState({ success: true });
+            }).catch(error => this.setState({ errorMessage: error.message }));
     };
 
     render() {
@@ -96,4 +99,15 @@ class SignUpPage extends Component {
     }
 }
 
-export default withFirebase(SignUpPage);
+const mapStateToProps = ({ firestore: { data }, firebase }) => {
+    const users = data.users;
+    return {
+        auth: firebase.auth,
+        users,
+    }
+};
+
+export default compose(
+    withFirestore,
+    connect(mapStateToProps)
+)(SignUpPage)
