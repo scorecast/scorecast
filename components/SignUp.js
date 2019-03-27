@@ -54,7 +54,7 @@ class SignUpPage extends Component {
         const signup = (
             <>
                 <TopBar
-                    left={{ linkTo: '/home', iconName: 'home' }}
+                    left={{ linkTo: '/home', iconName: 'times' }}
                     logoLeft="Sign"
                     logoRight="Up"
                 />
