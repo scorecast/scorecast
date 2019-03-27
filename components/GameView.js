@@ -14,7 +14,7 @@ import { pallette, styles } from '../styles';
 
 class GameView extends Component {
     shareGameTag = () => {
-        this.getTag(this.props).then(tag => Share.share({ message: tag }));
+        this.getTag(this.props).then(tag => Share.share({ message: "Welcome to ScoreCast. Here is your game id: " + tag }));
     };
 
     async getTag({ firestore, game, match }) {

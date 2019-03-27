@@ -68,23 +68,7 @@ class Discover extends React.Component {
                         ]}
                         keyExtractor={(game, index) => game.id + index}
                     />
-                ) : ( <> </> )}
-                <KeyboardAvoidingView behavior="position">
-                    <View style={localStyles.codeTextForm}>
-                        <TextInput
-                            onChangeText={codeText =>
-                                this.setState({ codeText })
-                            }
-                            style={localStyles.codeText}
-                            value={this.state.codeText}
-                            placeholder="Enter Game ID"
-                            placeholderTextColor={pallette.gray}
-                        />
-                        <TouchableOpacity style={localStyles.codeTextButton}>
-                            <Text style={localStyles.codeTextJoin}>Join</Text>
-                        </TouchableOpacity>
-                    </View>
-                </KeyboardAvoidingView>
+                ) : null}
             </>
         );
     }
