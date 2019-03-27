@@ -62,11 +62,11 @@ const UserProfile = props => {
     ) : (
         <>
             <TopBar
-                left={{ linkTo: '/home', iconName: 'home' }}
+                left={{ linkTo: '/home', iconName: 'times' }}
                 logoLeft="User"
                 logoRight="Profile"
             />
-            
+
             <View style={style.screen}>
                 <Text>Hello {auth.email}</Text>
                 { userGames.length !== 0 ? (
