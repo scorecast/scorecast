@@ -7,7 +7,11 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Link, Redirect } from 'react-router-native';
-import { withFirebase, firestoreConnect, withFirestore } from 'react-redux-firebase';
+import {
+    withFirebase,
+    firestoreConnect,
+    withFirestore,
+} from 'react-redux-firebase';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -39,10 +43,9 @@ class SignUpPage extends Component {
         const { email, password } = this.state;
         const { auth, firestore, firebase } = this.props;
         firebase
-            .createUser({ email, password })
-            .then(userData => {
-                this.setState({ success: true });
-            }).catch(error => this.setState({ errorMessage: error.message }));
+            .createUser({ email, password }, { following: [] })
+            .then(userData => this.setState({ success: true }))
+            .catch(error => this.setState({ errorMessage: error.message }));
     };
 
     render() {
@@ -104,10 +107,10 @@ const mapStateToProps = ({ firestore: { data }, firebase }) => {
     return {
         auth: firebase.auth,
         users,
-    }
+    };
 };
 
 export default compose(
     withFirestore,
     connect(mapStateToProps)
-)(SignUpPage)
+)(SignUpPage);
