@@ -6,6 +6,7 @@ class Evaluateable {
 class Operation extends Evaluateable{
     constructor(str) {
         super();
+        str = "" + str;
         let openIndex = str.indexOf('(');                                        // open paren
         //console.log(`openIndex: ${openIndex}`);
 

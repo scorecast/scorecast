@@ -66,10 +66,10 @@ class GameView extends Component {
         });
 
         //Check win condition
-        let isWon = game.variables[logic.winCondition] !== 0;
-        let winText = new Operation(logic.winText).evaluate(game.variables);
+        let isWon = game.variables['win'] !== 0;
+        let winText = game.variables['winString'];
+        //console.warn(winText);
 
-        let gameName = 'Game';
         let elements = view.elements.map((e, index) => {
             let varName = Object.keys(game.variables).find(varName => {
                 return varName === e.ref;
