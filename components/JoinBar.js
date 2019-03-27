@@ -62,7 +62,10 @@ class JoinBar extends Component {
             <KeyboardAvoidingView behavior="position">
                 <View style={localStyles.codeTextForm}>
                     <TextInput
-                        onChangeText={text => this.setState({ text })}
+                        autoCapitalize="none"
+                        onChangeText={text =>
+                            this.setState({ text: text.toUpperCase() })
+                        }
                         style={localStyles.codeText}
                         value={this.state.text}
                         placeholder="Enter Game ID"
