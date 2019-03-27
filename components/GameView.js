@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, View, Share } from 'react-native';
+import { Text, TouchableOpacity, View, Share, ImageBackground } from 'react-native';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
@@ -224,32 +224,44 @@ class GameView extends Component {
                         {
                             flex: 1,
                             flexDirection: 'row',
-                            backgroundColor: '#ffccdd',
+                            backgroundColor: view.backgroundColor,
                         },
                     ]}
                 >
+                  <ImageBackground style={{
+                                   flex: 1,
+                                     flexDirection: 'row'
+                                   }}
+                                   imageStyle={{
+                                     resizeMode: 'stretch',
+                                     opacity: 0.5
+                                   }}
+                                   source={{
+                                     uri: view.backgroundSrc,
+                                   }}>
                     {isWon ? (
-                        <View
-                            style={[
-                                styles.content,
-                                { backgroundColor: view.backgroundColor },
-                            ]}
-                        >
-                            <Text style={styles.header}>{winText}</Text>
-                        </View>
+                      <View
+                        style={[
+                          styles.content,
+                          //{ backgroundColor: view.backgroundColor },
+                        ]}
+                      >
+                        <Text style={styles.header}>{winText}</Text>
+                      </View>
                     ) : (
-                        <View
-                            style={[
-                                {
-                                    flex: 1,
-                                    flexDirection: 'column',
-                                    backgroundColor: view.backgroundColor,
-                                },
-                            ]}
-                        >
-                            {elements}
-                        </View>
+                      <View
+                        style={[
+                          {
+                            flex: 1,
+                            flexDirection: 'column',
+                            //backgroundColor: view.backgroundColor,
+                          },
+                        ]}
+                      >
+                        {elements}
+                      </View>
                     )}
+                  </ImageBackground>
                 </View>
             </>
         );
