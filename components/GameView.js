@@ -234,15 +234,20 @@ class GameView extends Component {
                                    }}
                                    imageStyle={{
                                      resizeMode: 'stretch',
-                                     opacity: 0.5
+                                     opacity: 0.25
                                    }}
                                    source={{
                                      uri: view.backgroundSrc,
                                    }}>
                     {isWon ? (
                       <View
-                        style={[
-                          styles.content,
+                        style={[{
+                          flex: 1,
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }
+                          //styles.content,
                           //{ backgroundColor: view.backgroundColor },
                         ]}
                       >
