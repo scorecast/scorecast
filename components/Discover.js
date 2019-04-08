@@ -63,7 +63,7 @@ class Discover extends React.Component {
                         renderItem={this.renderGameItem}
                         renderSectionHeader={this.renderSectionHeader}
                         sections={
-                            auth.isEmpty || auth.isAnonymous ? [{title: "General Games", data: generalGames},] :
+                            auth.isEmpty || auth.isAnonymous || followedGames.length === 0 ? [{title: "General Games", data: generalGames},] :
                                 [{title: "Followed Games", data: followedGames},
                                 {title: "All Games", data: generalGames},]
                         }
