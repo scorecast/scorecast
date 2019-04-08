@@ -33,7 +33,8 @@ class Discover extends React.Component {
         >
             <Text style={[{ fontSize: 20 }]}>{item.variables.gameName + (item.admin === this.props.auth.uid ? '\u2605' : '')}</Text>
             <Text style={{ fontSize: 10 }}>
-            {this.props.templates[item.template].name}
+            { /** TODO */}
+            {this.props.templates[item.template].name + (this.props.users ? this.props.users[item.admin]['email'] : '')}
             </Text>
         </Link>
     );
@@ -43,7 +44,7 @@ class Discover extends React.Component {
     );
 
     render() {
-        const { games, templates, currentUser, auth } = this.props;
+        const { games, templates, users, currentUser, auth } = this.props;
 
         const availableGames = games.filter(g => g.variables['gameName'] && !g.variables['win']);
         let followedGames = [];
@@ -57,7 +58,7 @@ class Discover extends React.Component {
         }
         return (
             <>
-                {games && templates ? (
+                {games && templates && users ? (
                     <SectionList
                         style={styles.listView}
                         renderItem={this.renderGameItem}
@@ -116,6 +117,7 @@ const mapStateToProps = state => ({
     firebase: state.firebase,
     templates: state.firestore.data.templates || {},
     games: state.firestore.ordered.games || [],
+    users: state.firestore.data.users,
     currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
     auth: state.firebase.auth,
 });
