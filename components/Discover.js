@@ -32,9 +32,10 @@ class Discover extends React.Component {
             ]}
         >
             <Text style={[{ fontSize: 20 }]}>{item.variables.gameName + (item.admin === this.props.auth.uid ? '\u2605' : '')}</Text>
-            <Text style={{ fontSize: 10 }}>
-            {this.props.templates[item.template].name}
-            </Text>
+            <Text style={{ fontSize: 10 }}>{this.props.templates[item.template].name}</Text>
+            { this.props.users && this.props.users[item.admin] ? (
+                <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
+            ) : null }
         </Link>
     );
 
@@ -116,6 +117,7 @@ const mapStateToProps = state => ({
     firebase: state.firebase,
     templates: state.firestore.data.templates || {},
     games: state.firestore.ordered.games || [],
+    users: state.firestore.data.users || {},
     currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
     auth: state.firebase.auth,
 });

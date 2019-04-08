@@ -34,18 +34,26 @@ const style = StyleSheet.create({
 class SignUpPage extends Component {
     state = {
         email: '',
+        username: '',
         password: '',
+        c_password: '',
         errorMessage: null,
         success: false,
     };
 
     handleSignUp = () => {
-        const { email, password } = this.state;
-        const { auth, firestore, firebase } = this.props;
-        firebase
-            .createUser({ email, password }, { email: email, following: [] })
+        const { email, username, password, c_password } = this.state;
+        const { auth, firestore, firebase, users } = this.props;
+        if (c_password !== password) {
+            this.setState({ c_password: '', errorMessage: 'The passwords were not the same, please use the same password.' });
+        } else if (users.some(u => u.username === username)) {
+            this.setState({ errorMessage: 'The username is taken.' });
+        } else {
+            firebase
+            .createUser({ email, password }, { email: email, username: username, following: [] })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
+        }
     };
 
     render() {
@@ -72,12 +80,27 @@ class SignUpPage extends Component {
                         value={this.state.email}
                     />
                     <TextField
+                        placeholder="Username"
+                        autoCapitalize="none"
+                        style={textStyle}
+                        onChangeText={username => this.setState({ username })}
+                        value={this.state.username}
+                    />
+                    <TextField
                         secureTextEntry
                         placeholder="Password"
                         autoCapitalize="none"
                         style={textStyle}
                         onChangeText={password => this.setState({ password })}
                         value={this.state.password}
+                    />
+                    <TextField
+                        secureTextEntry
+                        placeholder="Confirm Password"
+                        autoCapitalize="none"
+                        style={textStyle}
+                        onChangeText={c_password => this.setState({ c_password })}
+                        value={this.state.c_password}
                     />
                     <Button
                         text="Sign Up"
@@ -102,8 +125,8 @@ class SignUpPage extends Component {
     }
 }
 
-const mapStateToProps = ({ firestore: { data }, firebase }) => {
-    const users = data.users;
+const mapStateToProps = ({ firestore: { ordered }, firebase }) => {
+    const users = ordered.users;
     return {
         auth: firebase.auth,
         users,
