@@ -86,7 +86,7 @@ const UserProfile = props => {
                     onPress={() => {
                         props.firebase
                             .logout()
-                            .then(() => props.history.goBack());
+                            .then(() => props.history.replace("/login"));
                     }}
                     title="Log out"
                     style={[{ margin: 10 }]}
