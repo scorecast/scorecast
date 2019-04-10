@@ -88,7 +88,7 @@ class Login extends Component {
             </>
         );
 
-        return this.props.auth.email ? <Redirect to="/user" /> : login;
+        return this.props.auth.email ? <Redirect to="/me" /> : login;
     }
 }
 

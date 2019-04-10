@@ -7,7 +7,7 @@ import JoinBar from './JoinBar';
 const Home = props => (
     <>
         <TopBar
-            left={{ linkTo: '/user', iconName: 'user' }}
+            left={{ linkTo: '/me', iconName: 'user' }}
             right={{ linkTo: '/create', iconName: 'plus' }}
             logoLeft="Score"
             logoRight="Cast"

@@ -57,7 +57,7 @@ class NewFollow extends React.Component {
     };
 
     toggleFollow = (item) => {
-        const followed = this.props.currentUser.following.includes(item.id)
+        const followed = this.props.currentUser.following.includes(item.id);
         const n_arr = followed ?
             this.props.currentUser.following.filter(id => id !== item.id) :
             this.props.currentUser.following.concat(item.id);
@@ -110,7 +110,7 @@ class NewFollow extends React.Component {
                         : { backgroundColor: pallette.white },]}
         >
             <Link
-                to=""
+                to={"/user/" + item.id}
                 activeOpacity={0.5}
                 component={TouchableOpacity}
                 style={{ flex: 5 }}
@@ -141,7 +141,7 @@ class NewFollow extends React.Component {
         (
             <>
                 <TopBar
-                    left={{ linkTo: '/user', iconName: 'user' }}
+                    left={{ goBack: true, iconName: 'arrow-left' }}
                     logoLeft="Follow"
                     logoRight="People" />
                 {this.props.users ? (

@@ -1,23 +1,127 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withFirebase, withFirestore } from 'react-redux-firebase';
-import { Redirect, Route, Link } from 'react-router-native';
+import { firestoreConnect, withFirestore } from 'react-redux-firebase';
 import TopBar from './TopBar/Bar';
 import { styles, pallette } from '../styles';
-import NewFollow from './NewFollow';
+
+
+
+class UserProfile extends Component {
+
+    toggleFollow = (isFollowing, uid) => {
+        const n_arr = isFollowing ?
+            this.props.currentUser.following.filter(id => id !== uid) :
+            this.props.currentUser.following.concat(uid);
+
+        this.props.firestore.update({
+            collection: 'users', 
+            doc: this.props.auth.uid },
+            { following : n_arr });
+    };
+
+    render() {
+        const { games, users, userId, currentUser, match, auth } = this.props;
+        const uid = userId ? userId : match.params.userId;
+        const user = users[uid];
+        const followed = currentUser.following.includes(uid);
+
+        const userGames = games.filter(g => g.admin === uid);
+        return (
+            <>
+                <TopBar
+                    left={{ goBack: true , iconName: 'arrow-left' }}
+                    right={ uid === auth.uid ? { iconName: 'cog'}
+                        : {
+                            onPress: (() => this.toggleFollow(followed, uid)),
+                            iconName: (followed ? 'check' : 'user-plus')}
+                        }
+                    logoLeft="User"
+                    logoRight="Profile"
+                />
+                <View style={style.container_c}>
+                    <View style={[style.container_r, style.wrap, { marginBottom: 5 }]}>
+                        <Text style={[style.bigTag, { marginRight: 20 }]}>{'@' + user.username}</Text>
+                        <View style={style.container_r}>
+                            <View style={style.info_block}>
+                                <Text style={{ fontWeight: 'bold' }}>{userGames.length}</Text>
+                                <Text style={{ color: pallette.gray }}>Games Hosted</Text>
+                            </View>
+                            {/* <View style={style.info_block}>
+                                <Text style={{ fontWeight: 'bold' }}>4</Text>
+                                <Text style={{ color: pallette.gray }}>Followers</Text>
+                            </View> */}
+                            <View style={style.info_block}>
+                                <Text style={{ fontWeight: 'bold' }}>{user.following.length}</Text>
+                                <Text style={{ color: pallette.gray }}>Following</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={style.wrap}>
+                        <Text style={style.bio}>
+                            {user.bio}
+                        </Text>
+                    </View>
+                </View>
+            </>
+            // { userGames.length !== 0 ? (
+            //     <View>
+            //         <Text>Games you've hosted:</Text>
+            //         <FlatList
+            //             style={style.listView}
+            //             data={userGames}
+            //             renderItem={this.renderGameItem}
+            //             keyExtractor={game => game.id}
+            //         />
+            //     </View>
+            // ) : (
+            //     <Text>You haven't hosted any games.</Text>
+            // )}
+        );
+    }
+}
 
 const style = StyleSheet.create({
-    screen: {
-        flex: 1,
+    container_c: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+    },
+    container_r: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+    wrap: {
+        flexWrap: 'wrap',
+    },
+    bigTag: {
+        marginLeft: 15,
+        alignSelf: 'flex-start',
+        fontSize: 30,
+        fontWeight: 'bold',
+    },
+    bio: {
+        marginLeft: 10,
+        marginTop: 5,
+        marginBottom: 5,
+        fontSize: 18,
+    },
+    info_block: {
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: pallette.lightgray,
-    },
-    listView: {
-        flexGrow: 0,
-        backgroundColor: pallette.white,
+        marginLeft: 5,
+        marginRight: 5,
+        marginTop: 2,
+        marginBottom: 2,
+        paddingLeft: 2,
+        paddingRight: 2,
+        paddingBottom: 3,
+        fontSize: 12,
+        width: 'auto',
     },
     button: {
         backgroundColor: pallette.darkgray,
@@ -33,85 +137,18 @@ const style = StyleSheet.create({
     }
 });
 
-const UserProfile = props => {
-
-    const { games, templates, currentUser, auth } = props;
-
-    renderGameItem = ({ item, index }) => (
-        <Link
-            to={`/game/${item.id}`}
-            activeOpacity={0.5}
-            component={TouchableOpacity}
-            style={[
-                styles.listViewRow,
-                index % 2
-                    ? { backgroundColor: pallette.lightergray }
-                    : { backgroundColor: pallette.white },
-            ]}
-        >
-            <Text style={[{ fontSize: 20 }]}>{item.variables.gameName}</Text>
-            <Text style={{ fontSize: 10 }}>
-                {templates[item.template].name}
-            </Text>
-        </Link>
-    );
-
-    const userGames = games.filter(g => g.admin === props.auth.uid);
-    return auth.isEmpty || auth.isAnonymous ? (
-        <Redirect to="/login" from="/user" />
-    ) : (
-        <>
-            <TopBar
-                left={{ linkTo: '/home', iconName: 'times' }}
-                logoLeft="User"
-                logoRight="Profile"
-            />
-
-            <View style={style.screen}>
-                <Text>Hello {auth.email}</Text>
-                { userGames.length !== 0 ? (
-                    <View>
-                        <Text>Games you've hosted:</Text>
-                        <FlatList
-                            style={style.listView}
-                            data={userGames}
-                            renderItem={this.renderGameItem}
-                            keyExtractor={game => game.id}
-                        />
-                    </View>
-                ) : (
-                    <Text>You haven't hosted any games.</Text>
-                )}
-                <Button
-                    onPress={() => {
-                        props.firebase
-                            .logout()
-                            .then(() => props.history.replace("/login"));
-                    }}
-                    title="Log out"
-                    style={[{ margin: 10 }]}
-                />
-                <Link
-                    to="/follow/new"
-                    component={TouchableOpacity}
-                    style={style.button}
-                >
-                    <Text>Follow More People!</Text>
-                </Link>
-            </View>
-        </>
-    );
+const mapStateToProps = ({ firestore: { data, ordered }, firebase }, { match }) => {
+    const user = data.users && match && match.params ? data.users[match.params.userId] : {};
+    return {
+        user,
+        games: ordered.games || [],
+        users: data.users,
+        currentUser: data.users && firebase.auth.uid && data.users[firebase.auth.uid],
+        auth: firebase.auth,
+    };
 };
 
-const mapStateToProps = state => ({
-    auth: state.firebase.auth,
-    games: state.firestore.ordered.games || [],
-    templates: state.firestore.data.templates || {},
-    currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
-});
-
 export default compose(
-    withFirestore,
-    withFirebase,
+    firestoreConnect(['templates', 'users']),
     connect(mapStateToProps)
 )(UserProfile);
