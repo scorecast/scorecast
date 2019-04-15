@@ -42,7 +42,7 @@ class Login extends Component {
         const login = (
             <>
                 <TopBar
-                    left={{ linkTo: '/home', iconName: 'home' }}
+                    left={{ linkTo: '/home', iconName: 'times' }}
                     logoLeft="Sign"
                     logoRight="In"
                 />

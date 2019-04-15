@@ -127,7 +127,7 @@ class GameView extends Component {
                         </View>
                     </View>
                 );
-            } else if (logic) {
+            } else if (logic && isAdmin) {
                 let action = logic.actions.find(a => {
                     return a.name === e.ref;
                 });
@@ -215,7 +215,7 @@ class GameView extends Component {
             <>
                 <TopBar
                     left={{ linkTo: '/home', iconName: 'times' }}
-                    right={{ iconName: 'share', onPress: this.shareGameTag }}
+                    right={{ iconName: 'share-alt', onPress: this.shareGameTag }}
                     logoLeft="Live"
                     logoRight="Score"
                 />
@@ -234,15 +234,20 @@ class GameView extends Component {
                                    }}
                                    imageStyle={{
                                      resizeMode: 'stretch',
-                                     opacity: 0.5
+                                     opacity: 0.25
                                    }}
                                    source={{
                                      uri: view.backgroundSrc,
                                    }}>
                     {isWon ? (
                       <View
-                        style={[
-                          styles.content,
+                        style={[{
+                          flex: 1,
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }
+                          //styles.content,
                           //{ backgroundColor: view.backgroundColor },
                         ]}
                       >

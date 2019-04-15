@@ -32,9 +32,10 @@ class Discover extends React.Component {
             ]}
         >
             <Text style={[{ fontSize: 20 }]}>{item.variables.gameName + (item.admin === this.props.auth.uid ? '\u2605' : '')}</Text>
-            <Text style={{ fontSize: 10 }}>
-            {this.props.templates[item.template].name}
-            </Text>
+            <Text style={{ fontSize: 10 }}>{this.props.templates[item.template].name}</Text>
+            { this.props.users && this.props.users[item.admin] ? (
+                <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
+            ) : null }
         </Link>
     );
 
@@ -45,7 +46,7 @@ class Discover extends React.Component {
     render() {
         const { games, templates, currentUser, auth } = this.props;
 
-        const availableGames = games.filter(g => g.variables['gameName']);
+        const availableGames = games.filter(g => g.variables['gameName'] && !g.variables['win']);
         let followedGames = [];
         let generalGames = [];
 
@@ -63,9 +64,9 @@ class Discover extends React.Component {
                         renderItem={this.renderGameItem}
                         renderSectionHeader={this.renderSectionHeader}
                         sections={
-                            auth.isEmpty || auth.isAnonymous ? [{title: "General Games", data: generalGames},] :
+                            auth.isEmpty || auth.isAnonymous || followedGames.length === 0 ? [{title: "General Games", data: generalGames},] :
                                 [{title: "Followed Games", data: followedGames},
-                                {title: "General Games", data: generalGames},]
+                                {title: "All Games", data: generalGames},]
                         }
                         keyExtractor={(game, index) => game.id + index}
                     />
@@ -116,6 +117,7 @@ const mapStateToProps = state => ({
     firebase: state.firebase,
     templates: state.firestore.data.templates || {},
     games: state.firestore.ordered.games || [],
+    users: state.firestore.data.users || {},
     currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
     auth: state.firebase.auth,
 });

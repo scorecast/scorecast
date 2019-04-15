@@ -68,6 +68,39 @@ class NewFollow extends React.Component {
             { following : n_arr });
     };
 
+    boldSubText = (text, sub) => {
+        let elems = [];
+        let p_Text = text;
+        while (p_Text.length > 0 && p_Text.includes(sub) && sub.length > 0) {
+            const occ = p_Text.indexOf(sub);
+            if (occ >= 0) {
+                if (occ !== 0) {
+                    const extract = p_Text.slice(0, occ);
+                    elems.push((
+                        <Text>{extract}</Text>
+                    ));
+                }
+                elems.push((
+                    <Text style={{fontWeight: 'bold'}}>{sub}</Text>
+                ));
+                const newText = p_Text.slice(occ + sub.length);
+                p_Text = newText;
+            } else {
+                elems.push((
+                    <Text>{p_Text}</Text>
+                ));
+                p_Text = '';
+                break;
+            }
+        }
+        if (p_Text.length > 0) {
+            elems.push((
+                <Text>{p_Text}</Text>
+            ));
+        }
+        return elems;
+    }
+
     renderUserItem = ({ item, index }) => 
     (
         <View style={[
@@ -83,7 +116,7 @@ class NewFollow extends React.Component {
                 style={{ flex: 5 }}
             >   
                 <Text style={style.itemText}>
-                    {item.email} { /** TODO add bold highlighting to search text */}
+                    {this.boldSubText(item.email, this.state.searchText)} { /** TODO add bold highlighting to search text */}
                 </Text>
             </Link>
             <TouchableOpacity
