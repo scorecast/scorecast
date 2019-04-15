@@ -68,21 +68,27 @@ class Discover extends React.Component {
     );
 
     render() {
-        const { games, templates, currentUser, auth } = this.props;
+        const { games, gameList, templates, currentUser, auth } = this.props;
 
-        const availableGames = games.filter(g => g.variables['gameName'] && !g.variables['win']);
+        const availableGames = gameList.filter(g => g.variables['gameName'] && !g.variables['win']);
         let followedGames = [];
         let generalGames = [];
 
         if (currentUser) {
-            followedGames = availableGames.filter(g => currentUser.following.includes(g.admin) || g.admin === auth.uid);
-            generalGames = availableGames.filter(g => !currentUser.following.includes(g.admin) && g.admin !== auth.uid);
+            const follows = availableGames.filter(g => currentUser.following.includes(g.admin) || g.admin === auth.uid);
+            const reposts = currentUser.reposts.map(g_id => {
+                const game = Object.assign({}, games[g_id]);
+                game.id = g_id;
+                return game;
+            }).filter(game => !(follows.some(g => g.id === game.id)));
+            followedGames = follows.concat(reposts);
+            generalGames = availableGames.filter(g => !currentUser.following.includes(g.admin) && g.admin !== auth.uid && !reposts.some(g2 => g2.id === g.id));
         } else {
             generalGames = availableGames;
         }
         return (
             <>
-                {games && templates ? (
+                {gameList && templates ? (
                     <SectionList
                         style={styles.listView}
                         renderItem={this.renderGameItem}
@@ -144,7 +150,8 @@ const localStyles = StyleSheet.create({
 const mapStateToProps = state => ({
     firebase: state.firebase,
     templates: state.firestore.data.templates || {},
-    games: state.firestore.ordered.games || [],
+    gameList: state.firestore.ordered.games || [],
+    games: state.firestore.data.games,
     users: state.firestore.data.users || {},
     currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
     auth: state.firebase.auth,
