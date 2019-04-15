@@ -68,7 +68,7 @@ class Discover extends React.Component {
     );
 
     render() {
-        const { games, gameList, templates, currentUser, auth } = this.props;
+        const { games, gameList, templates, currentUser, users, auth } = this.props;
 
         const availableGames = gameList.filter(g => g.variables['gameName'] && !g.variables['win']);
         let followedGames = [];
@@ -82,7 +82,17 @@ class Discover extends React.Component {
                 return game;
             }).filter(game => !(follows.some(g => g.id === game.id)));
             followedGames = follows.concat(reposts);
-            generalGames = availableGames.filter(g => !currentUser.following.includes(g.admin) && g.admin !== auth.uid && !reposts.some(g2 => g2.id === g.id));
+            let follow_reposts = [];
+            currentUser.following.forEach(u_id => {
+                const fUser = users[u_id];
+                fUser.reposts.forEach(g_id => {
+                    const game = Object.assign({}, games[g_id]);
+                    game.id = g_id;
+                    follow_reposts.push(game);
+                });
+            });
+            followedGames = followedGames.concat(follow_reposts.filter(game => !(followedGames.some(g => g.id === game.id))));
+            generalGames = availableGames.filter(g => !currentUser.following.includes(g.admin) && g.admin !== auth.uid && !followedGames.some(g2 => g2.id === g.id));
         } else {
             generalGames = availableGames;
         }
@@ -152,7 +162,7 @@ const mapStateToProps = state => ({
     templates: state.firestore.data.templates || {},
     gameList: state.firestore.ordered.games || [],
     games: state.firestore.data.games,
-    users: state.firestore.data.users || {},
+    users: state.firestore.data.users,
     currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
     auth: state.firebase.auth,
 });

@@ -51,7 +51,7 @@ class SignUpPage extends Component {
             this.setState({ errorMessage: 'The username is taken.' });
         } else {
             firebase
-            .createUser({ email, password }, { email: email, username: username, following: [], bio: bio })
+            .createUser({ email, password }, { email: email, username: username, following: [], bio: bio, reposts: [], })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
         }
