@@ -132,9 +132,6 @@ class UserList extends React.Component {
     );
 
     render() {
-        console.log(this.props.userList);
-        console.log(this.props.currentUser)
-
         const filteredUsers = !this.props.userList ? null :
             this.props.userList.filter(u => {
                 const tester = new RegExp(".?" + this.state.searchText + ".?");

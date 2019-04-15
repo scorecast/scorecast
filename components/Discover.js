@@ -8,6 +8,7 @@ import {
     KeyboardAvoidingView,
     StyleSheet,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles, pallette } from '../styles';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
@@ -19,24 +20,47 @@ class Discover extends React.Component {
         codeText: '',
     };
 
+    toggleRepost = (item) => {
+        const reposted = this.props.currentUser.reposts.includes(item.id);
+        const n_arr = reposted ?
+            this.props.currentUser.reposts.filter(id => id !== item.id) :
+            this.props.currentUser.reposts.concat(item.id);
+
+        this.props.firestore.update({
+            collection: 'users', 
+            doc: this.props.auth.uid },
+            { reposts : n_arr });
+    };
+
     renderGameItem = ({ item, index, section }) => (
-        <Link
-            to={`/game/${item.id}`}
-            activeOpacity={0.5}
-            component={TouchableOpacity}
-            style={[
-                styles.listViewRow,
+        <View style={
+            [localStyles.itemRow,
                 index % 2
-                    ? { backgroundColor: pallette.lightergray }
-                    : { backgroundColor: pallette.white },
-            ]}
-        >
-            <Text style={[{ fontSize: 20 }]}>{item.variables.gameName + (item.admin === this.props.auth.uid ? '\u2605' : '')}</Text>
-            <Text style={{ fontSize: 10 }}>{this.props.templates[item.template].name}</Text>
-            { this.props.users && this.props.users[item.admin] ? (
-                <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
+                ? { backgroundColor: pallette.lightergray }
+                : { backgroundColor: pallette.white },]
+            }>
+            <Link
+                to={`/game/${item.id}`}
+                activeOpacity={0.5}
+                component={TouchableOpacity}
+                style={{fontSize: 20, flex: 5}}
+            >
+                <Text style={[{ fontSize: 20 }]}>{item.variables.gameName + (item.admin === this.props.auth.uid ? '\u2605' : '')}</Text>
+                <Text style={{ fontSize: 10 }}>{this.props.templates[item.template].name}</Text>
+                { this.props.users && this.props.users[item.admin] ? (
+                    <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
+                ) : null }
+            </Link>
+            { item.admin !== this.props.auth.uid ? (
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => this.toggleRepost(item)}
+                    style={{flex: 1, alignSelf: "center"}}
+                >
+                    <Icon name={ this.props.currentUser && this.props.currentUser.reposts.includes(item.id) ? 'check' : 'retweet'} size={20} color={pallette.darkgray} />
+                </TouchableOpacity>
             ) : null }
-        </Link>
+        </View>
     );
 
     renderSectionHeader = ({ section: { title }}) => (
@@ -110,6 +134,10 @@ const localStyles = StyleSheet.create({
         paddingLeft: 20,
         paddingTop: 5,
         paddingBottom: 5,
+    },
+    itemRow: {
+        flexDirection: 'row',
+        padding: 20,
     },
 });
 

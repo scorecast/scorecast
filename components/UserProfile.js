@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, SectionList } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect, withFirestore } from 'react-redux-firebase';
@@ -7,7 +8,74 @@ import { Link } from 'react-router-native';
 import TopBar from './TopBar/Bar';
 import { styles, pallette } from '../styles';
 
-
+const style = StyleSheet.create({
+    container_c: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+    },
+    container_r: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+    itemRow: {
+        flexDirection: 'row',
+        padding: 20,
+    },
+    wrap: {
+        flexWrap: 'wrap',
+    },
+    bigTag: {
+        marginLeft: 15,
+        alignSelf: 'flex-start',
+        fontSize: 30,
+        fontWeight: 'bold',
+    },
+    bio: {
+        marginLeft: 10,
+        marginTop: 5,
+        marginBottom: 5,
+        fontSize: 18,
+    },
+    info_block: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        marginLeft: 5,
+        marginRight: 5,
+        marginTop: 2,
+        marginBottom: 2,
+        paddingLeft: 2,
+        paddingRight: 2,
+        paddingBottom: 3,
+        fontSize: 12,
+        width: 'auto',
+    },
+    button: {
+        backgroundColor: pallette.darkgray,
+        color: pallette.black,
+        padding: 16,
+        fontSize: 26,
+        fontWeight: 'bold',
+        alignItems: 'center',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: pallette.black,
+        margin: 10,
+    },
+    sectionHeader: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        backgroundColor: pallette.crimson,
+        color: pallette.white,
+        paddingLeft: 20,
+        paddingTop: 5,
+        paddingBottom: 5,
+    },
+});
 
 class UserProfile extends Component {
 
@@ -22,8 +90,55 @@ class UserProfile extends Component {
             { following : n_arr });
     };
 
+    toggleRepost = (item) => {
+        const reposted = this.props.currentUser.reposts.includes(item.id);
+        const n_arr = reposted ?
+            this.props.currentUser.reposts.filter(id => id !== item.id) :
+            this.props.currentUser.reposts.concat(item.id);
+
+        this.props.firestore.update({
+            collection: 'users', 
+            doc: this.props.auth.uid },
+            { reposts : n_arr });
+    };
+
+    renderGameItem = ({ item, index, section }) => (
+        <View style={
+            [style.itemRow,
+                index % 2
+                ? { backgroundColor: pallette.lightergray }
+                : { backgroundColor: pallette.white },]
+        }>
+            <Link
+                to={`/game/${item.id}`}
+                activeOpacity={0.5}
+                component={TouchableOpacity}
+                style={{fontSize: 20, flex: 5}}
+            >
+                <Text style={[{ fontSize: 20 }]}>{item.variables.gameName + (item.admin === this.props.auth.uid ? '\u2605' : '')}</Text>
+                <Text style={{ fontSize: 10 }}>{this.props.templates[item.template].name}</Text>
+                { this.props.users && this.props.users[item.admin] ? (
+                    <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
+                ) : null }
+            </Link>
+            { item.admin !== this.props.auth.uid ? (
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => this.toggleRepost(item)}
+                    style={{flex: 1, alignSelf: 'center'}}
+                >
+                    <Icon name={ this.props.currentUser.reposts.includes(item.id) ? 'check' : 'retweet'} size={20} color={pallette.darkgray} />
+                </TouchableOpacity>
+            ) : null }
+        </View>
+    );
+
+    renderSectionHeader = ({ section: { title }}) => (
+        <Text style={style.sectionHeader}>{title}</Text>
+    );
+
     render() {
-        const { games, users, userId, currentUser, match, auth, userList } = this.props;
+        const { games, gameList, users, userId, currentUser, match, auth, userList } = this.props;
         const uid = userId ? userId : match.params.userId;
         const user = users[uid];
         const followed = currentUser.following.includes(uid);
@@ -38,7 +153,21 @@ class UserProfile extends Component {
             }
         }
 
-        const userGames = games.filter(g => g.admin === uid);
+        const userGames = gameList.filter(g => g.admin === uid);
+        const reposts = user.reposts.map(g_id => {
+            const game = Object.assign({}, games[g_id]);
+            game.id = g_id;
+            return game;
+        });
+        const currentGames = [];
+        const pastGames = [];
+        userGames.forEach(game => {
+            if (game.variables.win === 1) {
+                pastGames.push(game);
+            } else {
+                currentGames.push(game);
+            }
+        });
         return (
             <>
                 <TopBar
@@ -84,94 +213,38 @@ class UserProfile extends Component {
                             {user.bio}
                         </Text>
                     </View>
-                    <Text>
-                        Past Games:
-                    </Text>
-                    {/* <GameList userId={uid}/> */}
+                    <SectionList
+                        style={styles.listView}
+                        renderItem={this.renderGameItem}
+                        renderSectionHeader={this.renderSectionHeader}
+                        sections={
+                            reposts.length === 0 ? 
+                                (currentGames.length === 0 ? 
+                                    [{title: "Past Games", data: pastGames},] :
+                                    [{title: "Current Games", data: currentGames}, {title: "Past Games", data: pastGames},]) :
+                                (currentGames.length === 0 ? 
+                                    [{title: "Reposts", data: reposts}, {title: "Past Games", data: pastGames},] :
+                                    [{title: "Current Games", data: currentGames}, {title: "Reposts", data: reposts}, {title: "Past Games", data: pastGames},])
+                        }
+                        keyExtractor={(game, index) => game.id + index}
+                    />
                 </View>
             </>
-            // { userGames.length !== 0 ? (
-            //     <View>
-            //         <Text>Games you've hosted:</Text>
-            //         <FlatList
-            //             style={style.listView}
-            //             data={userGames}
-            //             renderItem={this.renderGameItem}
-            //             keyExtractor={game => game.id}
-            //         />
-            //     </View>
-            // ) : (
-            //     <Text>You haven't hosted any games.</Text>
-            // )}
         );
     }
 }
-
-const style = StyleSheet.create({
-    container_c: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-    },
-    container_r: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-    },
-    wrap: {
-        flexWrap: 'wrap',
-    },
-    bigTag: {
-        marginLeft: 15,
-        alignSelf: 'flex-start',
-        fontSize: 30,
-        fontWeight: 'bold',
-    },
-    bio: {
-        marginLeft: 10,
-        marginTop: 5,
-        marginBottom: 5,
-        fontSize: 18,
-    },
-    info_block: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        marginLeft: 5,
-        marginRight: 5,
-        marginTop: 2,
-        marginBottom: 2,
-        paddingLeft: 2,
-        paddingRight: 2,
-        paddingBottom: 3,
-        fontSize: 12,
-        width: 'auto',
-    },
-    button: {
-        backgroundColor: pallette.darkgray,
-        color: pallette.black,
-        padding: 16,
-        fontSize: 26,
-        fontWeight: 'bold',
-        alignItems: 'center',
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: pallette.black,
-        margin: 10,
-    }
-});
 
 const mapStateToProps = ({ firestore: { data, ordered }, firebase }, { match }) => {
     const user = data.users && match && match.params ? data.users[match.params.userId] : {};
     return {
         user,
-        games: ordered.games || [],
+        gameList: ordered.games || [],
+        games: data.games,
         users: data.users,
         userList: ordered.users,
         currentUser: data.users && firebase.auth.uid && data.users[firebase.auth.uid],
         auth: firebase.auth,
+        templates: data.templates || {},
     };
 };
 
