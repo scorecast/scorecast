@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect, withFirestore } from 'react-redux-firebase';
+import { Link } from 'react-router-native';
 import TopBar from './TopBar/Bar';
 import { styles, pallette } from '../styles';
 
@@ -22,10 +23,20 @@ class UserProfile extends Component {
     };
 
     render() {
-        const { games, users, userId, currentUser, match, auth } = this.props;
+        const { games, users, userId, currentUser, match, auth, userList } = this.props;
         const uid = userId ? userId : match.params.userId;
         const user = users[uid];
         const followed = currentUser.following.includes(uid);
+
+        let followingNum = 0;
+        for(let i = 0; i < userList.length; i++) {
+            const followList = userList[i].following;
+            for (let j = 0; j < followList.length; j++) {
+                if (followList[j] === uid) {
+                    followingNum++;
+                }
+            }
+        }
 
         const userGames = games.filter(g => g.admin === uid);
         return (
@@ -48,14 +59,24 @@ class UserProfile extends Component {
                                 <Text style={{ fontWeight: 'bold' }}>{userGames.length}</Text>
                                 <Text style={{ color: pallette.gray }}>Games Hosted</Text>
                             </View>
-                            {/* <View style={style.info_block}>
-                                <Text style={{ fontWeight: 'bold' }}>4</Text>
-                                <Text style={{ color: pallette.gray }}>Followers</Text>
-                            </View> */}
-                            <View style={style.info_block}>
-                                <Text style={{ fontWeight: 'bold' }}>{user.following.length}</Text>
-                                <Text style={{ color: pallette.gray }}>Following</Text>
-                            </View>
+                            <Link
+                                to={"/user/followers/" + uid}
+                                component={TouchableOpacity}
+                            >
+                                <View style={style.info_block}>
+                                    <Text style={{ fontWeight: 'bold' }}>{followingNum}</Text>
+                                    <Text style={{ color: pallette.gray }}>Followers</Text>
+                                </View>
+                            </Link>
+                            <Link
+                                to={"/user/following/" + uid}
+                                component={TouchableOpacity}
+                            >
+                                <View style={style.info_block}>
+                                    <Text style={{ fontWeight: 'bold' }}>{user.following.length}</Text>
+                                    <Text style={{ color: pallette.gray }}>Following</Text>
+                                </View>
+                            </Link>
                         </View>
                     </View>
                     <View style={style.wrap}>
@@ -63,6 +84,10 @@ class UserProfile extends Component {
                             {user.bio}
                         </Text>
                     </View>
+                    <Text>
+                        Past Games:
+                    </Text>
+                    {/* <GameList userId={uid}/> */}
                 </View>
             </>
             // { userGames.length !== 0 ? (
@@ -113,6 +138,7 @@ const style = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        alignSelf: 'flex-end',
         marginLeft: 5,
         marginRight: 5,
         marginTop: 2,
@@ -143,6 +169,7 @@ const mapStateToProps = ({ firestore: { data, ordered }, firebase }, { match }) 
         user,
         games: ordered.games || [],
         users: data.users,
+        userList: ordered.users,
         currentUser: data.users && firebase.auth.uid && data.users[firebase.auth.uid],
         auth: firebase.auth,
     };
