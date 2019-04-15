@@ -138,7 +138,7 @@ class UserProfile extends Component {
     );
 
     render() {
-        const { games, gameList, users, userId, currentUser, match, auth, userList } = this.props;
+        const { games, gameList, users, userId, currentUser, match, auth, userList, } = this.props;
         const uid = userId ? userId : match.params.userId;
         const user = users[uid];
         const followed = currentUser.following.includes(uid);
@@ -172,11 +172,17 @@ class UserProfile extends Component {
             <>
                 <TopBar
                     left={{ goBack: true , iconName: 'arrow-left' }}
-                    right={ uid === auth.uid ? { iconName: 'cog'}
-                        : {
-                            onPress: (() => this.toggleFollow(followed, uid)),
-                            iconName: (followed ? 'check' : 'user-plus')}
+                    right={ uid === auth.uid ?
+                        {
+                            linkTo: '/user/settings',
+                            iconName: 'cog'
                         }
+                        : 
+                        {
+                            onPress: (() => this.toggleFollow(followed, uid)),
+                            iconName: (followed ? 'check' : 'user-plus')
+                        }
+                    }
                     logoLeft="User"
                     logoRight="Profile"
                 />

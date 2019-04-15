@@ -24,6 +24,7 @@ class FollowList extends React.Component {
             <>
                 <TopBar
                     left={{ goBack: true, iconName: 'arrow-left' }}
+                    right={uid === auth.uid ? { linkTo: '/follow/new', iconName: 'plus'} : null}
                     logoLeft="Score"
                     logoRight="Cast" />
                 <UserList userList={followList} showFollow={true}/>

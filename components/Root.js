@@ -20,6 +20,7 @@ import NewFollow from './NewFollow';
 import MyProfile from './MyProfile';
 import FollowList from './FollowList';
 import FollowerList from './FollowerList';
+import Settings from './Settings';
 
 const Root = props => {
     return (
@@ -42,6 +43,7 @@ const Root = props => {
                     <Route path="/follow/new" component={NewFollow} />
                     <Route path="/user/following/:userId" component={FollowList} />
                     <Route path="/user/followers/:userId" component={FollowerList} />
+                    <Route path="/user/settings" component={Settings} />
                 </Switch>
                 <BackButton />
             </SafeAreaView>
