@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, View, Share, ImageBackground } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View, Share, ImageBackground } from 'react-native';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
@@ -13,6 +13,12 @@ import { createTag } from '../config/functions';
 import { pallette, styles } from '../styles';
 
 class GameView2 extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentView: -1,
+        };
+    }
     shareGameTag = () => {
         this.getTag(this.props).then(tag => Share.share({ message: "Welcome to ScoreCast. Here is your game id: " + tag }));
     };
@@ -39,13 +45,13 @@ class GameView2 extends Component {
     }
 
     render() {
-        /*const { game, template, auth, match } = this.props;
+        const { game, template, auth, match } = this.props;
         if (!game) return null;
 
         const isAdmin = auth.uid === game.admin;
 
         const logic = JSON.parse(template.logic);
-        const view = JSON.parse(template.view);
+        const viewLogic = JSON.parse(template.view);
 
         //Update composite variables
         logic.variables.map(v => {
@@ -68,12 +74,21 @@ class GameView2 extends Component {
         //Check win condition
         let isWon = game.variables['win'] !== 0;
         let winText = game.variables['winString'];
-        //console.warn(winText);
+
+        let currentView = (game.variables['win']) ? viewLogic.over :
+          (isAdmin ? viewLogic.adminDefault : viewLogic.default);
+        let view = viewLogic.views[currentView];
 
         let elements = view.elements.map((e, index) => {
             let varName = Object.keys(game.variables).find(varName => {
                 return varName === e.ref;
             });
+            let editable = e.edit;
+            let lvar = logic.variables.find(a => {
+              return a.name === varName;
+            });
+            let isInt = lvar && lvar.type === 'Int';
+            console.warn("isInt: "+isInt);
 
             if (varName) {
                 return (
@@ -95,15 +110,62 @@ class GameView2 extends Component {
                                 textAlign: 'center',
                             }}
                         >
-                            <Text
-                                style={{
+                          {
+                              editable ? isInt ? (
+                                <TextInput
+                                  style={{
                                     flex: 1,
                                     textAlign: 'center',
                                     fontSize: e.size,
-                                }}
-                            >
-                                {game.variables[varName]}
-                            </Text>
+                                    backgroundColor: pallette.white,
+                                    borderRadius: 10
+                                  }}
+                                  onEndEditing={(e) => {
+                                    console.warn("Text: "+e.nativeEvent.text);
+                                    this.props.firestore
+                                      .collection('games')
+                                      .doc('' + match.params.gameId)
+                                      .update({
+                                        [`variables.${varName}`]: parseInt(e.nativeEvent.text),
+                                      })
+                                      .catch(console.error);
+                                  }}
+                                >
+                                  {game.variables[varName]}
+                                </TextInput>
+                              ) : (
+                                <TextInput
+                                  style={{
+                                    flex: 1,
+                                    textAlign: 'center',
+                                    fontSize: e.size,
+                                    backgroundColor: pallette.white,
+                                    borderRadius: 10
+                                  }}
+                                  onSubmitEditing={(text) => {
+                                    this.props.firestore
+                                      .collection('games')
+                                      .doc('' + match.params.gameId)
+                                      .update({
+                                        [`variables.${varName}`]: text,
+                                      })
+                                      .catch(console.error);
+                                  }}
+                                >
+                                  {game.variables[varName]}
+                                </TextInput>
+                              ) : (
+                                <Text
+                                  style={{
+                                    flex: 1,
+                                    textAlign: 'center',
+                                    fontSize: e.size,
+                                  }}
+                                >
+                                  {game.variables[varName]}
+                                </Text>
+                              )
+                          }
                             {//Display the setup icon if user is admin
                             isAdmin && varName === 'gameName' ? (
                                 <TouchableOpacity
@@ -127,7 +189,7 @@ class GameView2 extends Component {
                         </View>
                     </View>
                 );
-            } else if (logic && isAdmin) {
+            } else if (logic) {
                 let action = logic.actions.find(a => {
                     return a.name === e.ref;
                 });
@@ -269,9 +331,6 @@ class GameView2 extends Component {
                   </ImageBackground>
                 </View>
             </>
-        );*/
-        return (
-          <Text>It Works!</Text>
         );
     }
 }

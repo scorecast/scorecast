@@ -30,8 +30,8 @@ class GameForm extends Component {
                         padding: 10,
                     }}
                     value={this.state[setupVar.name]}
-                    onChangeText={text =>
-                        this.setState({ [setupVar.name]: text })
+                    onEndEditing={e =>
+                        this.setState({ [setupVar.name]: e.nativeEvent.text })
                     }
                 />
             </View>
