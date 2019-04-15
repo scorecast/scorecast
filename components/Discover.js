@@ -31,9 +31,9 @@ class Discover extends React.Component {
                     : { backgroundColor: pallette.white },
             ]}
         >
-            <Text style={[{ fontSize: 20 }]}>{item.variables.gameName}</Text>
+            <Text style={[{ fontSize: 20 }]}>{item.variables.gameName + (item.admin === this.props.auth.uid ? '\u2605' : '')}</Text>
             <Text style={{ fontSize: 10 }}>
-                {this.props.templates[item.template].name}
+            {this.props.templates[item.template].name}
             </Text>
         </Link>
     );
@@ -50,8 +50,8 @@ class Discover extends React.Component {
         let generalGames = [];
 
         if (currentUser) {
-            followedGames = availableGames.filter(g => currentUser.following.includes(g.admin) || g.admin === currentUser.id);
-            generalGames = availableGames.filter(g => !currentUser.following.includes(g.admin));
+            followedGames = availableGames.filter(g => currentUser.following.includes(g.admin) || g.admin === auth.uid);
+            generalGames = availableGames.filter(g => !currentUser.following.includes(g.admin) && g.admin !== auth.uid);
         } else {
             generalGames = availableGames;
         }
@@ -62,10 +62,11 @@ class Discover extends React.Component {
                         style={styles.listView}
                         renderItem={this.renderGameItem}
                         renderSectionHeader={this.renderSectionHeader}
-                        sections={[
-                            {title: "Followed Games", data: followedGames},
-                            {title: "General Games", data: generalGames},
-                        ]}
+                        sections={
+                            auth.isEmpty || auth.isAnonymous ? [{title: "General Games", data: generalGames},] :
+                                [{title: "Followed Games", data: followedGames},
+                                {title: "General Games", data: generalGames},]
+                        }
                         keyExtractor={(game, index) => game.id + index}
                     />
                 ) : null}
