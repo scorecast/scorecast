@@ -37,12 +37,13 @@ class SignUpPage extends Component {
         username: '',
         password: '',
         c_password: '',
+        bio: '',
         errorMessage: null,
         success: false,
     };
 
     handleSignUp = () => {
-        const { email, username, password, c_password } = this.state;
+        const { email, username, password, c_password, bio } = this.state;
         const { auth, firestore, firebase, users } = this.props;
         if (c_password !== password) {
             this.setState({ c_password: '', errorMessage: 'The passwords were not the same, please use the same password.' });
@@ -50,7 +51,7 @@ class SignUpPage extends Component {
             this.setState({ errorMessage: 'The username is taken.' });
         } else {
             firebase
-            .createUser({ email, password }, { email: email, username: username, following: [] })
+            .createUser({ email, password }, { email: email, username: username, following: [], bio: bio })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
         }
@@ -102,6 +103,12 @@ class SignUpPage extends Component {
                         onChangeText={c_password => this.setState({ c_password })}
                         value={this.state.c_password}
                     />
+                    <TextField
+                        placeholder="Bio (optional)"
+                        style={textStyle}
+                        onChangeText={bio => this.setState({ bio })}
+                        value={this.state.bio}
+                    />
                     <Button
                         text="Sign Up"
                         style={textStyle}
@@ -121,7 +128,7 @@ class SignUpPage extends Component {
             </>
         );
 
-        return this.state.success ? <Redirect to="/user" /> : signup;
+        return this.state.success ? <Redirect to="/me" /> : signup;
     }
 }
 

@@ -17,6 +17,7 @@ import UserProfile from './UserProfile';
 import Login from './Login';
 import SignUpPage from './SignUp';
 import NewFollow from './NewFollow';
+import MyProfile from './MyProfile';
 
 const Root = props => {
     return (
@@ -32,7 +33,8 @@ const Root = props => {
                     <Route path="/home" component={Home} />
                     <Route path="/create" component={Create} />
                     <Route path="/game" component={Game} />
-                    <Route path="/user" component={UserProfile} />
+                    <Route path="/user/:userId" component={UserProfile} />
+                    <Route path="/me" component={MyProfile} />
                     <Route path="/login" component={Login} />
                     <Route path="/signup" component={SignUpPage} />
                     <Route path="/follow/new" component={NewFollow} />
