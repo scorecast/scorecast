@@ -19,6 +19,19 @@ class GameView2 extends Component {
             currentView: -1,
         };
     }
+
+    componentDidMount() {
+      const { game, template, auth, match } = this.props;
+      const isAdmin = auth.uid === game.admin;
+      const viewLogic = JSON.parse(template.view);
+
+      let currentView = (game.variables['win']) ? viewLogic.over :
+        (isAdmin ? viewLogic.adminDefault : viewLogic['default']);
+      this.setState({
+        currentView: currentView,
+      });
+    }
+
     shareGameTag = () => {
         this.getTag(this.props).then(tag => Share.share({ message: "Welcome to ScoreCast. Here is your game id: " + tag }));
     };
@@ -53,6 +66,10 @@ class GameView2 extends Component {
         const logic = JSON.parse(template.logic);
         const viewLogic = JSON.parse(template.view);
 
+        console.warn(JSON.stringify(viewLogic, null, 2));
+        console.warn(`AdminDefault: ${JSON.stringify(viewLogic.adminDefault, null, 2)}`);
+        console.warn(`Default: ${JSON.stringify(viewLogic['default'], null, 2)}`);
+
         //Update composite variables
         logic.variables.map(v => {
             if (v.value) {
@@ -75,11 +92,29 @@ class GameView2 extends Component {
         let isWon = game.variables['win'] !== 0;
         let winText = game.variables['winString'];
 
-        let currentView = (game.variables['win']) ? viewLogic.over :
-          (isAdmin ? viewLogic.adminDefault : viewLogic.default);
-        let view = viewLogic.views[currentView];
+        //console.warn(`Current View: ${this.state.currentView}`);
+        let view = viewLogic.views[this.state.currentView];
 
-        let elements = view.elements.map((e, index) => {
+        let elements = [];
+        /*view.elements.map((e, index) => {
+            if (e.target) {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        currentView: e.target,
+                      });
+                    }}
+                  >
+                    <Text
+                        style={{
+                            textDecorationLine: 'underline',
+                            color: pallette.lightblue,
+                        }}
+                    >{e.label}</Text>
+                  </TouchableOpacity>
+                );
+            }
             let varName = Object.keys(game.variables).find(varName => {
                 return varName === e.ref;
             });
@@ -271,7 +306,7 @@ class GameView2 extends Component {
                     );
                 }
             }
-        });
+        });*/
 
         return (
             <>
