@@ -10,7 +10,6 @@ const Button = ({ goBack, onPress, history, iconName, linkTo }) =>
             activeOpacity={0.5}
             style={styles.topButton}
             onPress={() => {
-                console.log('button');
                 if (onPress) onPress();
                 if (goBack) history.goBack();
             }}

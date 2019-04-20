@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { withFirebase, withFirestore } from 'react-redux-firebase';
 import { Redirect, Route, Link } from 'react-router-native';
 import Button from './Button';
+import TopBar from './TopBar/Bar';
 import { styles, pallette } from '../styles';
-import UserProfile from './UserProfile';
 
 const style = StyleSheet.create({
     screen: {
@@ -24,25 +24,39 @@ const style = StyleSheet.create({
     }
 });
 
-const MyProfile = props => {
+const Settings = props => {
 
-    const { auth } = props;
+    const { games, templates, currentUser, auth } = props;
 
     return auth.isEmpty || auth.isAnonymous ? (
         <Redirect to="/login" from="/me" />
     ) : (
-        <View style={style.screen}>
-            <UserProfile userId={auth.uid}/>
-        </View>
+        <>
+            <TopBar
+                    left={{ goBack: true , iconName: 'arrow-left' }}
+                    right={{ iconName: 'lock', onPress: (() => {
+                        props.firebase
+                            .logout()
+                            .then(() => props.history.replace("/login"));
+                    })}}
+                    logoLeft="User"
+                    logoRight="Settings"
+            />
+            <View style={style.screen}>
+            </View>
+        </>
     );
 }
 
 const mapStateToProps = state => ({
     auth: state.firebase.auth,
+    games: state.firestore.ordered.games || [],
+    templates: state.firestore.data.templates || {},
+    currentUser: state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
 });
 
 export default compose(
     withFirestore,
     withFirebase,
     connect(mapStateToProps)
-)(MyProfile);
+)(Settings);
