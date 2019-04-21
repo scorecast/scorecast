@@ -29,10 +29,12 @@ class GameView2 extends Component {
       const isAdmin = auth.uid === game.admin;
       const viewLogic = JSON.parse(template.view);
 
-      let currentView = (game.variables['win'] !== 0) ? viewLogic.over :
+      let isWon = game.variables['win'] !== 0;
+      let currentView = isWon ? viewLogic.over :
         (isAdmin ? viewLogic.adminDefault : viewLogic['default']);
       this.state = {
         currentView: currentView,
+        gameOver: isWon,
       };
     }
 

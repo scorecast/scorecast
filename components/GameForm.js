@@ -29,11 +29,12 @@ class GameForm extends Component {
                         flex: 1,
                         padding: 10,
                     }}
-                    value={this.state[setupVar.name]}
                     onEndEditing={e =>
                         this.setState({ [setupVar.name]: e.nativeEvent.text })
                     }
-                />
+                >
+                  {this.state[setupVar.name]}
+                </TextInput>
             </View>
         ));
 
