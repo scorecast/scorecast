@@ -11,25 +11,33 @@ import { Operation } from '../config/gameAction';
 import { createTag } from '../config/functions';
 
 import { pallette, styles } from '../styles';
+import Button from "./TopBar/Button";
+import VariableElement from "./Game/VariableElement";
+import EditElement from "./Game/EditElement";
+//import ButtonElement from "./Game/ButtonElement";
+import LinkElement from "./Game/LinkElement";
+import ButtonElement from "./Game/ButtonElement";
 
 class GameView2 extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            currentView: -1,
-        };
-    }
+        /*this.state = {
+            //currentView: -1,
+        };*/
 
-    componentDidMount() {
       const { game, template, auth, match } = this.props;
       const isAdmin = auth.uid === game.admin;
       const viewLogic = JSON.parse(template.view);
 
-      let currentView = (game.variables['win']) ? viewLogic.over :
+      let currentView = (game.variables['win'] !== 0) ? viewLogic.over :
         (isAdmin ? viewLogic.adminDefault : viewLogic['default']);
-      this.setState({
+      this.state = {
         currentView: currentView,
-      });
+      };
+    }
+
+    componentDidMount() {
+
     }
 
     shareGameTag = () => {
@@ -57,6 +65,152 @@ class GameView2 extends Component {
         return tag;
     }
 
+    renderElements() {
+      const { game, template, auth, match } = this.props;
+      if (!game) return [];
+
+      const isAdmin = auth.uid === game.admin;
+
+      const logic = JSON.parse(template.logic);
+      const viewLogic = JSON.parse(template.view);
+
+      if (typeof this.state.currentView === 'undefined') {
+        return ([]);
+      }
+
+      //Check win condition
+      let isWon = game.variables['win'] !== 0;
+      let winText = game.variables['winString'];
+
+      let view = viewLogic.views[this.state.currentView];
+
+      let elements = view.elements.map((e, index) => {
+        //console.warn(`Rendering ${e.ref}`);
+        if (e.target) {
+          return (
+            <LinkElement
+              onPress={() => {
+                this.setState({
+                  currentView: e.target
+                });
+              }}
+              label={e.target}
+              e={e}
+              key={index}
+              />
+          );
+        }
+        let varName = Object.keys(game.variables).find(varName => {
+          return varName === e.ref;
+        });
+        let editable = e.edit;
+        let lvar = logic.variables.find(a => {
+          return a.name === varName;
+        });
+        let isInt = lvar && lvar.type === 'Int';
+        //console.warn("isInt: "+isInt);
+
+        if (varName) {
+          // console.warn(`Rendering ${varName}`);
+          if (editable) {
+            let editCallback = isInt ? (e) => {
+              this.props.firestore
+                .collection('games')
+                .doc('' + match.params.gameId)
+                .update({
+                  [`variables.${varName}`]: parseInt(e.nativeEvent.text),
+                })
+                .catch(console.error);
+            } : (e) => {
+              this.props.firestore
+                .collection('games')
+                .doc('' + match.params.gameId)
+                .update({
+                  [`variables.${varName}`]: e.nativeEvent.text,
+                })
+                .catch(console.error);
+            };
+            editCallback.bind(this);
+            return (
+              <EditElement
+                key={index}
+                e={e}
+                varName={game.variables[varName]}
+                isAdmin={isAdmin}
+                editCallback={editCallback}
+              />
+            );
+          } else {
+            let goToSetup = () => {
+              console.log(this.props.match.params.gameId);
+              let setupPath = `${match.url}/edit`;
+              //console.log(setupPath);
+              this.history.push(setupPath);
+            };
+            goToSetup.bind(this);
+
+            return (
+              <VariableElement
+                key={index}
+                e={e}
+                varName={game.variables[varName]}
+                isAdmin={isAdmin}
+                goToSetup={goToSetup}
+              />
+            );
+          }
+
+        } else if (logic) {
+          let action = logic.actions.find(a => {
+            return a.name === e.ref;
+          });
+
+          if (action) {
+            let buttonPress = () => {
+              //Store result of gameAction in variables
+              let updatePromises = Promise.all(
+                action.variables.map(
+                  (varName, index) => {
+                    let val = new Operation(
+                      action.values[index]
+                    ).evaluate(game.variables);
+                    game.variables[
+                      varName
+                      ] = val;
+
+                    //Now Update the store
+                    return this.props.firestore
+                      .collection('games')
+                      .doc(
+                        '' +
+                        match.params
+                          .gameId
+                      )
+                      .update({
+                        [`variables.${varName}`]: val,
+                      });
+                  }
+                )
+              )
+                .then(values => {
+                })
+                .catch(console.error);
+            };
+            buttonPress.bind(this);
+
+            return (
+              <ButtonElement
+                key={index}
+                e={e}
+                onPress={buttonPress}
+                label={action.label || action.name}
+              />);
+          }
+        }
+      });
+      return elements;
+    }
+
     render() {
         const { game, template, auth, match } = this.props;
         if (!game) return null;
@@ -66,9 +220,7 @@ class GameView2 extends Component {
         const logic = JSON.parse(template.logic);
         const viewLogic = JSON.parse(template.view);
 
-        console.warn(JSON.stringify(viewLogic, null, 2));
-        console.warn(`AdminDefault: ${JSON.stringify(viewLogic.adminDefault, null, 2)}`);
-        console.warn(`Default: ${JSON.stringify(viewLogic['default'], null, 2)}`);
+        let view = viewLogic.views[this.state.currentView];
 
         //Update composite variables
         logic.variables.map(v => {
@@ -92,221 +244,9 @@ class GameView2 extends Component {
         let isWon = game.variables['win'] !== 0;
         let winText = game.variables['winString'];
 
-        //console.warn(`Current View: ${this.state.currentView}`);
-        let view = viewLogic.views[this.state.currentView];
 
-        let elements = [];
-        /*view.elements.map((e, index) => {
-            if (e.target) {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        currentView: e.target,
-                      });
-                    }}
-                  >
-                    <Text
-                        style={{
-                            textDecorationLine: 'underline',
-                            color: pallette.lightblue,
-                        }}
-                    >{e.label}</Text>
-                  </TouchableOpacity>
-                );
-            }
-            let varName = Object.keys(game.variables).find(varName => {
-                return varName === e.ref;
-            });
-            let editable = e.edit;
-            let lvar = logic.variables.find(a => {
-              return a.name === varName;
-            });
-            let isInt = lvar && lvar.type === 'Int';
-            console.warn("isInt: "+isInt);
+        let elements = this.renderElements();
 
-            if (varName) {
-                return (
-                    <View
-                        style={{
-                            position: 'absolute',
-                            top: e.py,
-                            left: e.px,
-                            width: e.w,
-                        }}
-                        key={index}
-                    >
-                        <View
-                            style={{
-                                position: 'absolute',
-                                left: -(e.w / 2),
-                                width: e.w,
-                                flexDirection: 'row',
-                                textAlign: 'center',
-                            }}
-                        >
-                          {
-                              editable ? isInt ? (
-                                <TextInput
-                                  style={{
-                                    flex: 1,
-                                    textAlign: 'center',
-                                    fontSize: e.size,
-                                    backgroundColor: pallette.white,
-                                    borderRadius: 10
-                                  }}
-                                  onEndEditing={(e) => {
-                                    console.warn("Text: "+e.nativeEvent.text);
-                                    this.props.firestore
-                                      .collection('games')
-                                      .doc('' + match.params.gameId)
-                                      .update({
-                                        [`variables.${varName}`]: parseInt(e.nativeEvent.text),
-                                      })
-                                      .catch(console.error);
-                                  }}
-                                >
-                                  {game.variables[varName]}
-                                </TextInput>
-                              ) : (
-                                <TextInput
-                                  style={{
-                                    flex: 1,
-                                    textAlign: 'center',
-                                    fontSize: e.size,
-                                    backgroundColor: pallette.white,
-                                    borderRadius: 10
-                                  }}
-                                  onSubmitEditing={(text) => {
-                                    this.props.firestore
-                                      .collection('games')
-                                      .doc('' + match.params.gameId)
-                                      .update({
-                                        [`variables.${varName}`]: text,
-                                      })
-                                      .catch(console.error);
-                                  }}
-                                >
-                                  {game.variables[varName]}
-                                </TextInput>
-                              ) : (
-                                <Text
-                                  style={{
-                                    flex: 1,
-                                    textAlign: 'center',
-                                    fontSize: e.size,
-                                  }}
-                                >
-                                  {game.variables[varName]}
-                                </Text>
-                              )
-                          }
-                            {//Display the setup icon if user is admin
-                            isAdmin && varName === 'gameName' ? (
-                                <TouchableOpacity
-                                    style={{ marginLeft: 10, marginTop: 5 }}
-                                    onPress={() => {
-                                        console.log(match.params.gameId);
-                                        let setupPath = `${match.url}/edit`;
-                                        //console.log(setupPath);
-                                        this.props.history.push(setupPath);
-                                    }}
-                                >
-                                    <Icon
-                                        name="wrench"
-                                        size={20}
-                                        color={pallette.darkgray}
-                                    />
-                                </TouchableOpacity>
-                            ) : (
-                                <></>
-                            )}
-                        </View>
-                    </View>
-                );
-            } else if (logic) {
-                let action = logic.actions.find(a => {
-                    return a.name === e.ref;
-                });
-
-                if (action) {
-                    return (
-                        <View
-                            style={{
-                                position: 'absolute',
-                                top: e.py,
-                                left: e.px,
-                                width: e.w,
-                            }}
-                            key={index}
-                        >
-                            <View
-                                style={{
-                                    position: 'absolute',
-                                    left: -(e.w / 2),
-                                    width: e.w,
-                                    flexDirection: 'row',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                <TouchableOpacity
-                                    style={{ marginLeft: 10, marginTop: 5 }}
-                                    onPress={() => {
-                                        //Store result of gameAction in variables
-                                        let updatePromises = Promise.all(
-                                            action.variables.map(
-                                                (varName, index) => {
-                                                    let val = new Operation(
-                                                        action.values[index]
-                                                    ).evaluate(game.variables);
-                                                    game.variables[
-                                                        varName
-                                                    ] = val;
-
-                                                    //Now Update the store
-                                                    return this.props.firestore
-                                                        .collection('games')
-                                                        .doc(
-                                                            '' +
-                                                                match.params
-                                                                    .gameId
-                                                        )
-                                                        .update({
-                                                            [`variables.${varName}`]: val,
-                                                        });
-                                                }
-                                            )
-                                        )
-                                            .then(values => {})
-                                            .catch(console.error);
-                                    }}
-                                >
-                                    <Text
-                                        style={[
-                                            {
-                                                flex: 1,
-                                                textAlign: 'center',
-                                                fontSize: e.size,
-                                            },
-                                            {
-                                                backgroundColor:
-                                                    pallette.darkgray,
-                                                color: pallette.white,
-                                                borderRadius: 10,
-                                                padding: 10,
-                                                fontSize: e.size,
-                                            },
-                                        ]}
-                                    >
-                                        {action.label || action.name}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    );
-                }
-            }
-        });*/
 
         return (
             <>
@@ -356,10 +296,12 @@ class GameView2 extends Component {
                           {
                             flex: 1,
                             flexDirection: 'column',
-                            //backgroundColor: view.backgroundColor,
+                            // backgroundColor: view.backgroundColor,
                           },
                         ]}
                       >
+                        {/*<Text>{JSON.stringify(this.state.currentView)}</Text>
+                        <Text>{JSON.stringify(game.variables['win'])}</Text>*/}
                         {elements}
                       </View>
                     )}
