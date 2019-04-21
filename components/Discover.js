@@ -45,7 +45,7 @@ class Discover extends React.Component {
                 component={TouchableOpacity}
                 style={{fontSize: 20, flex: 5}}
             >
-                <Text style={[{ fontSize: 20 }]}>{item.variables.gameName + (item.admin === this.props.auth.uid ? '\u2605' : '')}</Text>
+                <Text style={[{ fontSize: 20 }]}>{item.variables.gameName}</Text>
                 <Text style={{ fontSize: 10 }}>{this.props.templates[item.template].name}</Text>
                 { this.props.users && this.props.users[item.admin] ? (
                     <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
