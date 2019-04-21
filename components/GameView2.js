@@ -242,7 +242,12 @@ class GameView2 extends Component {
 
         //Check win condition
         let isWon = game.variables['win'] !== 0;
-        let winText = game.variables['winString'];
+        if (isWon && !this.state.gameOver) {
+          this.setState({
+            currentView: viewLogic.over,
+            gameOver: true,
+          });
+        }
 
 
         let elements = this.renderElements();
@@ -276,35 +281,16 @@ class GameView2 extends Component {
                                    source={{
                                      uri: view.backgroundSrc,
                                    }}>
-                    {isWon ? (
-                      <View
-                        style={[{
+                    <View
+                      style={[
+                        {
                           flex: 1,
                           flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }
-                          //styles.content,
-                          //{ backgroundColor: view.backgroundColor },
-                        ]}
-                      >
-                        <Text style={styles.header}>{winText}</Text>
-                      </View>
-                    ) : (
-                      <View
-                        style={[
-                          {
-                            flex: 1,
-                            flexDirection: 'column',
-                            // backgroundColor: view.backgroundColor,
-                          },
-                        ]}
-                      >
-                        {/*<Text>{JSON.stringify(this.state.currentView)}</Text>
-                        <Text>{JSON.stringify(game.variables['win'])}</Text>*/}
-                        {elements}
-                      </View>
-                    )}
+                        },
+                      ]}
+                    >
+                      {elements}
+                    </View>
                   </ImageBackground>
                 </View>
             </>
