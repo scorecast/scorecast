@@ -20,24 +20,19 @@ import ButtonElement from "./Game/ButtonElement";
 
 class GameView2 extends Component {
     constructor(props) {
-        super(props);
-        /*this.state = {
-            //currentView: -1,
-        };*/
+      super(props);
 
       const { game, template, auth, match } = this.props;
       const isAdmin = auth.uid === game.admin;
       const viewLogic = JSON.parse(template.view);
 
-      let currentView = (game.variables['win'] !== 0) ? viewLogic.over :
+      let isWon = (game.variables['win'] !== 0);
+      let currentView =  isWon ? viewLogic.over :
         (isAdmin ? viewLogic.adminDefault : viewLogic['default']);
       this.state = {
         currentView: currentView,
+        gameOver: isWon,
       };
-    }
-
-    componentDidMount() {
-
     }
 
     shareGameTag = () => {
@@ -78,10 +73,6 @@ class GameView2 extends Component {
         return ([]);
       }
 
-      //Check win condition
-      let isWon = game.variables['win'] !== 0;
-      let winText = game.variables['winString'];
-
       let view = viewLogic.views[this.state.currentView];
 
       let elements = view.elements.map((e, index) => {
@@ -108,10 +99,8 @@ class GameView2 extends Component {
           return a.name === varName;
         });
         let isInt = lvar && lvar.type === 'Int';
-        //console.warn("isInt: "+isInt);
 
         if (varName) {
-          // console.warn(`Rendering ${varName}`);
           if (editable) {
             let editCallback = isInt ? (e) => {
               this.props.firestore
@@ -144,7 +133,6 @@ class GameView2 extends Component {
             let goToSetup = () => {
               console.log(this.props.match.params.gameId);
               let setupPath = `${match.url}/edit`;
-              //console.log(setupPath);
               this.history.push(setupPath);
             };
             goToSetup.bind(this);
@@ -168,7 +156,7 @@ class GameView2 extends Component {
           if (action) {
             let buttonPress = () => {
               //Store result of gameAction in variables
-              let updatePromises = Promise.all(
+              Promise.all(
                 action.variables.map(
                   (varName, index) => {
                     let val = new Operation(
@@ -191,10 +179,8 @@ class GameView2 extends Component {
                       });
                   }
                 )
-              )
-                .then(values => {
-                })
-                .catch(console.error);
+              ).then(values => {
+              }).catch(console.error);
             };
             buttonPress.bind(this);
 

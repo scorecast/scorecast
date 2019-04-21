@@ -28,6 +28,10 @@ const MyProfile = props => {
 
     const { auth } = props;
 
+    /*console.warn(auth.isEmpty);
+    console.warn(auth.isAnonymous);
+    console.warn(auth.uid);*/
+
     return auth.isEmpty || auth.isAnonymous ? (
         <Redirect to="/login" from="/me" />
     ) : (
@@ -35,7 +39,7 @@ const MyProfile = props => {
             <UserProfile userId={auth.uid}/>
         </View>
     );
-}
+};
 
 const mapStateToProps = state => ({
     auth: state.firebase.auth,

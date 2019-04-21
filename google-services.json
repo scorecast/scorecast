@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "138861825009",
+    "firebase_url": "https://scorecast-5f168.firebaseio.com",
+    "project_id": "scorecast-5f168",
+    "storage_bucket": "scorecast-5f168.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138861825009:android:702a2e0b2d3f3402",
+        "android_client_info": {
+          "package_name": "com.backsplashdev.scorecast"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138861825009-eu88cujhr3s19h4v019d9756961ek6m1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4o-yNqOEnV4XyJbLFR4j1vhCf7osSTpY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138861825009-eu88cujhr3s19h4v019d9756961ek6m1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -19,6 +19,8 @@ import Button from './Button';
 import TopBar from './TopBar/Bar';
 import TextField from './TextField';
 
+import newUserPushToken from '../config/pushNotifications';
+
 import { styles, pallette } from '../styles';
 
 const style = StyleSheet.create({
@@ -45,13 +47,23 @@ class SignUpPage extends Component {
     handleSignUp = () => {
         const { email, username, password, c_password, bio } = this.state;
         const { auth, firestore, firebase, users } = this.props;
+        const pushToken = newUserPushToken();
+
         if (c_password !== password) {
             this.setState({ c_password: '', errorMessage: 'The passwords were not the same, please use the same password.' });
         } else if (users.some(u => u.username === username)) {
             this.setState({ errorMessage: 'The username is taken.' });
         } else {
             firebase
-            .createUser({ email, password }, { email: email, username: username, following: [], bio: bio, reposts: [], })
+            .createUser({ email, password },
+              {
+                email,
+                username,
+                following: [],
+                bio,
+                reposts: [],
+                pushToken,
+              })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
         }
