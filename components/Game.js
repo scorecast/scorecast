@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-native';
 
 import GameView from './GameView';
 import EditGame from './Game/Edit';
+import GameViewContainer from "./GameViewContainer";
 
 const Game = ({ match }) => {
     return (
@@ -11,7 +12,7 @@ const Game = ({ match }) => {
                 <Route
                     exact
                     path={`${match.url}/:gameId`}
-                    component={GameView}
+                    component={GameViewContainer}
                 />
                 <Route
                     path={`${match.url}/:gameId/edit`}
