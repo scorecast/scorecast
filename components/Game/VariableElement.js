@@ -31,7 +31,7 @@ export default class VariableElement extends Component {
               fontSize: this.props.e.size,
             }}
           >
-            {this.props.varName}
+            {this.props.value}
           </Text>
 
           {//Display the setup icon if user is admin

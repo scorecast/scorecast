@@ -11,18 +11,33 @@ export default class LinkElement extends Component {
           top: this.props.e.py,
           left: this.props.e.px,
           width: this.props.e.w,
+          // padding: 5,
+          // backgroundColor: pallette.green
         }}
         key={this.props.index}
       >
         <TouchableOpacity
-          onPress={this.props.onPress}
-        >
-          <Text
-            style={{
-              textDecorationLine: 'underline',
-              color: pallette.lightblue,
-            }}
-          >{this.props.label}</Text>
+          style={{
+            position: 'absolute',
+            left: -(this.props.e.w / 2),
+            width: this.props.e.w,
+            flexDirection: 'row',
+            textAlign: 'center',
+            justifyContent: 'center',
+            // padding: 5,
+            // backgroundColor: pallette.pink
+          }}
+            onPress={this.props.onPress}
+          >
+            <Text
+              style={{
+                textDecorationLine: 'underline',
+                color: pallette.lightblue,
+                flex: 1,
+                textAlign: 'center',
+                fontSize: this.props.e.size,
+              }}
+            >{this.props.label}</Text>
         </TouchableOpacity>
       </View>
     );

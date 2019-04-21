@@ -16,7 +16,7 @@ import { pallette, styles } from '../styles';
 
 class GameViewContainer extends Component {
     render() {
-        const { game, template, auth, match } = this.props;
+        const { game, template, auth, match, history } = this.props;
         if (!game) return null;
 
         if (template.version && template.version === 0.2) {
@@ -37,6 +37,7 @@ class GameViewContainer extends Component {
             template={template}
             auth={auth}
             match={match}
+            history={history}
           />
           );
         }

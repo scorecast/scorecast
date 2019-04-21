@@ -36,7 +36,7 @@ export default class EditElement extends Component {
                 }}
                 onEndEditing={this.props.editCallback}
               >
-                {this.props.varName}
+                {this.props.value}
               </TextInput>
         </View>
       </View>

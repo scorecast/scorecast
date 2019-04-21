@@ -96,7 +96,7 @@ class GameView2 extends Component {
                   currentView: e.target
                 });
               }}
-              label={e.target}
+              label={e.label}
               e={e}
               key={index}
               />
@@ -137,7 +137,8 @@ class GameView2 extends Component {
               <EditElement
                 key={index}
                 e={e}
-                varName={game.variables[varName]}
+                varName={varName}
+                value={game.variables[varName]}
                 isAdmin={isAdmin}
                 editCallback={editCallback}
               />
@@ -147,7 +148,7 @@ class GameView2 extends Component {
               console.log(this.props.match.params.gameId);
               let setupPath = `${match.url}/edit`;
               //console.log(setupPath);
-              this.history.push(setupPath);
+              this.props.history.push(setupPath);
             };
             goToSetup.bind(this);
 
@@ -155,7 +156,8 @@ class GameView2 extends Component {
               <VariableElement
                 key={index}
                 e={e}
-                varName={game.variables[varName]}
+                varName={varName}
+                value={game.variables[varName]}
                 isAdmin={isAdmin}
                 goToSetup={goToSetup}
               />

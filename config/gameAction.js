@@ -83,6 +83,10 @@ class Operation extends Evaluateable{
                 return ((this.operands[0].evaluate(variables)) === (this.operands[1].evaluate(variables))) ?
                     1:
                     0;
+            case 'ne':
+                return ((this.operands[0].evaluate(variables)) !== (this.operands[1].evaluate(variables))) ?
+                  1:
+                  0;
             case 'gt':
                 return ((this.operands[0].evaluate(variables)) > (this.operands[1].evaluate(variables))) ?
                     1:

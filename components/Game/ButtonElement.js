@@ -25,7 +25,10 @@ export default class ButtonElement extends Component {
           }}
         >
           <TouchableOpacity
-            style={{ marginLeft: 10, marginTop: 5 }}
+            //style={{ marginLeft: 10, marginTop: 5 }}
+            style={{
+              width: this.props.e.w,
+            }}
             onPress={this.props.onPress}
           >
             <Text
@@ -53,3 +56,6 @@ export default class ButtonElement extends Component {
     );
   }
 }
+
+// padding: 5,
+// backgroundColor: pallette.green
