@@ -194,7 +194,7 @@ class Discover extends React.Component {
             <SectionList
                 style={styles.listView}
                 renderItem={this.renderGameItem}
-                // renderSectionHeader={this.renderSectionHeader}
+                renderSectionHeader={this.renderSectionHeader}
                 sections={
                     auth.isEmpty ||
                     auth.isAnonymous ||
@@ -224,16 +224,19 @@ class Discover extends React.Component {
 
 const localStyles = StyleSheet.create({
     sectionHeader: {
-        //fontSize: 24,
-        //fontWeight: 'bold',
-        //backgroundColor: pallette.crimson,
-        //color: pallette.white,
-        fontSize: 12,
-        color: pallette.darkgray,
-        backgroundColor: pallette.lightgray,
-        paddingLeft: 20,
-        paddingTop: 5,
-        paddingBottom: 5,
+      // fontSize: 24,
+      // fontWeight: 'bold',
+      // backgroundColor: pallette.crimson,
+      // color: pallette.white,
+      fontSize: 12,
+      color: pallette.darkgray,
+      backgroundColor: pallette.lightgray,
+      paddingLeft: 20,
+      //paddingTop: 5,
+      paddingBottom: 5,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     itemRow: {
         flexDirection: 'row',

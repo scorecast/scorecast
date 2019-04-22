@@ -184,6 +184,7 @@ class GameView2 extends Component {
         const viewLogic = JSON.parse(template.view);
 
         let view = viewLogic.views[this.state.currentView];
+        //console.warn(this.state.currentView);
 
         //Update composite variables
         logic.variables.map(v => {
