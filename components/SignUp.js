@@ -59,7 +59,7 @@ class SignUpPage extends Component {
             this.setState({ errorMessage: 'The avatar URL you have provided is invalid.' });
         } else {
             firebase
-            .createUser({ email, password }, { email: email, username: username, following: [], bio: bio, reposts: [], avatar_url: avatar })
+            .createUser({ email, password }, { email: email, username: username, following: [], followed: [], bio: bio, reposts: [], avatar_url: avatar })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
         }

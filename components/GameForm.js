@@ -48,6 +48,7 @@ class GameForm extends Component {
             <KeyboardAwareScrollView
                 style={{ backgroundColor: 'white' }}
                 contentContainerStyle={styles.content}
+                enableOnAndroid
             >
                 <Text style={[styles.header, { padding: 20 }]}>
                     {template.name}
