@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Permissions, Notifications } from 'expo';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withFirebase, withFirestore } from 'react-redux-firebase';
@@ -24,17 +25,50 @@ const style = StyleSheet.create({
     }
 });
 
-const MyProfile = props => {
+class MyProfile extends Component {
 
-    const { auth } = props;
+    async getExpoNotification() {
+        const { status: existingStatus } = await Permissions.getAsync(
+            Permissions.NOTIFICATIONS
+        );
+        let finalStatus = existingStatus;
 
-    return auth.isEmpty || auth.isAnonymous ? (
-        <Redirect to="/login" from="/me" />
-    ) : (
-        <View style={style.screen}>
-            <UserProfile userId={auth.uid}/>
-        </View>
-    );
+        if (existingStatus !== 'granted') {
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            finalStatus = status;
+        }
+
+        let token = 'nah';
+        if (finalStatus === 'granted') {
+            // Get the token that uniquely identifies this device
+            token = await Notifications.getExpoPushTokenAsync();
+        }
+
+        this.props.firestore.update({
+            collection: 'users',
+            doc: this.props.auth.uid },
+            { expoDeviceToken : token }
+        );
+
+    }
+
+    componentWillMount() {
+        this.getExpoNotification();
+    }
+
+    render() {
+        const { auth } = this.props;
+
+        return auth.isEmpty || auth.isAnonymous ? (
+            <Redirect to="/login" from="/me" />
+        ) : (
+            <View style={style.screen}>
+                <UserProfile userId={auth.uid}/>
+            </View>
+        );
+    }
+
+    
 }
 
 const mapStateToProps = state => ({

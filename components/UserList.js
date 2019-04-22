@@ -18,6 +18,7 @@ const style = StyleSheet.create({
     itemRow: {
         flexDirection: 'row',
         padding: 20,
+        alignItems: 'center',
     },
     itemCol: {
         flexDirection: 'column',
@@ -82,6 +83,9 @@ class UserList extends React.Component {
 
     boldSubText = (text, sub) => {
         let elems = [];
+        elems.push((
+            <Text>@</Text>
+        ));
         let p_Text = text;
         while (p_Text.length > 0 && p_Text.includes(sub) && sub.length > 0) {
             const occ = p_Text.indexOf(sub);
@@ -127,7 +131,7 @@ class UserList extends React.Component {
                 component={TouchableOpacity}
                 style={{flex: 5}}
             >
-                <View style={{display: 'flex', flexDirection: 'row'}}>
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <Image style={styles.avatarStyle} source={{ uri : (this.props.users[item.id] && this.props.users[item.id].avatar_url) ?
                         this.props.users[item.id].avatar_url :
                         'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png'}} style={styles.avatarStyle}/>
