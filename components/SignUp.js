@@ -38,20 +38,28 @@ class SignUpPage extends Component {
         password: '',
         c_password: '',
         bio: '',
+        avatar: '',
+        url_valid: true,
         errorMessage: null,
         success: false,
     };
 
+    verifyURL = (url) => {
+        return ((url.match(/(http|https):\/\/.+\.(jpeg|jpg|gif|png)$/) != null) || (url.length === 0));
+    }
+
     handleSignUp = () => {
-        const { email, username, password, c_password, bio } = this.state;
+        const { email, username, password, c_password, bio, avatar, verifyURL } = this.state;
         const { auth, firestore, firebase, users } = this.props;
         if (c_password !== password) {
             this.setState({ c_password: '', errorMessage: 'The passwords were not the same, please use the same password.' });
         } else if (users.some(u => u.username === username)) {
             this.setState({ errorMessage: 'The username is taken.' });
+        } else if (!verifyURL) {
+            this.setState({ errorMessage: 'The avatar URL you have provided is invalid.' });
         } else {
             firebase
-            .createUser({ email, password }, { email: email, username: username, following: [], bio: bio, reposts: [], })
+            .createUser({ email, password }, { email: email, username: username, following: [], bio: bio, reposts: [], avatar_url: avatar })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
         }
@@ -108,6 +116,13 @@ class SignUpPage extends Component {
                         style={textStyle}
                         onChangeText={bio => this.setState({ bio })}
                         value={this.state.bio}
+                    />
+                    <TextField
+                        placeholder="Avatar (optional)"
+                        style={textStyle}
+                        textColor={(this.state.url_valid ? pallette.darkgreen : pallette.crimson)}
+                        onChangeText={avatar => this.setState({ avatar, url_valid: this.verifyURL(avatar) })}
+                        value={this.state.avatar}
                     />
                     <Button
                         text="Sign Up"

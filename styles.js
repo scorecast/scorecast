@@ -12,6 +12,7 @@ const pallette = {
     lightblue: '#83c2ff',
     green: '#88ff00',
     lightgreen: '#efffe6',
+    darkgreen: '#4e8c07',
 };
 
 const styles = StyleSheet.create({

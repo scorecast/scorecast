@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, Text, StyleSheet, FlatList, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { View, TextInput, Text, StyleSheet, FlatList, KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -23,10 +23,17 @@ const style = StyleSheet.create({
         flexDirection: 'column',
     },
     itemText: {
-        fontSize: 20,
+        flex: 4,
     },
     itemButton: {
         flex: 1,
+    },
+    avatarStyle: {
+        flex: 1,
+        height: 64,
+        width: 64,
+        borderRadius: 4,
+        marginRight: 10,
     },
     searchTextForm: {
         flexDirection: 'row',
@@ -113,11 +120,16 @@ class UserList extends React.Component {
                 to={"/user/profile/" + item.id}
                 activeOpacity={0.5}
                 component={TouchableOpacity}
-                style={{ flex: 5 }}
-            >   
-                <Text style={style.itemText}>
-                    {this.boldSubText(item.username, this.state.searchText)} { /** TODO add bold highlighting to search text */}
-                </Text>
+                style={{flex: 5}}
+            >
+                <View style={{display: 'flex', flexDirection: 'row'}}>
+                    <Image style={style.avatarStyle} source={{ uri : (this.props.users[item.id] && this.props.users[item.id].avatar_url) ? 
+                        this.props.users[item.id].avatar_url :
+                        'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png'}} style={style.avatarStyle}/>
+                    <Text style={[style.itemText, { fontSize: 20 }]}> { /** Figure out why icon size is related to font size */}
+                        {this.boldSubText(item.username, this.state.searchText)} 
+                    </Text>
+                </View>
             </Link>
             { item.id !== this.props.auth.uid || !this.props.showFollow ? (
                 <TouchableOpacity
@@ -170,6 +182,7 @@ class UserList extends React.Component {
 const mapStateToProps = state => ({
     currentUser : state.firestore.data.users && state.firestore.data.users[state.firebase.auth.uid],
     auth: state.firebase.auth,
+    users: state.firebase.data.users || {},
 });
 
 export default compose(
