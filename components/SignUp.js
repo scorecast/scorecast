@@ -76,7 +76,7 @@ class SignUpPage extends Component {
             }
 
             firebase
-            .createUser({ email, password }, { email: email, username: username, following: [], followed: [], bio: bio, reposts: [], avatar_url: avatar, expoDeviceTokens: token })
+            .createUser({ email, password }, { email: email, username: username, following: [], followed: [], bio: bio, reposts: [], avatar_url: avatar, expoDeviceToken: token })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
         }

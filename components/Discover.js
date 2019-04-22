@@ -44,8 +44,6 @@ class Discover extends React.Component {
     };
 
     renderGameItem = ({ item, index, section }) => {
-        //console.warn(index % 2);
-
         return (
             <View
                 style={[
