@@ -110,12 +110,25 @@ const styles = StyleSheet.create({
         }),
     },
     avatarStyle: {
-        flex: 1,
+        //flex: 1,
         height: 64,
         width: 64,
-        borderRadius: 4,
         marginRight: 10,
+        backgroundColor:'#fff',
+        borderRadius:32,
+        borderWidth:1,
+        borderColor:'rgba(0,0,0,0.2)',
     },
+    avatarContainer: {
+      borderWidth:1,
+      borderColor:'rgba(0,0,0,0.2)',
+      alignItems:'center',
+      justifyContent:'center',
+      width:64,
+      height:64,
+      backgroundColor:'#fff',
+      borderRadius:32,
+    }
 });
 
 export { styles, pallette };
