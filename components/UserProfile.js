@@ -123,6 +123,18 @@ class UserProfile extends Component {
                 ? { backgroundColor: pallette.lightergray }
                 : { backgroundColor: pallette.white },]
         }>
+
+            { this.props.users &&
+                    this.props.users[item.admin] &&
+                    this.props.users[item.admin].avatar_url ?
+                (<Image style={styles.avatarStyle} source={{
+                  uri : this.props.users[item.id].avatar_url
+                }} style={styles.avatarStyle}/>) : (
+                  <Image style={styles.avatarStyle} source={{
+                    uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
+                  }} style={styles.avatarStyle}/>
+                )
+            }
             <Link
                 to={`/game/${item.id}`}
                 activeOpacity={0.5}

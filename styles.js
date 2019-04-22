@@ -95,19 +95,26 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
     },
     shadow: {
-    ...Platform.select({
-      ios: {
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        shadowOffset: {
-          height: 0,
-          width: 0,
-        }
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+        ...Platform.select({
+          ios: {
+            shadowOpacity: 0.3,
+            shadowRadius: 3,
+            shadowOffset: {
+              height: 0,
+              width: 0,
+            }
+          },
+          android: {
+            elevation: 2,
+          },
+        }),
+    },
+    avatarStyle: {
+        flex: 1,
+        height: 64,
+        width: 64,
+        borderRadius: 4,
+        marginRight: 10,
     },
 });
 

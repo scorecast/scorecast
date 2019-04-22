@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-    View,
-    SectionList,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    StyleSheet,
-} from 'react-native';
+  View,
+  SectionList,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  StyleSheet, Image
+} from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles, pallette } from '../styles';
 import { compose } from 'redux';
@@ -39,21 +39,32 @@ class Discover extends React.Component {
                 ? { backgroundColor: pallette.lightergray }
                 : { backgroundColor: pallette.white },]
             }>
+            { this.props.users &&
+                    this.props.users[item.admin] &&
+                    this.props.users[item.admin].avatar_url ?
+                (<Image style={styles.avatarStyle} source={{
+                    uri : this.props.users[item.id].avatar_url
+                }} style={styles.avatarStyle}/>) : (
+                  <Image style={styles.avatarStyle} source={{
+                    uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
+                  }} style={styles.avatarStyle}/>
+                )
+            }
             <Link
                 to={`/game/${item.id}`}
                 activeOpacity={0.5}
                 component={TouchableOpacity}
                 style={{fontSize: 20, flex: 5}}
             >
+                { this.props.users && this.props.users[item.admin] ? (
+                <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
+                ) : null }
                 <Text style={[{ fontSize: 20 }]}>{
                     item && item.variables ? item.variables.gameName : ''
                 }</Text>
                 <Text style={{ fontSize: 10 }}>{
                     item && item.template ? this.props.templates[item.template].name : ''
                 }</Text>
-                { this.props.users && this.props.users[item.admin] ? (
-                    <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
-                ) : null }
             </Link>
             { item.admin !== this.props.auth.uid && !(this.props.auth.isEmpty || this.props.auth.isAnonymous) ? (
                 <TouchableOpacity
