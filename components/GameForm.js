@@ -18,10 +18,9 @@ class GameForm extends Component {
         const { template, logic } = this.props;
 
         // TODO: add form validation for types
-        // TODO: add readable name to vars (maybe just setup vars)
         const setupList = logic.setup.map((setupVar, index) => (
             <View key={index} style={{ flexDirection: 'row', padding: 10 }}>
-                <Text style={{ fontSize: 20 }}>{setupVar.name + ': '}</Text>
+                <Text style={{ fontSize: 20 }}>{setupVar.label + ': '}</Text>
                 <TextInput
                     style={{
                         borderRadius: 10,
@@ -29,9 +28,16 @@ class GameForm extends Component {
                         flex: 1,
                         padding: 10,
                     }}
-                    onEndEditing={e =>
-                        this.setState({ [setupVar.name]: e.nativeEvent.text })
-                    }
+                    onEndEditing={e => {
+                        const isInt = logic.variables.find((v) => {
+                          return v.name === setupVar.name;
+                        }).type === 'Int';
+                        if (isInt) {
+                          this.setState({ [setupVar.name]: parseInt(e.nativeEvent.text) });
+                        } else {
+                          this.setState({ [setupVar.name]: e.nativeEvent.text });
+                        }
+                    }}
                 >
                   {this.state[setupVar.name]}
                 </TextInput>

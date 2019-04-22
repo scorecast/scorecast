@@ -4,6 +4,7 @@ import { pallette } from "../../styles";
 
 export default class LinkElement extends Component {
   render() {
+    //console.warn(`LinkElement: ${this.props.e.label}`);
     return (
       <View
         style={{

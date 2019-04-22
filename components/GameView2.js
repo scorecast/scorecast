@@ -20,10 +20,7 @@ import ButtonElement from "./Game/ButtonElement";
 
 class GameView2 extends Component {
     constructor(props) {
-        super(props);
-        /*this.state = {
-            //currentView: -1,
-        };*/
+      super(props);
 
       const { game, template, auth, match } = this.props;
       const isAdmin = auth.uid === game.admin;
@@ -87,8 +84,8 @@ class GameView2 extends Component {
       let view = viewLogic.views[this.state.currentView];
 
       let elements = view.elements.map((e, index) => {
-        //console.warn(`Rendering ${e.ref}`);
-        if (e.target) {
+        //console.warn(`Rendering ${e}`);
+        if (typeof e.target !== 'undefined') {
           return (
             <LinkElement
               onPress={() => {
