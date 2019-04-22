@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, SectionList } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, SectionList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -31,6 +31,12 @@ const style = StyleSheet.create({
         alignSelf: 'flex-start',
         fontSize: 30,
         fontWeight: 'bold',
+    },
+    avatarStyle: {
+        maxHeight: 100,
+        maxWidth: 100,
+        borderRadius: 4,
+        marginRight: 10,
     },
     bio: {
         marginLeft: 10,
@@ -127,7 +133,7 @@ class UserProfile extends Component {
                     onPress={() => this.toggleRepost(item)}
                     style={{flex: 1, alignSelf: 'center'}}
                 >
-                    <Icon name={ this.props.currentUser.reposts.includes(item.id) ? 'check' : 'retweet'} size={20} color={pallette.darkgray} />
+                    <Icon name={'retweet'} color={this.props.currentUser && this.props.currentUser.reposts.includes(item.id) ? pallette.green : pallette.darkgray} size={20} />
                 </TouchableOpacity>
             ) : null }
         </View>

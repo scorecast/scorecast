@@ -50,6 +50,7 @@ export default class TextField extends Component {
         const {
             style: propStyle,
             secureTextEntry,
+            textColor,
             onFocus,
             onBlur,
             ...props
@@ -57,7 +58,7 @@ export default class TextField extends Component {
         return (
             <View style={this.getStyle().concat(propStyle)}>
                 <TextInput
-                    style={style.textField}
+                    style={[style.textField, { color: textColor ? textColor : pallette.black }]}
                     onFocus={this.onFocus}
                     onBlur={this.onBlur}
                     placeholderTextColor="rgba(0, 0, 0, 0.4)"
