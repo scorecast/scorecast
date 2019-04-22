@@ -28,13 +28,6 @@ const style = StyleSheet.create({
     itemButton: {
         flex: 1,
     },
-    avatarStyle: {
-        flex: 1,
-        height: 64,
-        width: 64,
-        borderRadius: 4,
-        marginRight: 10,
-    },
     searchTextForm: {
         flexDirection: 'row',
         backgroundColor: pallette.white,
@@ -70,7 +63,7 @@ class UserList extends React.Component {
             this.props.currentUser.following.concat(item.id);
 
         this.props.firestore.update({
-            collection: 'users', 
+            collection: 'users',
             doc: this.props.auth.uid },
             { following : n_arr });
     };
@@ -108,7 +101,7 @@ class UserList extends React.Component {
         return elems;
     }
 
-    renderUserItem = ({ item, index }) => 
+    renderUserItem = ({ item, index }) =>
     (
         <View style={[
             style.itemRow,
@@ -123,11 +116,11 @@ class UserList extends React.Component {
                 style={{flex: 5}}
             >
                 <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Image style={style.avatarStyle} source={{ uri : (this.props.users[item.id] && this.props.users[item.id].avatar_url) ? 
+                    <Image style={styles.avatarStyle} source={{ uri : (this.props.users[item.id] && this.props.users[item.id].avatar_url) ?
                         this.props.users[item.id].avatar_url :
-                        'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png'}} style={style.avatarStyle}/>
+                        'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png'}} style={styles.avatarStyle}/>
                     <Text style={[style.itemText, { fontSize: 20 }]}> { /** Figure out why icon size is related to font size */}
-                        {this.boldSubText(item.username, this.state.searchText)} 
+                        {this.boldSubText(item.username, this.state.searchText)}
                     </Text>
                 </View>
             </Link>

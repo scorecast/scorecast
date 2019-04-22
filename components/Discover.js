@@ -5,6 +5,7 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
+    Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { styles, pallette } from '../styles';
@@ -29,56 +30,94 @@ class Discover extends React.Component {
         );
     };
 
-    renderGameItem = ({ item, index, section }) => (
-        <View
-            style={[
-                localStyles.itemRow,
-                index % 2
-                    ? { backgroundColor: pallette.lightergray }
-                    : { backgroundColor: pallette.white },
-            ]}
-        >
-            <Link
-                to={`/game/${item.id}`}
-                activeOpacity={0.5}
-                component={TouchableOpacity}
-                style={{ fontSize: 20, flex: 5 }}
+    renderGameItem = ({ item, index, section }) => {
+        //console.warn(index % 2);
+
+        return (
+            <View
+                style={[
+                    localStyles.itemRow,
+                    index % 2 === 0
+                        ? { backgroundColor: pallette.lightergray }
+                        : { backgroundColor: pallette.white },
+                ]}
             >
-                <Text style={[{ fontSize: 20 }]}>
-                    {item && item.variables ? item.variables.gameName : ''}
-                </Text>
-                <Text style={{ fontSize: 10 }}>
-                    {item && item.template
-                        ? this.props.templates[item.template].name
-                        : ''}
-                </Text>
-                {this.props.users && this.props.users[item.admin] ? (
-                    <Text style={{ fontSize: 10 }}>
-                        {'@' + this.props.users[item.admin].username}
-                    </Text>
-                ) : null}
-            </Link>
-            {item.admin !== this.props.auth.uid &&
-            !(this.props.auth.isEmpty || this.props.auth.isAnonymous) ? (
-                <TouchableOpacity
+                <Link
+                    to={`/game/${item.id}`}
                     activeOpacity={0.5}
-                    onPress={() => this.toggleRepost(item)}
-                    style={{ flex: 1, alignSelf: 'center' }}
+                    component={TouchableOpacity}
+                    style={{ fontSize: 20, flex: 5 }}
                 >
-                    <Icon
-                        name={'retweet'}
-                        color={
-                            this.props.currentUser &&
-                            this.props.currentUser.reposts.includes(item.id)
-                                ? pallette.green
-                                : pallette.darkgray
-                        }
-                        size={20}
-                    />
-                </TouchableOpacity>
-            ) : null}
-        </View>
-    );
+                    <View
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                        }}
+                    >
+                        {this.props.users &&
+                        this.props.users[item.admin] &&
+                        this.props.users[item.admin].avatar_url ? (
+                            <Image
+                                style={styles.avatarStyle}
+                                source={{
+                                    uri: this.props.users[item.admin]
+                                        .avatar_url,
+                                }}
+                                style={styles.avatarStyle}
+                            />
+                        ) : (
+                            <Image
+                                style={styles.avatarStyle}
+                                source={{
+                                    uri:
+                                        'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
+                                }}
+                                style={styles.avatarStyle}
+                            />
+                        )}
+                        <View>
+                            {this.props.users &&
+                            this.props.users[item.admin] ? (
+                                <Text style={{ fontSize: 10 }}>
+                                    {'@' +
+                                        this.props.users[item.admin].username}
+                                </Text>
+                            ) : null}
+                            <Text style={[{ fontSize: 20 }]}>
+                                {item && item.variables
+                                    ? item.variables.gameName
+                                    : ''}
+                            </Text>
+                            <Text style={{ fontSize: 10 }}>
+                                {item && item.template
+                                    ? this.props.templates[item.template].name
+                                    : ''}
+                            </Text>
+                        </View>
+                    </View>
+                </Link>
+                {item.admin !== this.props.auth.uid &&
+                !(this.props.auth.isEmpty || this.props.auth.isAnonymous) ? (
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={() => this.toggleRepost(item)}
+                        style={{ flex: 1, alignSelf: 'center' }}
+                    >
+                        <Icon
+                            name={'retweet'}
+                            color={
+                                this.props.currentUser &&
+                                this.props.currentUser.reposts.includes(item.id)
+                                    ? pallette.green
+                                    : pallette.darkgray
+                            }
+                            size={20}
+                        />
+                    </TouchableOpacity>
+                ) : null}
+            </View>
+        );
+    };
 
     renderSectionHeader = ({ section: { title } }) => (
         <Text style={localStyles.sectionHeader}>{title}</Text>
@@ -172,10 +211,13 @@ class Discover extends React.Component {
 
 const localStyles = StyleSheet.create({
     sectionHeader: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        backgroundColor: pallette.crimson,
-        color: pallette.white,
+        //fontSize: 24,
+        //fontWeight: 'bold',
+        //backgroundColor: pallette.crimson,
+        //color: pallette.white,
+        fontSize: 12,
+        color: pallette.darkgray,
+        backgroundColor: pallette.lightgray,
         paddingLeft: 20,
         paddingTop: 5,
         paddingBottom: 5,

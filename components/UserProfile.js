@@ -18,6 +18,8 @@ const style = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
+        // borderColor: pallette.darkgray,
+        // borderBottomWidth: 1,
     },
     itemRow: {
         flexDirection: 'row',
@@ -27,7 +29,7 @@ const style = StyleSheet.create({
         flexWrap: 'wrap',
     },
     bigTag: {
-        marginLeft: 15,
+        //marginLeft: 15,
         alignSelf: 'flex-start',
         fontSize: 30,
         fontWeight: 'bold',
@@ -73,13 +75,19 @@ const style = StyleSheet.create({
         margin: 10,
     },
     sectionHeader: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        backgroundColor: pallette.crimson,
-        color: pallette.white,
+        // fontSize: 24,
+        // fontWeight: 'bold',
+        // backgroundColor: pallette.crimson,
+        // color: pallette.white,
+        fontSize: 12,
+        color: pallette.darkgray,
+        backgroundColor: pallette.lightgray,
         paddingLeft: 20,
-        paddingTop: 5,
+        //paddingTop: 5,
         paddingBottom: 5,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 
@@ -91,7 +99,7 @@ class UserProfile extends Component {
             this.props.currentUser.following.concat(uid);
 
         this.props.firestore.update({
-            collection: 'users', 
+            collection: 'users',
             doc: this.props.auth.uid },
             { following : n_arr });
     };
@@ -103,7 +111,7 @@ class UserProfile extends Component {
             this.props.currentUser.reposts.concat(item.id);
 
         this.props.firestore.update({
-            collection: 'users', 
+            collection: 'users',
             doc: this.props.auth.uid },
             { reposts : n_arr });
     };
@@ -115,6 +123,18 @@ class UserProfile extends Component {
                 ? { backgroundColor: pallette.lightergray }
                 : { backgroundColor: pallette.white },]
         }>
+
+            { this.props.users &&
+                    this.props.users[item.admin] &&
+                    this.props.users[item.admin].avatar_url ?
+                (<Image style={styles.avatarStyle} source={{
+                  uri : this.props.users[item.admin].avatar_url
+                }} style={styles.avatarStyle}/>) : (
+                  <Image style={styles.avatarStyle} source={{
+                    uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
+                  }} style={styles.avatarStyle}/>
+                )
+            }
             <Link
                 to={`/game/${item.id}`}
                 activeOpacity={0.5}
@@ -183,7 +203,7 @@ class UserProfile extends Component {
                             linkTo: '/user/settings',
                             iconName: 'cog'
                         }
-                        : 
+                        :
                         {
                             onPress: (() => this.toggleFollow(followed, uid)),
                             iconName: (followed ? 'check' : 'user-plus')
@@ -193,13 +213,46 @@ class UserProfile extends Component {
                     logoRight="Profile"
                 />
                 <View style={style.container_c}>
-                    <View style={[style.container_r, style.wrap, { marginBottom: 5 }]}>
-                        <Text style={[style.bigTag, { marginRight: 20 }]}>{'@' + user.username}</Text>
-                        <View style={style.container_r}>
-                            <View style={style.info_block}>
+                    <View style={[style.container_r, style.wrap, {
+                        //marginBottom: 5,
+                        borderBottomWidth: 1,
+                        borderColor: pallette.lightgray,
+                        backgroundColor: pallette.lightergray,
+                        paddingBottom: 20,
+                        paddingTop: 20,
+                    }]}>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            paddingLeft: 15,
+                        }}>
+                          { user &&
+                          user.avatar_url ?
+                            (<Image style={styles.avatarStyle} source={{
+                              uri : user.avatar_url
+                            }}/>) : (
+                              <Image style={styles.avatarStyle} source={{
+                                uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
+                              }}/>
+                            )
+                          }
+
+                          <Text style={[style.bigTag, { marginRight: 20 }]}>{'@' + user.username}</Text>
+                        </View>
+                        <View style={[style.container_r,
+                          {
+                            //display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'flex-end',
+                            justifyContent: 'flex-start',
+                            paddingRight: 15,
+                          }]}>
+                            <TouchableOpacity>
+                              <View style={style.info_block}>
                                 <Text style={{ fontWeight: 'bold' }}>{userGames.length}</Text>
                                 <Text style={{ color: pallette.gray }}>Games Hosted</Text>
-                            </View>
+                              </View>
+                            </TouchableOpacity>
                             <Link
                                 to={"/user/followers/" + uid}
                                 component={TouchableOpacity}
@@ -230,11 +283,11 @@ class UserProfile extends Component {
                         renderItem={this.renderGameItem}
                         renderSectionHeader={this.renderSectionHeader}
                         sections={
-                            reposts.length === 0 ? 
-                                (currentGames.length === 0 ? 
+                            reposts.length === 0 ?
+                                (currentGames.length === 0 ?
                                     [{title: "Past Games", data: pastGames},] :
                                     [{title: "Current Games", data: currentGames}, {title: "Past Games", data: pastGames},]) :
-                                (currentGames.length === 0 ? 
+                                (currentGames.length === 0 ?
                                     [{title: "Reposts", data: reposts}, {title: "Past Games", data: pastGames},] :
                                     [{title: "Current Games", data: currentGames}, {title: "Reposts", data: reposts}, {title: "Past Games", data: pastGames},])
                         }
