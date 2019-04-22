@@ -1,43 +1,13 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, View, Share, ImageBackground } from 'react-native';
-import { compose } from 'redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { connect } from 'react-redux';
+import { Text, TouchableOpacity, View, ImageBackground } from 'react-native';
+import { withFirestore } from 'react-redux-firebase';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import TopBar from './TopBar/Bar';
-
 import { Operation } from '../config/gameAction';
-import { createTag } from '../config/functions';
 
 import { pallette, styles } from '../styles';
 
 class GameView extends Component {
-    shareGameTag = () => {
-        this.getTag(this.props).then(tag => Share.share({ message: "Welcome to ScoreCast. Here is your game id: " + tag }));
-    };
-
-    async getTag({ firestore, game, match }) {
-        if (game.tag) return game.tag;
-
-        let tag;
-        let query;
-        do {
-            tag = createTag();
-            query = await firestore
-                .collection('games')
-                .where('tag', '==', tag)
-                .get();
-        } while (query.size > 0);
-
-        firestore.update(
-            { collection: 'games', doc: match.params.gameId },
-            { tag }
-        );
-
-        return tag;
-    }
-
     render() {
         const { game, template, auth, match } = this.props;
         if (!game) return null;
@@ -61,7 +31,6 @@ class GameView extends Component {
                         [`variables.${v.name}`]: val,
                     })
                     .catch(console.error);
-                ``;
             }
         });
 
@@ -212,78 +181,60 @@ class GameView extends Component {
         });
 
         return (
-            <>
-                <TopBar
-                    left={{ linkTo: '/home', iconName: 'times' }}
-                    right={{ iconName: 'share-alt', onPress: this.shareGameTag }}
-                    logoLeft="Live"
-                    logoRight="Score"
-                />
-                <View
-                    style={[
-                        {
-                            flex: 1,
-                            flexDirection: 'row',
-                            backgroundColor: view.backgroundColor,
-                        },
-                    ]}
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        flexDirection: 'row',
+                        backgroundColor: view.backgroundColor,
+                    },
+                ]}
+            >
+                <ImageBackground
+                    style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                    }}
+                    imageStyle={{
+                        resizeMode: 'stretch',
+                        opacity: 0.25,
+                    }}
+                    source={{
+                        uri: view.backgroundSrc,
+                    }}
                 >
-                  <ImageBackground style={{
-                                   flex: 1,
-                                     flexDirection: 'row'
-                                   }}
-                                   imageStyle={{
-                                     resizeMode: 'stretch',
-                                     opacity: 0.25
-                                   }}
-                                   source={{
-                                     uri: view.backgroundSrc,
-                                   }}>
                     {isWon ? (
-                      <View
-                        style={[{
-                          flex: 1,
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }
-                          //styles.content,
-                          //{ backgroundColor: view.backgroundColor },
-                        ]}
-                      >
-                        <Text style={styles.header}>{winText}</Text>
-                      </View>
+                        <View
+                            style={[
+                                {
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                },
+                                //styles.content,
+                                //{ backgroundColor: view.backgroundColor },
+                            ]}
+                        >
+                            <Text style={styles.header}>{winText}</Text>
+                        </View>
                     ) : (
-                      <View
-                        style={[
-                          {
-                            flex: 1,
-                            flexDirection: 'column',
-                            //backgroundColor: view.backgroundColor,
-                          },
-                        ]}
-                      >
-                        {elements}
-                      </View>
+                        <View
+                            style={[
+                                {
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    //backgroundColor: view.backgroundColor,
+                                },
+                            ]}
+                        >
+                            {elements}
+                        </View>
                     )}
-                  </ImageBackground>
-                </View>
-            </>
+                </ImageBackground>
+            </View>
         );
     }
 }
 
-const mapStateToProps = ({ firestore: { data }, firebase }, { match }) => {
-    const game = data.games && data.games[match.params.gameId];
-    const template = game && data.templates && data.templates[game.template];
-    return {
-        auth: firebase.auth,
-        game,
-        template,
-    };
-};
-
-export default compose(
-    firestoreConnect(['templates', 'games']),
-    connect(mapStateToProps)
-)(GameView);
+export default withFirestore(GameView);
