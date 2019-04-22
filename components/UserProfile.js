@@ -169,15 +169,7 @@ class UserProfile extends Component {
         const user = users[uid];
         const followed = currentUser.following.includes(uid);
 
-        let followingNum = 0;
-        for(let i = 0; i < userList.length; i++) {
-            const followList = userList[i].following;
-            for (let j = 0; j < followList.length; j++) {
-                if (followList[j] === uid) {
-                    followingNum++;
-                }
-            }
-        }
+        
 
         const userGames = gameList.filter(g => g.admin === uid);
         const reposts = user.reposts.map(g_id => {
@@ -258,7 +250,7 @@ class UserProfile extends Component {
                                 component={TouchableOpacity}
                             >
                                 <View style={style.info_block}>
-                                    <Text style={{ fontWeight: 'bold' }}>{followingNum}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{user.followed.length}</Text>
                                     <Text style={{ color: pallette.gray }}>Followers</Text>
                                 </View>
                             </Link>

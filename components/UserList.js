@@ -56,16 +56,28 @@ class UserList extends React.Component {
         searchText: '',
     };
 
-    toggleFollow = (item) => {
-        const followed = this.props.currentUser.following.includes(item.id);
-        const n_arr = followed ?
-            this.props.currentUser.following.filter(id => id !== item.id) :
-            this.props.currentUser.following.concat(item.id);
+    toggleFollow = (clicked_user) => {
+        const c_followed = this.props.currentUser.following.includes(clicked_user.id);
+        const cur_n_arr = c_followed ?
+            this.props.currentUser.following.filter(id => id !== clicked_user.id) :
+            this.props.currentUser.following.concat(clicked_user.id);
+
+        const f_followed = clicked_user.followed.includes(this.props.auth.uid);
+        const f_n_arr = f_followed ?
+            clicked_user.followed.filter(id => id !== this.props.auth.uid) :
+            clicked_user.followed.concat(this.props.auth.uid);
 
         this.props.firestore.update({
             collection: 'users',
             doc: this.props.auth.uid },
-            { following : n_arr });
+            { following : cur_n_arr }
+        );
+
+        this.props.firestore.update({
+            collection: 'users', 
+            doc: clicked_user.id },
+            { followed : f_n_arr }
+        );
     };
 
     boldSubText = (text, sub) => {

@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Link, Redirect } from 'react-router-native';
+import { Permissions, Notifications } from 'expo';
 import {
     withFirebase,
     firestoreConnect,
@@ -58,8 +59,24 @@ class SignUpPage extends Component {
         } else if (!verifyURL) {
             this.setState({ errorMessage: 'The avatar URL you have provided is invalid.' });
         } else {
+            const { status: existingStatus } = await Permissions.getAsync(
+                Permissions.NOTIFICATIONS
+            );
+            let finalStatus = existingStatus;
+
+            if (existingStatus !== 'granted') {
+                const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+                finalStatus = status;
+            }
+
+            let token = 'nah';
+            if (finalStatus === 'granted') {
+                // Get the token that uniquely identifies this device
+                token = await Notifications.getExpoPushTokenAsync();
+            }
+
             firebase
-            .createUser({ email, password }, { email: email, username: username, following: [], bio: bio, reposts: [], avatar_url: avatar })
+            .createUser({ email, password }, { email: email, username: username, following: [], followed: [], bio: bio, reposts: [], avatar_url: avatar, expoDeviceTokens: token })
             .then(userData => this.setState({ success: true }))
             .catch(error => this.setState({ errorMessage: error.message }));
         }
