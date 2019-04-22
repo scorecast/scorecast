@@ -1,0 +1,825 @@
+{
+  "adminDefault": 0,
+  "default": 1,
+  "over": 4,
+  "views": [
+    {
+      "elements": [
+        {
+          "px": "50%",
+          "py": "5%",
+          "w": 200,
+          "size": 20,
+          "ref": "gameName"
+        },
+        {
+          "px": "25%",
+          "py": "30%",
+          "w": 100,
+          "size": 40,
+          "ref": "aScore",
+          "edit": true
+        },
+        {
+          "px": "75%",
+          "py": "30%",
+          "w": 100,
+          "size": 40,
+          "ref": "bScore",
+          "edit": true
+        },
+        {
+          "px": "25%",
+          "py": "23%",
+          "w": 150,
+          "size": 30,
+          "ref": "aName"
+        },
+        {
+          "px": "75%",
+          "py": "23%",
+          "w": 150,
+          "size": 30,
+          "ref": "bName"
+        },
+        {
+          "px": "18%",
+          "py": "40%",
+          "w": 50,
+          "size": 20,
+          "ref": "aPlus"
+        },
+        {
+          "px": "32%",
+          "py": "40%",
+          "w": 50,
+          "size": 20,
+          "ref": "aMinus"
+        },
+        {
+          "px": "68%",
+          "py": "40%",
+          "w": 50,
+          "size": 20,
+          "ref": "bPlus"
+        },
+        {
+          "px": "82%",
+          "py": "40%",
+          "w": 50,
+          "size": 20,
+          "ref": "bMinus"
+        },
+        {
+          "px": "50%",
+          "py": "13%",
+          "w": 75,
+          "size": 25,
+          "ref": "turnover"
+        },
+        {
+          "px": "25%",
+          "py": "15%",
+          "w": 50,
+          "size": 20,
+          "ref": "aPos"
+        },
+        {
+          "px": "75%",
+          "py": "15%",
+          "w": 50,
+          "size": 20,
+          "ref": "bPos"
+        },
+        {
+          "px": "25%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "target": 2,
+          "label": "Roster"
+        },
+        {
+          "px": "75%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "target": 3,
+          "label": "Roster"
+        },
+        {
+          "px": "50%",
+          "py": "90%",
+          "w": 250,
+          "size": 15,
+          "ref": "description"
+        }
+      ],
+      "backgroundColor": "#55db92",
+      "backgroundSrc": "https://i.ibb.co/2jRSfv8/ufbg.png"
+    },
+    {
+      "elements": [
+        {
+          "px": "50%",
+          "py": "5%",
+          "w": 200,
+          "size": 20,
+          "ref": "gameName"
+        },
+        {
+          "px": "25%",
+          "py": "30%",
+          "w": 100,
+          "size": 40,
+          "ref": "aScore"
+        },
+        {
+          "px": "75%",
+          "py": "30%",
+          "w": 100,
+          "size": 40,
+          "ref": "bScore"
+        },
+        {
+          "px": "25%",
+          "py": "23%",
+          "w": 150,
+          "size": 30,
+          "ref": "aName"
+        },
+        {
+          "px": "75%",
+          "py": "23%",
+          "w": 150,
+          "size": 30,
+          "ref": "bName"
+        },
+        {
+          "px": "25%",
+          "py": "15%",
+          "w": 50,
+          "size": 20,
+          "ref": "aPos"
+        },
+        {
+          "px": "75%",
+          "py": "15%",
+          "w": 50,
+          "size": 20,
+          "ref": "bPos"
+        },
+        {
+          "px": "25%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "target": 4,
+          "label": "Roster"
+        },
+        {
+          "px": "75%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "target": 5,
+          "label": "Roster"
+        },
+        {
+          "px": "50%",
+          "py": "90%",
+          "w": 250,
+          "size": 15,
+          "ref": "description"
+        }
+      ],
+      "backgroundColor": "#55db92",
+      "backgroundSrc": "https://i.ibb.co/2jRSfv8/ufbg.png"
+    },
+    {
+      "elements": [
+        {
+          "px": "50%",
+          "py": "10%",
+          "w": 100,
+          "size": 30,
+          "ref": "aName"
+        },
+        {
+          "px": "15%",
+          "py": "20%",
+          "w": 100,
+          "size": 20,
+          "ref": "player1"
+        },
+        {
+          "px": "15%",
+          "py": "25%",
+          "w": 100,
+          "size": 20,
+          "ref": "player2"
+        },
+        {
+          "px": "15%",
+          "py": "30%",
+          "w": 100,
+          "size": 20,
+          "ref": "player3"
+        },
+        {
+          "px": "15%",
+          "py": "35%",
+          "w": 100,
+          "size": 20,
+          "ref": "player4"
+        },
+        {
+          "px": "15%",
+          "py": "40%",
+          "w": 100,
+          "size": 20,
+          "ref": "player5"
+        },
+        {
+          "px": "15%",
+          "py": "45%",
+          "w": 100,
+          "size": 20,
+          "ref": "player6"
+        },
+        {
+          "px": "15%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "ref": "player7"
+        },{
+          "px": "50%",
+          "py": "20%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer1",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "25%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer2",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "30%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer3",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "35%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer4",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "40%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer5",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "45%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer6",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer7",
+          "edit": true
+        },
+        {
+          "px": "85%",
+          "py": "20%",
+          "w": 100,
+          "size": 15,
+          "ref": "aPlayer1Score"
+        },
+        {
+          "px": "85%",
+          "py": "25%",
+          "w": 100,
+          "size": 15,
+          "ref": "aPlayer2Score"
+        },
+        {
+          "px": "85%",
+          "py": "30%",
+          "w": 100,
+          "size": 15,
+          "ref": "aPlayer3Score"
+        },
+        {
+          "px": "85%",
+          "py": "35%",
+          "w": 100,
+          "size": 15,
+          "ref": "aPlayer4Score"
+        },
+        {
+          "px": "85%",
+          "py": "40%",
+          "w": 100,
+          "size": 15,
+          "ref": "aPlayer5Score"
+        },
+        {
+          "px": "85%",
+          "py": "45%",
+          "w": 100,
+          "size": 15,
+          "ref": "aPlayer6Score"
+        },
+        {
+          "px": "85%",
+          "py": "50%",
+          "w": 100,
+          "size": 15,
+          "ref": "aPlayer7Score"
+        },
+        {
+          "px": "50%",
+          "py": "60%",
+          "w": 100,
+          "size": 20,
+          "target": 0,
+          "label": "Back"
+        },
+        {
+          "px": "50%",
+          "py": "90%",
+          "w": 250,
+          "size": 15,
+          "ref": "description"
+        }
+      ],
+      "backgroundColor": "#55db92",
+      "backgroundSrc": "https://i.ibb.co/2jRSfv8/ufbg.png"
+    },
+    {
+      "elements": [
+        {
+          "px": "50%",
+          "py": "10%",
+          "w": 100,
+          "size": 30,
+          "ref": "bName"
+        },
+        {
+          "px": "15%",
+          "py": "20%",
+          "w": 100,
+          "size": 20,
+          "ref": "player1"
+        },
+        {
+          "px": "15%",
+          "py": "25%",
+          "w": 100,
+          "size": 20,
+          "ref": "player2"
+        },
+        {
+          "px": "15%",
+          "py": "30%",
+          "w": 100,
+          "size": 20,
+          "ref": "player3"
+        },
+        {
+          "px": "15%",
+          "py": "35%",
+          "w": 100,
+          "size": 20,
+          "ref": "player4"
+        },
+        {
+          "px": "15%",
+          "py": "40%",
+          "w": 100,
+          "size": 20,
+          "ref": "player5"
+        },
+        {
+          "px": "15%",
+          "py": "45%",
+          "w": 100,
+          "size": 20,
+          "ref": "player6"
+        },
+        {
+          "px": "15%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "ref": "player7"
+        },{
+          "px": "50%",
+          "py": "20%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer1",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "25%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer2",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "30%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer3",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "35%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer4",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "40%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer5",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "45%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer6",
+          "edit": true
+        },
+        {
+          "px": "50%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer7",
+          "edit": true
+        },
+        {
+          "px": "85%",
+          "py": "20%",
+          "w": 100,
+          "size": 15,
+          "ref": "bPlayer1Score"
+        },
+        {
+          "px": "85%",
+          "py": "25%",
+          "w": 100,
+          "size": 15,
+          "ref": "bPlayer2Score"
+        },
+        {
+          "px": "85%",
+          "py": "30%",
+          "w": 100,
+          "size": 15,
+          "ref": "bPlayer3Score"
+        },
+        {
+          "px": "85%",
+          "py": "35%",
+          "w": 100,
+          "size": 15,
+          "ref": "bPlayer4Score"
+        },
+        {
+          "px": "85%",
+          "py": "40%",
+          "w": 100,
+          "size": 15,
+          "ref": "bPlayer5Score"
+        },
+        {
+          "px": "85%",
+          "py": "45%",
+          "w": 100,
+          "size": 15,
+          "ref": "bPlayer6Score"
+        },
+        {
+          "px": "85%",
+          "py": "50%",
+          "w": 100,
+          "size": 15,
+          "ref": "bPlayer7Score"
+        },
+        {
+          "px": "50%",
+          "py": "60%",
+          "w": 100,
+          "size": 20,
+          "target": 0,
+          "label": "Back"
+        },
+        {
+          "px": "50%",
+          "py": "90%",
+          "w": 250,
+          "size": 15,
+          "ref": "description"
+        }
+      ],
+      "backgroundColor": "#55db92",
+      "backgroundSrc": "https://i.ibb.co/2jRSfv8/ufbg.png"
+    },
+    {
+      "elements": [
+        {
+          "px": "50%",
+          "py": "10%",
+          "w": 100,
+          "size": 30,
+          "ref": "aName"
+        },
+        {
+          "px": "15%",
+          "py": "20%",
+          "w": 100,
+          "size": 20,
+          "ref": "player1"
+        },
+        {
+          "px": "15%",
+          "py": "25%",
+          "w": 100,
+          "size": 20,
+          "ref": "player2"
+        },
+        {
+          "px": "15%",
+          "py": "30%",
+          "w": 100,
+          "size": 20,
+          "ref": "player3"
+        },
+        {
+          "px": "15%",
+          "py": "35%",
+          "w": 100,
+          "size": 20,
+          "ref": "player4"
+        },
+        {
+          "px": "15%",
+          "py": "40%",
+          "w": 100,
+          "size": 20,
+          "ref": "player5"
+        },
+        {
+          "px": "15%",
+          "py": "45%",
+          "w": 100,
+          "size": 20,
+          "ref": "player6"
+        },
+        {
+          "px": "15%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "ref": "player7"
+        },{
+          "px": "50%",
+          "py": "20%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer1"
+        },
+        {
+          "px": "50%",
+          "py": "25%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer2"
+        },
+        {
+          "px": "50%",
+          "py": "30%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer3"
+        },
+        {
+          "px": "50%",
+          "py": "35%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer4"
+        },
+        {
+          "px": "50%",
+          "py": "40%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer5"
+        },
+        {
+          "px": "50%",
+          "py": "45%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer6"
+        },
+        {
+          "px": "50%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "ref": "aPlayer7"
+        },
+        {
+          "px": "50%",
+          "py": "60%",
+          "w": 100,
+          "size": 20,
+          "target": 1,
+          "label": "Back"
+        },
+        {
+          "px": "50%",
+          "py": "90%",
+          "w": 250,
+          "size": 15,
+          "ref": "description"
+        }
+      ],
+      "backgroundColor": "#55db92",
+      "backgroundSrc": "https://i.ibb.co/2jRSfv8/ufbg.png"
+    },
+    {
+      "elements": [
+        {
+          "px": "50%",
+          "py": "10%",
+          "w": 100,
+          "size": 30,
+          "ref": "bName"
+        },
+        {
+          "px": "15%",
+          "py": "20%",
+          "w": 100,
+          "size": 20,
+          "ref": "player1"
+        },
+        {
+          "px": "15%",
+          "py": "25%",
+          "w": 100,
+          "size": 20,
+          "ref": "player2"
+        },
+        {
+          "px": "15%",
+          "py": "30%",
+          "w": 100,
+          "size": 20,
+          "ref": "player3"
+        },
+        {
+          "px": "15%",
+          "py": "35%",
+          "w": 100,
+          "size": 20,
+          "ref": "player4"
+        },
+        {
+          "px": "15%",
+          "py": "40%",
+          "w": 100,
+          "size": 20,
+          "ref": "player5"
+        },
+        {
+          "px": "15%",
+          "py": "45%",
+          "w": 100,
+          "size": 20,
+          "ref": "player6"
+        },
+        {
+          "px": "15%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "ref": "player7"
+        },{
+          "px": "50%",
+          "py": "20%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer1"
+        },
+        {
+          "px": "50%",
+          "py": "25%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer2"
+        },
+        {
+          "px": "50%",
+          "py": "30%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer3"
+        },
+        {
+          "px": "50%",
+          "py": "35%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer4"
+        },
+        {
+          "px": "50%",
+          "py": "40%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer5"
+        },
+        {
+          "px": "50%",
+          "py": "45%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer6"
+        },
+        {
+          "px": "50%",
+          "py": "50%",
+          "w": 100,
+          "size": 20,
+          "ref": "bPlayer7"
+        },
+        {
+          "px": "50%",
+          "py": "60%",
+          "w": 100,
+          "size": 20,
+          "target": 1,
+          "label": "Back"
+        },
+        {
+          "px": "50%",
+          "py": "90%",
+          "w": 250,
+          "size": 15,
+          "ref": "description"
+        }
+      ],
+      "backgroundColor": "#55db92",
+      "backgroundSrc": "https://i.ibb.co/2jRSfv8/ufbg.png"
+    },
+    {
+      "elements": [
+        {
+          "px": "50%",
+          "py": "50%",
+          "w": 250,
+          "size": 35,
+          "ref": "winString"
+        }
+      ],
+      "backgroundColor": "#55db92",
+      "backgroundSrc": "https://i.ibb.co/2jRSfv8/ufbg.png"
+    }
+  ]
+}
