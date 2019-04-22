@@ -20,7 +20,7 @@ class GameViewContainer extends Component {
         if (!game) return null;
 
         if (template.version && template.version === 0.2) {
-          console.log("GameView 0.2");
+          //console.log("GameView 0.2");
           return (
           <GameView2
             game={game}
@@ -30,7 +30,7 @@ class GameViewContainer extends Component {
           />
           );
         } else {
-          console.log("GameView 0.1");
+          //console.log("GameView 0.1");
           return (
           <GameView
             game={game}
