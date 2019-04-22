@@ -20,7 +20,7 @@ class GameForm extends Component {
         // TODO: add form validation for types
         const setupList = logic.setup.map((setupVar, index) => (
             <View key={index} style={{ flexDirection: 'row', padding: 10 }}>
-                <Text style={{ fontSize: 20 }}>{setupVar.label + ': '}</Text>
+                <Text style={{ fontSize: 20 }}>{setupVar.label? (setupVar.label + ': ') : (setupVar.name + ': ') }</Text>
                 <TextInput
                     style={{
                         borderRadius: 10,

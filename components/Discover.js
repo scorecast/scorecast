@@ -147,7 +147,7 @@ class Discover extends React.Component {
         } = this.props;
 
         if (!gameList || !templates) return null;
-        console.log(users);
+        //console.log(users);
 
         const availableGames = gameList.filter(
             g => g.variables && g.variables['gameName'] && !g.variables['win']

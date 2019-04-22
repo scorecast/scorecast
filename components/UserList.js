@@ -74,7 +74,7 @@ class UserList extends React.Component {
         );
 
         this.props.firestore.update({
-            collection: 'users', 
+            collection: 'users',
             doc: clicked_user.id },
             { followed : f_n_arr }
         );
@@ -128,9 +128,19 @@ class UserList extends React.Component {
                 style={{flex: 5}}
             >
                 <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Image style={styles.avatarStyle} source={{ uri : (this.props.users[item.id] && this.props.users[item.id].avatar_url) ?
+                    {/*<Image style={styles.avatarStyle} source={{ uri : (this.props.users[item.id] && this.props.users[item.id].avatar_url) ?
                         this.props.users[item.id].avatar_url :
-                        'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png'}} style={styles.avatarStyle}/>
+                        'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png'}} style={styles.avatarStyle}/>*/}
+                    { item &&
+                    item.avatar_url ?
+                      (<Image style={styles.avatarStyle} source={{
+                        uri : item.avatar_url
+                      }} style={styles.avatarStyle}/>) : (
+                        <Image style={styles.avatarStyle} source={{
+                          uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
+                        }} style={styles.avatarStyle}/>
+                      )
+                    }
                     <Text style={[style.itemText, { fontSize: 20 }]}> { /** Figure out why icon size is related to font size */}
                         {this.boldSubText(item.username, this.state.searchText)}
                     </Text>
