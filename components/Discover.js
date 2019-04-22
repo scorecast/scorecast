@@ -51,13 +51,13 @@ class Discover extends React.Component {
                     <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
                 ) : null }
             </Link>
-            { item.admin !== this.props.auth.uid ? (
+            { item.admin !== this.props.auth.uid && !(this.props.auth.isEmpty || this.props.auth.isAnonymous) ? (
                 <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={() => this.toggleRepost(item)}
                     style={{flex: 1, alignSelf: "center"}}
                 >
-                    <Icon name={ this.props.currentUser && this.props.currentUser.reposts.includes(item.id) ? 'check' : 'retweet'} size={20} color={pallette.darkgray} />
+                    <Icon name={'retweet'} color={this.props.currentUser && this.props.currentUser.reposts.includes(item.id) ? pallette.green : pallette.darkgray} size={20} />
                 </TouchableOpacity>
             ) : null }
         </View>
