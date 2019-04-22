@@ -167,16 +167,14 @@ class UserProfile extends Component {
         const { games, gameList, users, userId, currentUser, match, auth, userList, } = this.props;
         const uid = userId ? userId : match.params.userId;
         const user = users[uid];
-        const followed = currentUser.following.includes(uid);
-
-        
+        const followed = currentUser ? currentUser.following.includes(uid) : false;
 
         const userGames = gameList.filter(g => g.admin === uid);
-        const reposts = user.reposts.map(g_id => {
+        const reposts = user ? user.reposts.map(g_id => {
             const game = Object.assign({}, games[g_id]);
             game.id = g_id;
             return game;
-        });
+        }) : [];
         const currentGames = [];
         const pastGames = [];
         userGames.forEach(game => {
@@ -201,74 +199,75 @@ class UserProfile extends Component {
                             iconName: (followed ? 'check' : 'user-plus')
                         }
                     }
-                    logoLeft="User"
+                    logoLeft={uid === auth.uid ? "My" : "User"}
                     logoRight="Profile"
                 />
                 <View style={style.container_c}>
-                    <View style={[style.container_r, style.wrap, {
+                    <View style={[style.container_c, {
                         //marginBottom: 5,
                         borderBottomWidth: 1,
                         borderColor: pallette.lightgray,
                         backgroundColor: pallette.lightergray,
-                        paddingBottom: 20,
+                        paddingBottom: 5,
                         paddingTop: 20,
                     }]}>
-                        <View style={{
-                            flex: 1,
-                            flexDirection: 'column',
-                            paddingLeft: 15,
-                        }}>
-                          { user &&
-                          user.avatar_url ?
-                            (<Image style={styles.avatarStyle} source={{
-                              uri : user.avatar_url
-                            }}/>) : (
-                              <Image style={styles.avatarStyle} source={{
-                                uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
-                              }}/>
-                            )
-                          }
-
-                          <Text style={[style.bigTag, { marginRight: 20 }]}>{'@' + user.username}</Text>
-                        </View>
-                        <View style={[style.container_r,
-                          {
-                            //display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'flex-end',
-                            justifyContent: 'flex-start',
-                            paddingRight: 15,
-                          }]}>
-                            <TouchableOpacity>
-                              <View style={style.info_block}>
-                                <Text style={{ fontWeight: 'bold' }}>{userGames.length}</Text>
-                                <Text style={{ color: pallette.gray }}>Games Hosted</Text>
-                              </View>
-                            </TouchableOpacity>
-                            <Link
-                                to={"/user/followers/" + uid}
-                                component={TouchableOpacity}
-                            >
+                        <View style={[style.container_r, style.wrap,]}>
+                            <View style={{
+                                flex: 1,
+                                flexDirection: 'column',
+                                paddingLeft: 15,
+                            }}>
+                            { user &&
+                            user.avatar_url ?
+                                (<Image style={styles.avatarStyle} source={{
+                                uri : user.avatar_url
+                                }}/>) : (
+                                <Image style={styles.avatarStyle} source={{
+                                    uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
+                                }}/>
+                                )
+                            }
+                            </View>
+                            <View style={[style.container_r,
+                            {
+                                //display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'flex-end',
+                                justifyContent: 'flex-start',
+                                paddingRight: 15,
+                            }]}>
+                                <TouchableOpacity>
                                 <View style={style.info_block}>
-                                    <Text style={{ fontWeight: 'bold' }}>{user.followed.length}</Text>
-                                    <Text style={{ color: pallette.gray }}>Followers</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{userGames.length}</Text>
+                                    <Text style={{ color: pallette.gray }}>Games Hosted</Text>
                                 </View>
-                            </Link>
-                            <Link
-                                to={"/user/following/" + uid}
-                                component={TouchableOpacity}
-                            >
-                                <View style={style.info_block}>
-                                    <Text style={{ fontWeight: 'bold' }}>{user.following.length}</Text>
-                                    <Text style={{ color: pallette.gray }}>Following</Text>
-                                </View>
-                            </Link>
+                                </TouchableOpacity>
+                                <Link
+                                    to={"/user/followers/" + uid}
+                                    component={TouchableOpacity}
+                                >
+                                    <View style={style.info_block}>
+                                        <Text style={{ fontWeight: 'bold' }}>{user ? user.followed.length : 0}</Text>
+                                        <Text style={{ color: pallette.gray }}>Followers</Text>
+                                    </View>
+                                </Link>
+                                <Link
+                                    to={"/user/following/" + uid}
+                                    component={TouchableOpacity}
+                                >
+                                    <View style={style.info_block}>
+                                        <Text style={{ fontWeight: 'bold' }}>{user ? user.following.length : 0}</Text>
+                                        <Text style={{ color: pallette.gray }}>Following</Text>
+                                    </View>
+                                </Link>
+                            </View>
                         </View>
-                    </View>
-                    <View style={style.wrap}>
-                        <Text style={style.bio}>
-                            {user.bio}
-                        </Text>
+                        <Text style={[style.bigTag, style.wrap, { marginLeft: 10 }]}>{'@' + ((user !== undefined) ? user.username : 'unavailable')}</Text>
+                        <View style={style.wrap}>
+                            <Text style={style.bio}>
+                                {user ? user.bio : ''}
+                            </Text>
+                        </View>
                     </View>
                     <SectionList
                         style={styles.listView}

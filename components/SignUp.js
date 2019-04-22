@@ -49,14 +49,14 @@ class SignUpPage extends Component {
         return ((url.match(/(http|https):\/\/.+\.(jpeg|jpg|gif|png)$/) != null) || (url.length === 0));
     }
 
-    handleSignUp = () => {
-        const { email, username, password, c_password, bio, avatar, verifyURL } = this.state;
+    handleSignUp = async () => {
+        const { email, username, password, c_password, bio, avatar, url_valid } = this.state;
         const { auth, firestore, firebase, users } = this.props;
         if (c_password !== password) {
             this.setState({ c_password: '', errorMessage: 'The passwords were not the same, please use the same password.' });
         } else if (users.some(u => u.username === username)) {
             this.setState({ errorMessage: 'The username is taken.' });
-        } else if (!verifyURL) {
+        } else if (!url_valid) {
             this.setState({ errorMessage: 'The avatar URL you have provided is invalid.' });
         } else {
             const { status: existingStatus } = await Permissions.getAsync(

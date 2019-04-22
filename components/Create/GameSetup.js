@@ -15,6 +15,7 @@ class GameSetup extends Component {
             admin: auth.uid,
             variables: state,
             template: match.params.templateId,
+            reposters: [],
         };
 
         firestore.add({ collection: 'games' }, game).then(ref => {

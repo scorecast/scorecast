@@ -16,18 +16,31 @@ import { Link } from 'react-router-native';
 
 class Discover extends React.Component {
     toggleRepost = item => {
-        const reposted = this.props.currentUser.reposts.includes(item.id);
-        const n_arr = reposted
+        const u_reposted = this.props.currentUser.reposts.includes(item.id);
+        const reposted_games = u_reposted
             ? this.props.currentUser.reposts.filter(id => id !== item.id)
             : this.props.currentUser.reposts.concat(item.id);
+
+        const g_reposted = item.reposters.includes(this.props.auth.uid);
+        const reposters = g_reposted
+            ? item.reposters.filter(id => id !== this.props.auth.uid)
+            : item.reposters.concat(this.props.auth.uid);
 
         this.props.firestore.update(
             {
                 collection: 'users',
                 doc: this.props.auth.uid,
             },
-            { reposts: n_arr }
+            { reposts: reposted_games }
         );
+
+        this.props.firestore.update(
+            {
+                collection: 'games',
+                doc: item.id,
+            },
+            { reposters }
+        )
     };
 
     renderGameItem = ({ item, index, section }) => {
