@@ -27,7 +27,7 @@ class Discover extends React.Component {
             this.props.currentUser.reposts.concat(item.id);
 
         this.props.firestore.update({
-            collection: 'users', 
+            collection: 'users',
             doc: this.props.auth.uid },
             { reposts : n_arr });
     };
@@ -45,8 +45,12 @@ class Discover extends React.Component {
                 component={TouchableOpacity}
                 style={{fontSize: 20, flex: 5}}
             >
-                <Text style={[{ fontSize: 20 }]}>{item.variables.gameName}</Text>
-                <Text style={{ fontSize: 10 }}>{this.props.templates[item.template].name}</Text>
+                <Text style={[{ fontSize: 20 }]}>{
+                    item && item.variables ? item.variables.gameName : ''
+                }</Text>
+                <Text style={{ fontSize: 10 }}>{
+                    item && item.template ? this.props.templates[item.template].name : ''
+                }</Text>
                 { this.props.users && this.props.users[item.admin] ? (
                     <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
                 ) : null }
@@ -70,7 +74,7 @@ class Discover extends React.Component {
     render() {
         const { games, gameList, templates, currentUser, users, auth } = this.props;
 
-        const availableGames = gameList.filter(g => g.variables['gameName'] && !g.variables['win']);
+        const availableGames = gameList.filter(g => g.variables && g.variables['gameName'] && !g.variables['win']);
         let followedGames = [];
         let generalGames = [];
 
@@ -102,7 +106,7 @@ class Discover extends React.Component {
                     <SectionList
                         style={styles.listView}
                         renderItem={this.renderGameItem}
-                        renderSectionHeader={this.renderSectionHeader}
+                        //renderSectionHeader={this.renderSectionHeader}
                         sections={
                             auth.isEmpty || auth.isAnonymous || followedGames.length === 0 ? [{title: "General Games", data: generalGames},] :
                                 [{title: "Followed Games", data: followedGames},

@@ -1,7 +1,11 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Platform, StyleSheet } from 'react-native';
 import Button from './Button';
 import { styles, pallette } from '../../styles';
+
+/*const shadowStyle = StyleSheet.create({
+
+});*/
 
 const getButton = b =>
     b ? (
@@ -16,7 +20,10 @@ const getButton = b =>
     );
 
 const Bar = ({ left, right, ...props }) => (
-    <View style={[styles.topbar]}>
+    <View style={[
+      styles.topbar,
+      styles.shadow,
+    ]}>
         {getButton(left)}
         <Text style={styles.logoText}>
             {props.logoLeft}

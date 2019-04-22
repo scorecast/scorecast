@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from "react-native";
 
 const pallette = {
     white: '#ffffff',
@@ -93,6 +93,21 @@ const styles = StyleSheet.create({
         padding: 16,
         alignItems: 'center',
         alignSelf: 'stretch',
+    },
+    shadow: {
+    ...Platform.select({
+      ios: {
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        shadowOffset: {
+          height: 0,
+          width: 0,
+        }
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
     },
 });
 
