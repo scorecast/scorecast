@@ -32,51 +32,63 @@ class Discover extends React.Component {
             { reposts : n_arr });
     };
 
-    renderGameItem = ({ item, index, section }) => (
+    renderGameItem = ({ item, index, section }) => {
+        //console.warn(index % 2);
+
+        return (
         <View style={
-            [localStyles.itemRow,
-                index % 2
-                ? { backgroundColor: pallette.lightergray }
-                : { backgroundColor: pallette.white },]
-            }>
-            { this.props.users &&
-                    this.props.users[item.admin] &&
-                    this.props.users[item.admin].avatar_url ?
+          [localStyles.itemRow,
+            (index % 2 === 0)
+              ? { backgroundColor: pallette.lightergray }
+              : { backgroundColor: pallette.white },]
+        }>
+          <Link
+            to={`/game/${item.id}`}
+            activeOpacity={0.5}
+            component={TouchableOpacity}
+            style={{fontSize: 20, flex: 5}}
+          >
+            <View style={{
+              display: 'flex',
+              flexDirection: 'row',
+            }}>
+              { this.props.users &&
+              this.props.users[item.admin] &&
+              this.props.users[item.admin].avatar_url ?
                 (<Image style={styles.avatarStyle} source={{
-                    uri : this.props.users[item.admin].avatar_url
+                  uri : this.props.users[item.admin].avatar_url
                 }} style={styles.avatarStyle}/>) : (
                   <Image style={styles.avatarStyle} source={{
                     uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
                   }} style={styles.avatarStyle}/>
                 )
-            }
-            <Link
-                to={`/game/${item.id}`}
-                activeOpacity={0.5}
-                component={TouchableOpacity}
-                style={{fontSize: 20, flex: 5}}
-            >
+              }
+              <View>
                 { this.props.users && this.props.users[item.admin] ? (
-                <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
+                  <Text style={{ fontSize: 10}}>{"@" + (this.props.users[item.admin]).username}</Text>
                 ) : null }
                 <Text style={[{ fontSize: 20 }]}>{
-                    item && item.variables ? item.variables.gameName : ''
+                  item && item.variables ? item.variables.gameName : ''
                 }</Text>
                 <Text style={{ fontSize: 10 }}>{
-                    item && item.template ? this.props.templates[item.template].name : ''
+                  item && item.template ? this.props.templates[item.template].name : ''
                 }</Text>
-            </Link>
-            { item.admin !== this.props.auth.uid && !(this.props.auth.isEmpty || this.props.auth.isAnonymous) ? (
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => this.toggleRepost(item)}
-                    style={{flex: 1, alignSelf: "center"}}
-                >
-                    <Icon name={'retweet'} color={this.props.currentUser && this.props.currentUser.reposts.includes(item.id) ? pallette.green : pallette.darkgray} size={20} />
-                </TouchableOpacity>
-            ) : null }
+              </View>
+            </View>
+
+          </Link>
+          { item.admin !== this.props.auth.uid && !(this.props.auth.isEmpty || this.props.auth.isAnonymous) ? (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => this.toggleRepost(item)}
+              style={{flex: 1, alignSelf: "center"}}
+            >
+              <Icon name={'retweet'} color={this.props.currentUser && this.props.currentUser.reposts.includes(item.id) ? pallette.green : pallette.darkgray} size={20} />
+            </TouchableOpacity>
+          ) : null }
         </View>
-    );
+      );
+    };
 
     renderSectionHeader = ({ section: { title }}) => (
         <Text style={localStyles.sectionHeader}>{title}</Text>

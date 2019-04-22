@@ -29,7 +29,7 @@ const style = StyleSheet.create({
         flexWrap: 'wrap',
     },
     bigTag: {
-        marginLeft: 15,
+        //marginLeft: 15,
         alignSelf: 'flex-start',
         fontSize: 30,
         fontWeight: 'bold',
@@ -221,12 +221,38 @@ class UserProfile extends Component {
                         paddingBottom: 20,
                         paddingTop: 20,
                     }]}>
-                        <Text style={[style.bigTag, { marginRight: 20 }]}>{'@' + user.username}</Text>
-                        <View style={style.container_r}>
-                            <View style={style.info_block}>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            paddingLeft: 15,
+                        }}>
+                          { user &&
+                          user.avatar_url ?
+                            (<Image style={styles.avatarStyle} source={{
+                              uri : user.avatar_url
+                            }}/>) : (
+                              <Image style={styles.avatarStyle} source={{
+                                uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
+                              }}/>
+                            )
+                          }
+
+                          <Text style={[style.bigTag, { marginRight: 20 }]}>{'@' + user.username}</Text>
+                        </View>
+                        <View style={[style.container_r,
+                          {
+                            //display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'flex-end',
+                            justifyContent: 'flex-start',
+                            paddingRight: 15,
+                          }]}>
+                            <TouchableOpacity>
+                              <View style={style.info_block}>
                                 <Text style={{ fontWeight: 'bold' }}>{userGames.length}</Text>
                                 <Text style={{ color: pallette.gray }}>Games Hosted</Text>
-                            </View>
+                              </View>
+                            </TouchableOpacity>
                             <Link
                                 to={"/user/followers/" + uid}
                                 component={TouchableOpacity}
