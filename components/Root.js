@@ -21,6 +21,7 @@ import MyProfile from './MyProfile';
 import FollowList from './FollowList';
 import FollowerList from './FollowerList';
 import Settings from './Settings';
+import LinkRedirector from './LinkRedirector';
 
 const Root = props => {
     return (
@@ -36,16 +37,26 @@ const Root = props => {
                     <Route path="/home" component={Home} />
                     <Route path="/create" component={Create} />
                     <Route path="/game" component={Game} />
-                    <Route path="/user/profile/:userId" component={UserProfile} />
+                    <Route
+                        path="/user/profile/:userId"
+                        component={UserProfile}
+                    />
                     <Route path="/me" component={MyProfile} />
                     <Route path="/login" component={Login} />
                     <Route path="/signup" component={SignUpPage} />
                     <Route path="/follow/new" component={NewFollow} />
-                    <Route path="/user/following/:userId" component={FollowList} />
-                    <Route path="/user/followers/:userId" component={FollowerList} />
+                    <Route
+                        path="/user/following/:userId"
+                        component={FollowList}
+                    />
+                    <Route
+                        path="/user/followers/:userId"
+                        component={FollowerList}
+                    />
                     <Route path="/user/settings" component={Settings} />
                 </Switch>
                 <BackButton />
+                <LinkRedirector />
             </SafeAreaView>
         </NativeRouter>
     );
