@@ -128,7 +128,7 @@ class UserProfile extends Component {
                     this.props.users[item.admin] &&
                     this.props.users[item.admin].avatar_url ?
                 (<Image style={styles.avatarStyle} source={{
-                  uri : this.props.users[item.id].avatar_url
+                  uri : this.props.users[item.admin].avatar_url
                 }} style={styles.avatarStyle}/>) : (
                   <Image style={styles.avatarStyle} source={{
                     uri : 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png',
