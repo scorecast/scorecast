@@ -7,11 +7,14 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "expo": "^32.0.0",
+    "@expo/vector-icons": "^10.0.6",
+    "expo": "^33.0.0",
+    "expo-codemod": "^1.0.7",
+    "expo-font": "~5.0.1",
     "firebase": "^5.8.4",
     "history": "^4.7.2",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-firebase": "^5.2.2",
     "react-native-keyboard-aware-scroll-view": "^0.8.0",
     "react-native-super-grid": "^3.0.3",
